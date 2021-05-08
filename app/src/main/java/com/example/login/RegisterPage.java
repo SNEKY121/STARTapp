@@ -88,7 +88,7 @@ public class RegisterPage extends AppCompatActivity {
     }
 
     private boolean CheckCreds(String email, String name, String password, String passwordConfirm) {
-        if (email.contains("@") && email.contains(".") && !email.isEmpty()) {
+        if (email.contains("@") && email.contains(".") && email.length() > 4) {
             if (EmailCheck(email, name)) {
                 if (password.equals(passwordConfirm)) {
                     if (password.length() > 7)
