@@ -39,8 +39,8 @@ public class LoginPage extends AppCompatActivity {
         eLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String inputName = eName.getText().toString();
-                String inputPassword = ePassword.getText().toString();
+                String inputName = eName.getText().toString().trim();
+                String inputPassword = ePassword.getText().toString().trim();
 
                 if (inputName.isEmpty() || inputPassword.isEmpty()) {
                     Toast.makeText(LoginPage.this, "Completati toate formularele!", Toast.LENGTH_SHORT).show();

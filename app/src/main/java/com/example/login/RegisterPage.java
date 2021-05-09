@@ -76,10 +76,11 @@ public class RegisterPage extends AppCompatActivity {
             SQLConnection connectionHelper = new SQLConnection();
             connect = connectionHelper.connectionclass();
             if (connect != null) {
+                pass.trim();
                 pass = PasswordHash.generate(pass, null);
                 PreparedStatement stmt = connect.prepareStatement("INSERT INTO Table1(Username, Email, Password, Salt) VALUES (?, ?, ?, ?)");
-                stmt.setString(1, usr);
-                stmt.setString(2, email);
+                stmt.setString(1, usr.trim());
+                stmt.setString(2, email.trim());
                 stmt.setString(3, pass);
                 stmt.setBytes(4, PasswordHash.Salt);
 
