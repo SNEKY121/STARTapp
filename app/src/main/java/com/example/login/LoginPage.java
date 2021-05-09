@@ -83,9 +83,11 @@ public class LoginPage extends AppCompatActivity {
                 ResultSet rs = st.executeQuery(query);
 
                 while (rs.next()) {
-                    if (name.equals(rs.getString(1)) || name.equals(rs.getString(2)))
+                    if (name.equals(rs.getString(1)) || name.equals(rs.getString(2))) {
+                        password = PasswordHash.generate(password, rs.getBytes(4));
                         if (password.equals(rs.getString(3)))
                             return true;
+                    }
                 }
                 return false;
             } else {

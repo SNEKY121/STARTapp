@@ -15,6 +15,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RegisterPage extends AppCompatActivity {
 
@@ -48,10 +50,11 @@ public class RegisterPage extends AppCompatActivity {
                 String inputPasswordConfirm = ePasswordConfirm.getText().toString();
 
                 if (CheckCreds(inputEmail, inputName, inputPassword, inputPasswordConfirm)) {
-                    SubmitRegister(inputName, inputEmail, inputPassword);
-                    Toast.makeText(RegisterPage.this, "Bun venit!", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(RegisterPage.this, LoginPage.class);
-                    startActivity(intent);
+                    if(SubmitRegister(inputName, inputEmail, inputPassword)) {
+                        Toast.makeText(RegisterPage.this, "Inregistrat!", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(RegisterPage.this, GetStartedPage.class);
+                        startActivity(intent);
+                    }
                 } else {
                     ePassword.getText().clear();
                     ePasswordConfirm.getText().clear();
@@ -68,23 +71,29 @@ public class RegisterPage extends AppCompatActivity {
         });
     }
 
-    public void SubmitRegister(String usr, String email, String pass) {
+    public boolean SubmitRegister(String usr, String email, String pass) {
         try {
             SQLConnection connectionHelper = new SQLConnection();
             connect = connectionHelper.connectionclass();
             if (connect != null) {
-                PreparedStatement stmt = connect.prepareStatement("INSERT INTO Table1(Username, Email, Password) VALUES (?, ?, ?)");
+                pass = PasswordHash.generate(pass, null);
+                PreparedStatement stmt = connect.prepareStatement("INSERT INTO Table1(Username, Email, Password, Salt) VALUES (?, ?, ?, ?)");
                 stmt.setString(1, usr);
                 stmt.setString(2, email);
                 stmt.setString(3, pass);
+                stmt.setBytes(4, PasswordHash.Salt);
 
                 stmt.executeUpdate();
+                return true;
             } else {
                 Toast.makeText(RegisterPage.this, "Connection Failed.", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception ex) {
-            Toast.makeText(RegisterPage.this, "Connection Error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterPage.this, "Connection Error!", Toast.LENGTH_SHORT).show();
+            Logger logger = Logger.getAnonymousLogger();
+            logger.log(Level.FINE, "lol? : ", ex);
         }
+        return false;
     }
 
     private boolean CheckCreds(String email, String name, String password, String passwordConfirm) {
