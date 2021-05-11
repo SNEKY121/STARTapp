@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -24,8 +23,6 @@ public class RegisterPage extends AppCompatActivity {
     private EditText eName;
     private EditText ePassword;
     private EditText ePasswordConfirm;
-    private Button eRegister;
-    private FloatingActionButton eReturn;
 
     Connection connect;
 
@@ -38,36 +35,30 @@ public class RegisterPage extends AppCompatActivity {
         eName = findViewById(R.id.etName);
         ePassword = findViewById(R.id.etPassword);
         ePasswordConfirm = findViewById(R.id.etPasswordConfirm);
-        eRegister = findViewById(R.id.btnRegister);
-        eReturn = findViewById(R.id.register_btnReturn);
+        Button eRegister = findViewById(R.id.btnRegister);
+        FloatingActionButton eReturn = findViewById(R.id.register_btnReturn);
 
-        eRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String inputEmail = eEmail.getText().toString();
-                String inputName = eName.getText().toString();
-                String inputPassword = ePassword.getText().toString();
-                String inputPasswordConfirm = ePasswordConfirm.getText().toString();
+        eRegister.setOnClickListener(v -> {
+            String inputEmail = eEmail.getText().toString();
+            String inputName = eName.getText().toString();
+            String inputPassword = ePassword.getText().toString();
+            String inputPasswordConfirm = ePasswordConfirm.getText().toString();
 
-                if (CheckCreds(inputEmail, inputName, inputPassword, inputPasswordConfirm)) {
-                    if(SubmitRegister(inputName, inputEmail, inputPassword)) {
-                        Toast.makeText(RegisterPage.this, "Inregistrat!", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(RegisterPage.this, GetStartedPage.class);
-                        startActivity(intent);
-                    }
-                } else {
-                    ePassword.getText().clear();
-                    ePasswordConfirm.getText().clear();
+            if (CheckCreds(inputEmail, inputName, inputPassword, inputPasswordConfirm)) {
+                if(SubmitRegister(inputName, inputEmail, inputPassword)) {
+                    Toast.makeText(RegisterPage.this, "Inregistrat!", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(RegisterPage.this, GetStartedPage.class);
+                    startActivity(intent);
                 }
+            } else {
+                ePassword.getText().clear();
+                ePasswordConfirm.getText().clear();
             }
         });
 
-        eReturn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RegisterPage.this, GetStartedPage.class);
-                startActivity(intent);
-            }
+        eReturn.setOnClickListener(v -> {
+            Intent intent = new Intent(RegisterPage.this, GetStartedPage.class);
+            startActivity(intent);
         });
     }
 
@@ -76,7 +67,7 @@ public class RegisterPage extends AppCompatActivity {
             SQLConnection connectionHelper = new SQLConnection();
             connect = connectionHelper.connectionclass();
             if (connect != null) {
-                pass.trim();
+                pass = pass.trim();
                 pass = PasswordHash.generate(pass, null);
                 PreparedStatement stmt = connect.prepareStatement("INSERT INTO Table1(Username, Email, Password, Salt) VALUES (?, ?, ?, ?)");
                 stmt.setString(1, usr.trim());

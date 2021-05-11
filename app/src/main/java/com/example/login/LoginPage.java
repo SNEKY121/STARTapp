@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,8 +18,6 @@ public class LoginPage extends AppCompatActivity {
 
     private EditText eName;
     private EditText ePassword;
-    private Button eLogin;
-    private FloatingActionButton eReturn;
 
     private boolean isValid = false;
 
@@ -33,43 +30,36 @@ public class LoginPage extends AppCompatActivity {
 
         eName = findViewById(R.id.etName);
         ePassword = findViewById(R.id.etPassword);
-        eLogin = findViewById(R.id.btnLogin);
-        eReturn = findViewById(R.id.login_btnReturn);
+        Button eLogin = findViewById(R.id.btnLogin);
+        FloatingActionButton eReturn = findViewById(R.id.login_btnReturn);
 
-        eLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String inputName = eName.getText().toString().trim();
-                String inputPassword = ePassword.getText().toString().trim();
+        eLogin.setOnClickListener(v -> {
+            String inputName = eName.getText().toString().trim();
+            String inputPassword = ePassword.getText().toString().trim();
 
-                if (inputName.isEmpty() || inputPassword.isEmpty()) {
-                    Toast.makeText(LoginPage.this, "Completati toate formularele!", Toast.LENGTH_SHORT).show();
+            if (inputName.isEmpty() || inputPassword.isEmpty()) {
+                Toast.makeText(LoginPage.this, "Completati toate formularele!", Toast.LENGTH_SHORT).show();
+            } else {
+                isValid = checkCred(inputName, inputPassword);
+
+                if (!isValid) {
+                    // fail message
+                    Toast.makeText(LoginPage.this, "Date Introduse Invalide", Toast.LENGTH_LONG).show();
+                    // clear password form
+                    ePassword.getText().clear();
                 } else {
-                    isValid = checkCred(inputName, inputPassword);
-
-                    if (!isValid) {
-                        // fail message
-                        Toast.makeText(LoginPage.this, "Date Introduse Invalide", Toast.LENGTH_LONG).show();
-                        // clear password form
-                        ePassword.getText().clear();
-                    } else {
-                        // clear login forms
-                        ePassword.getText().clear();
-                        eName.getText().clear();
-                        // go to new activity
-                        Intent intent = new Intent(LoginPage.this, HomePage.class);
-                        startActivity(intent);
-                    }
+                    Intent intent = new Intent(LoginPage.this, HomePage.class);
+                    intent.putExtra("username", inputName);
+                    ePassword.getText().clear();
+                    eName.getText().clear();
+                    startActivity(intent);
                 }
             }
         });
 
-        eReturn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginPage.this, GetStartedPage.class);
-                startActivity(intent);
-            }
+        eReturn.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginPage.this, GetStartedPage.class);
+            startActivity(intent);
         });
     }
 

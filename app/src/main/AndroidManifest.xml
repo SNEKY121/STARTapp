@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Login">
-        <activity android:name=".GetStartedPage"></activity>
+        <activity android:name=".GetStartedPage" />
         <activity
             android:name=".SplashPage"
             android:screenOrientation="portrait">
@@ -30,7 +30,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".LoginPage"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
