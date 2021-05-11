@@ -6,4 +6,7 @@
     <font android:fontStyle="italic"
         android:fontWeight="400"
         android:font="@font/opensans_italic" />
+    <font android:fontStyle="normal"
+        android:fontWeight="400"
+        android:font="@font/cocogoose_regular" />
 </font-family>
