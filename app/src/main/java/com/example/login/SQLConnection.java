@@ -9,7 +9,7 @@ import java.sql.DriverManager;
 public class SQLConnection {
     String uname, pass, ip, port, database;
     public Connection connectionclass() {
-        ip = "79.114.217.178";
+        ip = "79.114.154.206";
         database = "MLC App Profiles";
         uname = "lol";
         pass = "test129";
