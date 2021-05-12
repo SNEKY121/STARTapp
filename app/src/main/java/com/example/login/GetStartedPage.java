@@ -63,6 +63,21 @@ public class GetStartedPage extends AppCompatActivity {
 
     }
 
+    private long pressedTime;
+
+    @Override
+    public void onBackPressed() {
+
+        if (pressedTime + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed();
+            finish();
+        } else {
+            String close = getResources().getString(R.string.close_app);
+            Toast.makeText(getBaseContext(), close, Toast.LENGTH_SHORT).show();
+        }
+        pressedTime = System.currentTimeMillis();
+    }
+
     private boolean checkCred(String name, String password) {
         try {
             SQLConnection connectionHelper = new SQLConnection();
