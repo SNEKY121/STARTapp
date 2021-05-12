@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -36,6 +37,22 @@ public class HomePage extends AppCompatActivity {
             Intent intent = new Intent(HomePage.this, GetStartedPage.class);
             startActivity(intent);
         });
+    }
+
+    private long pressedTime;
+
+    @Override
+    public void onBackPressed() {
+
+        if (pressedTime + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed();
+            finish();
+            System.exit(0);
+        } else {
+            String close = getResources().getString(R.string.close_app);
+            Toast.makeText(getBaseContext(), close, Toast.LENGTH_SHORT).show();
+        }
+        pressedTime = System.currentTimeMillis();
     }
 
     BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener = item -> {
