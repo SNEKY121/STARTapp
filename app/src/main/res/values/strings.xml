@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SDVApp</string>
+    <string name="close_app">Apasati inca o data pentru a iesi</string>
 </resources>
