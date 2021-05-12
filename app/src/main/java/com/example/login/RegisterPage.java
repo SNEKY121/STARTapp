@@ -70,7 +70,6 @@ public class RegisterPage extends AppCompatActivity {
         if (pressedTime + 2000 > System.currentTimeMillis()) {
             super.onBackPressed();
             finish();
-            System.exit(0);
         } else {
             String close = getResources().getString(R.string.close_app);
             Toast.makeText(getBaseContext(), close, Toast.LENGTH_SHORT).show();
