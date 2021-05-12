@@ -41,17 +41,14 @@ public class GetStartedPage extends AppCompatActivity {
                 isValid = checkCred(inputName, inputPassword);
 
                 if (!isValid) {
-                    // fail message
                     Toast.makeText(GetStartedPage.this, "Date Introduse Invalide", Toast.LENGTH_LONG).show();
-                    // clear password form
-                    ePassword.getText().clear();
                 } else {
                     Intent intent = new Intent(GetStartedPage.this, HomePage.class);
                     intent.putExtra("username", inputName);
-                    ePassword.getText().clear();
                     eName.getText().clear();
                     startActivity(intent);
                 }
+                ePassword.getText().clear();
             }
         });
 

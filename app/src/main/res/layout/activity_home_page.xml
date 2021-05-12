@@ -11,12 +11,12 @@
         android:id="@+id/imageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="84dp"
-        android:layout_marginEnd="172dp"
+        android:layout_marginTop="80dp"
         android:background="@drawable/img"
         android:contentDescription="Profile picture"
         app:layout_constraintCircleRadius="50dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
