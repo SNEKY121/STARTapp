@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -31,26 +32,26 @@ public class GetStartedPage extends AppCompatActivity {
         ePassword = findViewById(R.id.etPassword);
         Button eLogin = findViewById(R.id.btnLogin);
 
-        eLogin.setOnClickListener(v -> {
-            String inputName = eName.getText().toString().trim();
-            String inputPassword = ePassword.getText().toString().trim();
+        eLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String inputName = eName.getText().toString().trim();
+                String inputPassword = ePassword.getText().toString().trim();
 
-            if (inputName.isEmpty() || inputPassword.isEmpty()) {
-                Toast.makeText(GetStartedPage.this, "Completati toate formularele!", Toast.LENGTH_SHORT).show();
-            } else {
-                isValid = checkCred(inputName, inputPassword);
-
-                if (!isValid) {
-                    // fail message
-                    Toast.makeText(GetStartedPage.this, "Date Introduse Invalide", Toast.LENGTH_LONG).show();
-                    // clear password form
-                    ePassword.getText().clear();
+                if (inputName.isEmpty() || inputPassword.isEmpty()) {
+                    Toast.makeText(GetStartedPage.this, "Completati toate formularele!", Toast.LENGTH_SHORT).show();
                 } else {
-                    Intent intent = new Intent(GetStartedPage.this, HomePage.class);
-                    intent.putExtra("username", inputName);
+                    isValid = checkCred(inputName, inputPassword);
+
+                    if (!isValid) {
+                        Toast.makeText(GetStartedPage.this, "Date Introduse Invalide", Toast.LENGTH_LONG).show();
+                    } else {
+                        Intent intent = new Intent(GetStartedPage.this, HomePage.class);
+                        intent.putExtra("username", inputName);
+                        eName.getText().clear();
+                        startActivity(intent);
+                    }
                     ePassword.getText().clear();
-                    eName.getText().clear();
-                    startActivity(intent);
                 }
             }
         });
