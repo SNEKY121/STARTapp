@@ -3,6 +3,7 @@ package com.example.login;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,6 +11,9 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -46,6 +50,7 @@ public class RegisterPage extends AppCompatActivity {
 
             if (CheckCreds(inputEmail, inputName, inputPassword, inputPasswordConfirm)) {
                 if(SubmitRegister(inputName, inputEmail, inputPassword)) {
+                    CreateProfile(inputName);
                     Toast.makeText(RegisterPage.this, "Inregistrat!", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(RegisterPage.this, GetStartedPage.class);
                     startActivity(intent);
@@ -84,7 +89,7 @@ public class RegisterPage extends AppCompatActivity {
             if (connect != null) {
                 pass = pass.trim();
                 pass = PasswordHash.generate(pass, null);
-                PreparedStatement stmt = connect.prepareStatement("INSERT INTO Table1(Username, Email, Password, Salt) VALUES (?, ?, ?, ?)");
+                PreparedStatement stmt = connect.prepareStatement("INSERT INTO " + SQLConnection.accountsTable + "(Username, Email, Password, Salt) VALUES (?, ?, ?, ?)");
                 stmt.setString(1, usr.trim());
                 stmt.setString(2, email.trim());
                 stmt.setString(3, pass);
@@ -126,7 +131,7 @@ public class RegisterPage extends AppCompatActivity {
             SQLConnection connectionHelper = new SQLConnection();
             connect = connectionHelper.connectionclass();
             if (connect != null) {
-                String query = "Select * from Table1";
+                String query = "Select * from " + SQLConnection.accountsTable;
                 Statement st = connect.createStatement();
                 ResultSet rs = st.executeQuery(query);
 
@@ -147,5 +152,25 @@ public class RegisterPage extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    private void CreateProfile(String username) {
+        try {
+            SQLConnection connectionHelper = new SQLConnection();
+            connect = connectionHelper.connectionclass();
+            if (connect != null) {
+                File image = new File("../../../../res/drawable/kakadu.jpg");
+                FileInputStream inputStream = new FileInputStream(image);
+                PreparedStatement stmt = connect.prepareStatement("INSERT INTO " + SQLConnection.profilesTable + "(Username, Courses, Image, Xp, Streak) VALUES (?, ?, ?, ?, ?)");
+                stmt.setString(1, username);
+                stmt.setString(2, "");
+                stmt.setBinaryStream(3, (InputStream) inputStream, (int) (image.length()));
+                stmt.setInt(4, 0);
+                stmt.setInt(5, 0);
+                stmt.executeUpdate();
+            }
+        } catch (Exception ex) {
+            Toast.makeText(RegisterPage.this, "Connection Failed.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -8,6 +8,9 @@ import java.sql.DriverManager;
 
 public class SQLConnection {
     String uname, pass, ip, port, database;
+    public static String accountsTable = "Accounts";
+    public static String profilesTable = "Profiles";
+
     public Connection connectionclass() {
         ip = "mlcapp.go.ro";
         database = "MLC App Profiles";

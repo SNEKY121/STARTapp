@@ -1,12 +1,19 @@
 package com.example.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.w3c.dom.Text;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,6 +25,9 @@ public class ProfileFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private TextView eUsername;
+    private String username;
+    private FloatingActionButton eLogout;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -44,7 +54,7 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             // TODO: Rename and change types of parameters
-            String mParam1 = getArguments().getString(ARG_PARAM1);
+            username = getArguments().getString(ARG_PARAM1);
             String mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
@@ -52,6 +62,23 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        eUsername = (TextView) view.findViewById(R.id.tv_username);
+        eUsername.setText(username);
+        eLogout = (FloatingActionButton) view.findViewById(R.id.home_fabLogout);
+
+        eLogout.setOnClickListener(v -> {
+            resetPref();
+            Intent intent = new Intent(getActivity(), GetStartedPage.class);
+            startActivity(intent);
+        });
+        return view;
+    }
+
+    private void resetPref() {
+        getActivity().getSharedPreferences(GetStartedPage.PREFS_NAME, 0)
+                .edit()
+                .putString(GetStartedPage.PREF_USERNAME, null)
+                .apply();
     }
 }

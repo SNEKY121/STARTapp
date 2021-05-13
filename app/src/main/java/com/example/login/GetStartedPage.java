@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -99,7 +98,7 @@ public class GetStartedPage extends AppCompatActivity {
             SQLConnection connectionHelper = new SQLConnection();
             connect = connectionHelper.connectionclass();
             if (connect != null) {
-                String query = "Select * from Table1";
+                String query = "Select * from " + SQLConnection.accountsTable;
                 Statement st = connect.createStatement();
                 ResultSet rs = st.executeQuery(query);
 
