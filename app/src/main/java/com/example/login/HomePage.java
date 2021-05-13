@@ -34,6 +34,7 @@ public class HomePage extends AppCompatActivity {
         openFragment(ProfileFragment.newInstance("", ""));
 
         eLogout.setOnClickListener(v -> {
+            resetPref();
             Intent intent = new Intent(HomePage.this, GetStartedPage.class);
             startActivity(intent);
         });
@@ -45,6 +46,7 @@ public class HomePage extends AppCompatActivity {
     public void onBackPressed() {
 
         if (pressedTime + 2000 > System.currentTimeMillis()) {
+            resetPref();
             super.onBackPressed();
             finish();
         } else {
@@ -67,4 +69,11 @@ public class HomePage extends AppCompatActivity {
         }
         return false;
     };
+
+    private void resetPref() {
+        getSharedPreferences(GetStartedPage.PREFS_NAME, MODE_PRIVATE)
+                .edit()
+                .putString(GetStartedPage.PREF_USERNAME, null)
+                .apply();
+    }
 }

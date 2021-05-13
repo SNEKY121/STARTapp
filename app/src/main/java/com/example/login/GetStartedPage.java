@@ -3,9 +3,12 @@ package com.example.login;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -15,8 +18,13 @@ import java.sql.Statement;
 
 public class GetStartedPage extends AppCompatActivity {
 
+    public static final String PREFS_NAME = "RememberMe";
+    public static final String PREF_USERNAME = "username";
+
+
     private EditText eName;
     private EditText ePassword;
+    private CheckBox eCheckBox;
 
     private boolean isValid = false;
 
@@ -27,11 +35,17 @@ public class GetStartedPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_started_page);
 
+        SharedPreferences pref = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        String savedUsername = pref.getString(PREF_USERNAME, null);
+
         Button eRegister = findViewById(R.id.btnCreate);
         eName = findViewById(R.id.etName);
         ePassword = findViewById(R.id.etPassword);
+        eCheckBox = findViewById(R.id.cb_rememberme);
         Button eLogin = findViewById(R.id.btnLogin);
 
+        if (savedUsername != null)
+            redirect(savedUsername);
         eLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,10 +60,13 @@ public class GetStartedPage extends AppCompatActivity {
                     if (!isValid) {
                         Toast.makeText(GetStartedPage.this, "Date Introduse Invalide", Toast.LENGTH_LONG).show();
                     } else {
-                        Intent intent = new Intent(GetStartedPage.this, HomePage.class);
-                        intent.putExtra("username", inputName);
+                        if (eCheckBox.isChecked())
+                            getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                                    .edit()
+                                    .putString(PREF_USERNAME, inputName)
+                                    .apply();
                         eName.getText().clear();
-                        startActivity(intent);
+                        redirect(inputName);
                     }
                     ePassword.getText().clear();
                 }
@@ -60,7 +77,6 @@ public class GetStartedPage extends AppCompatActivity {
             Intent intent = new Intent(GetStartedPage.this, RegisterPage.class);
             startActivity(intent);
         });
-
     }
 
     private long pressedTime;
@@ -102,5 +118,11 @@ public class GetStartedPage extends AppCompatActivity {
             Toast.makeText(GetStartedPage.this, "Eroare", Toast.LENGTH_LONG).show();
         }
         return false;
+    }
+
+    private void redirect(String inputName) {
+        Intent intent = new Intent(GetStartedPage.this, HomePage.class);
+        intent.putExtra("username", inputName);
+        startActivity(intent);
     }
 }

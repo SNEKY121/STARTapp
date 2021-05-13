@@ -61,15 +61,15 @@
         android:layout_width="190dp"
         android:layout_height="50dp"
         android:background="@drawable/custom_button"
-        android:text="Autentificare"
         android:fontFamily="@font/cocogoose_regular"
+        android:text="Autentificare"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etPassword"
-        app:layout_constraintVertical_bias="0.053"
+        app:layout_constraintTop_toBottomOf="@+id/cb_rememberme"
+        app:layout_constraintVertical_bias="0.07"
         tools:text="Login" />
 
     <Button
@@ -103,5 +103,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnLogin"
         app:layout_constraintVertical_bias="0.082" />
+
+    <CheckBox
+        android:id="@+id/cb_rememberme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tine-ma in minte"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etPassword"
+        app:layout_constraintVertical_bias="0.036" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
