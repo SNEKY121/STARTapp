@@ -9,11 +9,19 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.w3c.dom.Text;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+import static java.lang.Integer.parseInt;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,12 +34,20 @@ public class ProfileFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private TextView eUsername;
-    private String username;
+    private ProgressBar eBar;
     private FloatingActionButton eLogout;
+    private TextView eLevel;
+    private TextView eCursuri;
+    private TextView eStreak;
+
+    private String username;
+    private Integer xp = 0;
+
 
     public ProfileFragment() {
         // Required empty public constructor
     }
+    Connection connect;
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -63,9 +79,15 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        eUsername = (TextView) view.findViewById(R.id.tv_username);
+        eUsername = view.findViewById(R.id.tv_username);
         eUsername.setText(username);
-        eLogout = (FloatingActionButton) view.findViewById(R.id.home_fabLogout);
+        eLogout = view.findViewById(R.id.home_fabLogout);
+        eStreak = view.findViewById(R.id.tv_streak);
+        eLevel = view.findViewById(R.id.tv_level);
+        eCursuri = view.findViewById(R.id.tv_cursuri);
+        eBar = view.findViewById(R.id.pb_XP);
+
+        getData();
 
         eLogout.setOnClickListener(v -> {
             resetPref();
@@ -80,5 +102,29 @@ public class ProfileFragment extends Fragment {
                 .edit()
                 .putString(GetStartedPage.PREF_USERNAME, null)
                 .apply();
+    }
+
+    private void getData() {
+        try {
+            SQLConnection connectionHelper = new SQLConnection();
+            connect = connectionHelper.connectionclass();
+            if (connect != null) {
+                String query = "Select * from " + SQLConnection.profilesTable;
+                Statement st = connect.createStatement();
+                ResultSet rs = st.executeQuery(query);
+
+                while (rs.next())
+                    if (username.equals(rs.getString(1))) {
+                        xp = parseInt(rs.getString(4));
+                        eCursuri.setText(rs.getString(2) + " cursuri finalizate");
+                        eStreak.setText(rs.getString(5) + " day streak");
+                        eLevel.setText("Nivel " + xp/100);
+                        eBar.setProgress(xp);
+                        return;
+                    }
+            }
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+        }
     }
 }
