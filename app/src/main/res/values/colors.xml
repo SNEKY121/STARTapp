@@ -16,5 +16,6 @@
     <color name="gr_start">#25A96B</color>
     <color name="green2">#1A9577</color>
     <color name="transparent">#00000000</color>
-    <color name="grey">#50202020</color>
+    <color name="grey">#808080</color>
+    <color name="grey_lightdark">#707070</color>
 </resources>

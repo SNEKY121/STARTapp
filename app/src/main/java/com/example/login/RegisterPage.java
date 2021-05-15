@@ -3,7 +3,6 @@ package com.example.login;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,9 +10,6 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -50,10 +46,11 @@ public class RegisterPage extends AppCompatActivity {
 
             if (CheckCreds(inputEmail, inputName, inputPassword, inputPasswordConfirm)) {
                 if(SubmitRegister(inputName, inputEmail, inputPassword)) {
-                    CreateProfile(inputName);
-                    Toast.makeText(RegisterPage.this, "Inregistrat!", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(RegisterPage.this, GetStartedPage.class);
-                    startActivity(intent);
+                    if(CreateProfile(inputName)) {
+                        Toast.makeText(RegisterPage.this, "Inregistrat!", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(RegisterPage.this, GetStartedPage.class);
+                        startActivity(intent);
+                    }
                 }
             } else {
                 ePassword.getText().clear();
@@ -154,23 +151,24 @@ public class RegisterPage extends AppCompatActivity {
         return true;
     }
 
-    private void CreateProfile(String username) {
+    private boolean CreateProfile(String username) {
         try {
             SQLConnection connectionHelper = new SQLConnection();
             connect = connectionHelper.connectionclass();
             if (connect != null) {
-                File image = new File("../../../../res/drawable/kakadu.jpg");
-                FileInputStream inputStream = new FileInputStream(image);
                 PreparedStatement stmt = connect.prepareStatement("INSERT INTO " + SQLConnection.profilesTable + "(Username, Courses, Image, Xp, Streak) VALUES (?, ?, ?, ?, ?)");
                 stmt.setString(1, username);
                 stmt.setString(2, "");
-                stmt.setBinaryStream(3, (InputStream) inputStream, (int) (image.length()));
+                stmt.setString(3, "");
                 stmt.setInt(4, 0);
                 stmt.setInt(5, 0);
                 stmt.executeUpdate();
+
+                return true;
             }
         } catch (Exception ex) {
-            Toast.makeText(RegisterPage.this, "Connection Failed.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterPage.this, ex.toString(), Toast.LENGTH_SHORT).show();
         }
+        return false;
     }
 }

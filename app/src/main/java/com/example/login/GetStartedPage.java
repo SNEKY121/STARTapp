@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -19,11 +18,14 @@ public class GetStartedPage extends AppCompatActivity {
 
     public static final String PREFS_NAME = "RememberMe";
     public static final String PREF_USERNAME = "username";
+    public static boolean specialLogin = false;
 
 
     private EditText eName;
     private EditText ePassword;
     private CheckBox eCheckBox;
+    private String email;
+    private String username;
 
     private boolean isValid = false;
 
@@ -36,6 +38,7 @@ public class GetStartedPage extends AppCompatActivity {
 
         SharedPreferences pref = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         String savedUsername = pref.getString(PREF_USERNAME, null);
+        String savedEmail = pref.getString("email", null);
 
         Button eRegister = findViewById(R.id.btnCreate);
         eName = findViewById(R.id.etName);
@@ -43,32 +46,30 @@ public class GetStartedPage extends AppCompatActivity {
         eCheckBox = findViewById(R.id.cb_rememberme);
         Button eLogin = findViewById(R.id.btnLogin);
 
-        if (savedUsername != null)
-            redirect(savedUsername);
-        eLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String inputName = eName.getText().toString().trim();
-                String inputPassword = ePassword.getText().toString().trim();
+        if (savedUsername != null && savedEmail != null && !specialLogin)
+            redirect(savedUsername, savedEmail);
+        eLogin.setOnClickListener(v -> {
+            String inputName = eName.getText().toString().trim();
+            String inputPassword = ePassword.getText().toString().trim();
 
-                if (inputName.isEmpty() || inputPassword.isEmpty()) {
-                    Toast.makeText(GetStartedPage.this, "Completati toate formularele!", Toast.LENGTH_SHORT).show();
+            if (inputName.isEmpty() || inputPassword.isEmpty()) {
+                Toast.makeText(GetStartedPage.this, "Completati toate formularele!", Toast.LENGTH_SHORT).show();
+            } else {
+                isValid = checkCred(inputName, inputPassword);
+
+                if (!isValid) {
+                    Toast.makeText(GetStartedPage.this, "Date Introduse Invalide", Toast.LENGTH_LONG).show();
                 } else {
-                    isValid = checkCred(inputName, inputPassword);
-
-                    if (!isValid) {
-                        Toast.makeText(GetStartedPage.this, "Date Introduse Invalide", Toast.LENGTH_LONG).show();
-                    } else {
-                        if (eCheckBox.isChecked())
-                            getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-                                    .edit()
-                                    .putString(PREF_USERNAME, inputName)
-                                    .apply();
-                        eName.getText().clear();
-                        redirect(inputName);
-                    }
-                    ePassword.getText().clear();
+                    if (eCheckBox.isChecked())
+                        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                                .edit()
+                                .putString(PREF_USERNAME, username)
+                                .putString("email", email)
+                                .apply();
+                    eName.getText().clear();
+                    redirect(username, email);
                 }
+                ePassword.getText().clear();
             }
         });
 
@@ -105,8 +106,11 @@ public class GetStartedPage extends AppCompatActivity {
                 while (rs.next()) {
                     if (name.equals(rs.getString(1)) || name.equals(rs.getString(2))) {
                         password = PasswordHash.generate(password, rs.getBytes(4));
-                        if (password.equals(rs.getString(3)))
+                        if (password.equals(rs.getString(3))) {
+                            email = rs.getString(2);
+                            username = rs.getString(1);
                             return true;
+                        }
                     }
                 }
                 return false;
@@ -119,9 +123,10 @@ public class GetStartedPage extends AppCompatActivity {
         return false;
     }
 
-    private void redirect(String inputName) {
+    private void redirect(String username, String email) {
         Intent intent = new Intent(GetStartedPage.this, HomePage.class);
-        intent.putExtra("username", inputName);
+        intent.putExtra("username", username);
+        intent.putExtra("email", email);
         startActivity(intent);
     }
 }
