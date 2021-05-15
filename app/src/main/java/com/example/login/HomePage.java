@@ -34,16 +34,10 @@ public class HomePage extends AppCompatActivity {
         } catch (Exception e) {
             username = "not working";
         }
-        //FloatingActionButton eLogout = findViewById(R.id.home_fabLogout);
         BottomNavigationView eNav = findViewById(R.id.home_nav);
         eNav.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
         openFragment(CoursesFragment.newInstance("", ""));
 
-        /*eLogout.setOnClickListener(v -> {
-            resetPref();
-            Intent intent = new Intent(HomePage.this, GetStartedPage.class);
-            startActivity(intent);
-        });*/
     }
 
     private long pressedTime;
@@ -78,7 +72,7 @@ public class HomePage extends AppCompatActivity {
                 openFragment(ProfileFragment.newInstance(username, ""));
                 return true;
             case settings_id:
-                openFragment(SettingsFragment.newInstance("", ""));
+                openFragment(SettingsFragment.newInstance());
                 return true;
         }
         return false;
