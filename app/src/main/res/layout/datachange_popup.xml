@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:background="#80505050"
+    android:background="@drawable/popup_shape"
     android:orientation="vertical"
     android:padding="3dp">
 
@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="Schimba adresa email"
+        android:textColor="@color/white"
         android:textSize="18sp" />
 
     <TextView
@@ -26,6 +27,7 @@
         android:text="example@gmail.com"
         android:layout_marginTop="5dp"
         android:textSize="18sp"
+        android:textColor="@color/white"
         android:layout_gravity="center_horizontal" />
 
     <EditText

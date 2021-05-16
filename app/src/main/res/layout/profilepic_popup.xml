@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="260dp"
     android:orientation="vertical"
+    android:background="@drawable/popup_shape"
     android:layout_gravity="bottom">
 
     <Button
@@ -20,7 +21,19 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:text="Fa o Poza"
-        android:layout_margin="20dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:background="@drawable/rounded_textedit" />
+
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Inapoi"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="20dp"
         android:gravity="center"
         android:textSize="20sp"
         android:background="@drawable/rounded_textedit" />

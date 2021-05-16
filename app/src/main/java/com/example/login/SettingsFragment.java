@@ -2,6 +2,7 @@ package com.example.login;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.SwitchCompat;
@@ -11,6 +12,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -83,7 +85,7 @@ public class SettingsFragment extends Fragment {
         eNotifs.setOnClickListener(v -> eNotifsbtn.setChecked(!eNotifsbtn.isChecked()));
 
         eEmail.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DialogTheme);
             View dialogLayout = inflater.inflate(R.layout.datachange_popup, null);
             final AlertDialog dialog = builder.create();
             dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -116,7 +118,7 @@ public class SettingsFragment extends Fragment {
         });
 
         eUsername.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DialogTheme);
             View dialogLayout = inflater.inflate(R.layout.datachange_popup, null);
             final AlertDialog dialog = builder.create();
             dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -154,7 +156,7 @@ public class SettingsFragment extends Fragment {
         });
 
         eFeedback.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DialogTheme);
             View dialogLayout = inflater.inflate(R.layout.feedback_popup, null);
             final AlertDialog dialog = builder.create();
             dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -181,25 +183,31 @@ public class SettingsFragment extends Fragment {
         });
 
         eProfilepic.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.DialogTheme);
             View dialogLayout = inflater.inflate(R.layout.profilepic_popup, null);
             final AlertDialog dialog = builder.create();
+
             dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             dialog.setView(dialogLayout, 0, 0, 0, 0);
             dialog.setCanceledOnTouchOutside(true);
             dialog.setCancelable(true);
-
+            //dialog.getWindow().getDecorView().setPadding(0,0,0,0);
             WindowManager.LayoutParams wlmp = dialog.getWindow().getAttributes();
             wlmp.gravity = Gravity.BOTTOM;
 
             Button btnUpload = dialogLayout.findViewById(R.id.btnUpload);
             Button btnTake = dialogLayout.findViewById(R.id.btnTake);
+            Button btnCancel = dialogLayout.findViewById(R.id.btnCancel);
 
             btnUpload.setOnClickListener(v3 -> {
                 dialog.dismiss();
             });
 
             btnTake.setOnClickListener(v4 -> {
+                dialog.dismiss();
+            });
+
+            btnCancel.setOnClickListener(v5 -> {
                 dialog.dismiss();
             });
 
