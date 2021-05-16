@@ -156,12 +156,11 @@ public class RegisterPage extends AppCompatActivity {
             SQLConnection connectionHelper = new SQLConnection();
             connect = connectionHelper.connectionclass();
             if (connect != null) {
-                PreparedStatement stmt = connect.prepareStatement("INSERT INTO " + SQLConnection.profilesTable + "(Username, Courses, Image, Xp, Streak) VALUES (?, ?, ?, ?, ?)");
+                PreparedStatement stmt = connect.prepareStatement("INSERT INTO " + SQLConnection.profilesTable + "(Username, Courses, Image, Xp) VALUES (?, ?, ?, ?)");
                 stmt.setString(1, username);
                 stmt.setString(2, "");
                 stmt.setString(3, "");
                 stmt.setInt(4, 0);
-                stmt.setInt(5, 0);
                 stmt.executeUpdate();
 
                 return true;

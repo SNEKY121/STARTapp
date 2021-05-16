@@ -1,6 +1,8 @@
 package com.example.login;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -18,8 +20,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.w3c.dom.Text;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Calendar;
 
 import static java.lang.Integer.parseInt;
 
@@ -117,14 +121,38 @@ public class ProfileFragment extends Fragment {
                     if (username.equals(rs.getString(1))) {
                         xp = parseInt(rs.getString(4));
                         eCursuri.setText(rs.getString(2) + " cursuri finalizate");
-                        eStreak.setText(rs.getString(5) + " day streak");
+                        eStreak.setText(getStreaks() + " day streak");
                         eLevel.setText("Nivel " + xp/100);
                         eBar.setProgress(xp);
+                        PreparedStatement stmt = connect.prepareStatement("UPADTE " + SQLConnection.profilesTable + " SET Xp = ? WHERE Username = ?");
+                        stmt.setInt(1, xp);
+                        stmt.setString(2, username);
+                        stmt.executeUpdate();
                         return;
                     }
             }
         } catch (Exception e) {
             Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private int getStreaks() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("StreaksKey", Context.MODE_PRIVATE);
+        Calendar c = Calendar.getInstance();
+
+        int thisDay = c.get(Calendar.DAY_OF_YEAR); // GET THE CURRENT DAY OF THE YEAR
+        int lastDay = sharedPreferences.getInt("LAST_DAY", 0); //If we don't have a saved value, use 0.
+        int counterOfConsecutiveDays = sharedPreferences.getInt("STREAKS_COUNTER", 0); //If we don't have a saved value, use 0.
+
+        if(lastDay == thisDay - 1){
+            counterOfConsecutiveDays = counterOfConsecutiveDays + 1;
+            sharedPreferences.edit().putInt("THIS_DAY", thisDay);
+            sharedPreferences.edit().putInt("STREAKS_COUNTER", counterOfConsecutiveDays).commit();
+            xp = xp + 10 * counterOfConsecutiveDays;
+        } else {
+            sharedPreferences.edit().putInt("THIS_DAY", thisDay);
+            sharedPreferences.edit().putInt("STREAKS_COUNTER", 1).commit();
+        }
+        return counterOfConsecutiveDays;
     }
 }
