@@ -50,28 +50,13 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0">
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/home_fabLogout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:contentDescription="Logout Button"
-                android:rotation="180"
-                android:src="@drawable/ic_login"
-                android:translationZ="5dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.045"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.082" />
-
-            <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageView
+                android:id="@+id/iv_avatar"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/img"
+                android:background="@drawable/circle"
+                android:src="@drawable/logosmall"
                 android:contentDescription="Profile picture"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -85,7 +70,7 @@
                 android:layout_gravity="center_horizontal"
                 android:fontFamily="@font/tommy_soft"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toTopOf="@+id/imageButton"
+                app:layout_constraintBottom_toTopOf="@+id/iv_avatar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"

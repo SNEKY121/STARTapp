@@ -1,13 +1,24 @@
 package com.example.login;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +27,14 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -39,6 +55,7 @@ public class SettingsFragment extends Fragment {
     private TextView eEmail;
     private TextView eUsername;
     private TextView eFeedback;
+    private TextView eLogout;
 
     private String username;
     private String newUsername;
@@ -81,8 +98,37 @@ public class SettingsFragment extends Fragment {
         eEmail = view.findViewById(R.id.tv_email);
         eUsername = view.findViewById(R.id.tv_username);
         eFeedback = view.findViewById(R.id.tv_feedback);
+        eLogout = view.findViewById(R.id.tv_logout);
 
         eNotifs.setOnClickListener(v -> eNotifsbtn.setChecked(!eNotifsbtn.isChecked()));
+
+        eLogout.setOnClickListener(vv -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DialogTheme);
+            View dialogLayout = inflater.inflate(R.layout.logout_popup, null);
+            final AlertDialog dialog = builder.create();
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            dialog.setView(dialogLayout, 0, 0, 0, 0);
+            dialog.setCanceledOnTouchOutside(true);
+            dialog.setCancelable(true);
+
+            WindowManager.LayoutParams wlmp = dialog.getWindow().getAttributes();
+            wlmp.gravity = Gravity.BOTTOM;
+
+            Button btnLogout = dialogLayout.findViewById(R.id.btnLogout);
+            Button btnCancel = dialogLayout.findViewById(R.id.btnCancel);
+
+            btnLogout.setOnClickListener(v1 -> {
+                dialog.dismiss();
+                resetPref();
+                Intent intent = new Intent(getActivity(), GetStartedPage.class);
+                startActivity(intent);
+            });
+            btnCancel.setOnClickListener(v2 -> dialog.dismiss());
+
+            builder.setView(dialogLayout);
+            dialog.show();
+
+        });
 
         eEmail.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DialogTheme);
@@ -182,39 +228,6 @@ public class SettingsFragment extends Fragment {
             dialog.show();
         });
 
-        eProfilepic.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.DialogTheme);
-            View dialogLayout = inflater.inflate(R.layout.profilepic_popup, null);
-            final AlertDialog dialog = builder.create();
-
-            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-            dialog.setView(dialogLayout, 0, 0, 0, 0);
-            dialog.setCanceledOnTouchOutside(true);
-            dialog.setCancelable(true);
-            //dialog.getWindow().getDecorView().setPadding(0,0,0,0);
-            WindowManager.LayoutParams wlmp = dialog.getWindow().getAttributes();
-            wlmp.gravity = Gravity.BOTTOM;
-
-            Button btnUpload = dialogLayout.findViewById(R.id.btnUpload);
-            Button btnTake = dialogLayout.findViewById(R.id.btnTake);
-            Button btnCancel = dialogLayout.findViewById(R.id.btnCancel);
-
-            btnUpload.setOnClickListener(v3 -> {
-                dialog.dismiss();
-            });
-
-            btnTake.setOnClickListener(v4 -> {
-                dialog.dismiss();
-            });
-
-            btnCancel.setOnClickListener(v5 -> {
-                dialog.dismiss();
-            });
-
-            builder.setView(dialogLayout);
-            dialog.show();
-        });
-
         return view;
     }
 
@@ -273,5 +286,12 @@ public class SettingsFragment extends Fragment {
         email.setType("message/rfc822");
 
         startActivity(Intent.createChooser(email, "Choose an Email client :"));
+    }
+
+    private void resetPref() {
+        getActivity().getSharedPreferences(GetStartedPage.PREFS_NAME, 0)
+                .edit()
+                .putString(GetStartedPage.PREF_USERNAME, null)
+                .apply();
     }
 }

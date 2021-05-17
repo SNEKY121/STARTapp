@@ -38,7 +38,7 @@ public class HomePage extends AppCompatActivity {
         }
         BottomNavigationView eNav = findViewById(R.id.home_nav);
         eNav.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
-        openFragment(CoursesFragment.newInstance("", ""));
+        openFragment(ProfileFragment.newInstance(username));
 
     }
 
@@ -71,7 +71,7 @@ public class HomePage extends AppCompatActivity {
                 openFragment(LeaderboardFragment.newInstance("", ""));
                 return true;
             case profile_id:
-                openFragment(ProfileFragment.newInstance(username, ""));
+                openFragment(ProfileFragment.newInstance(username));
                 return true;
             case settings_id:
                 openFragment(SettingsFragment.newInstance(email, username));
