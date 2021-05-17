@@ -13,6 +13,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -29,7 +30,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -52,7 +55,7 @@ public class ProfileFragment extends Fragment {
     private TextView eLevel;
     private TextView eCursuri;
     private TextView eStreak;
-    public static ImageView eAvatar;
+    public ImageView eAvatar;
 
     private String username;
     private Integer xp = 0;
@@ -105,7 +108,6 @@ public class ProfileFragment extends Fragment {
             dialog.setView(dialogLayout, 0, 0, 0, 0);
             dialog.setCanceledOnTouchOutside(true);
             dialog.setCancelable(true);
-            //dialog.getWindow().getDecorView().setPadding(0,0,0,0);
             WindowManager.LayoutParams wlmp = dialog.getWindow().getAttributes();
             wlmp.gravity = Gravity.BOTTOM;
 
@@ -151,7 +153,9 @@ public class ProfileFragment extends Fragment {
                         eStreak.setText(getStreaks() + " day streak");
                         eLevel.setText("Nivel " + xp/100);
                         eBar.setProgress(xp);
-
+                        byte[] barray = rs.getBytes(3);
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(barray, 0, barray.length);
+                        eAvatar.setImageBitmap(bitmap);
                         setXp();
                         return;
                     }
@@ -214,17 +218,40 @@ public class ProfileFragment extends Fragment {
                         Bitmap Image = (Bitmap) data.getExtras().get("data");
                         eAvatar.setImageBitmap(Image);
                     }
-
                     break;
                 case 100:
                     Uri selectedImageUri = data.getData();
                     if (selectedImageUri != null) {
                         eAvatar.setImageURI(selectedImageUri);
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getActivity().getContentResolver(), selectedImageUri);
+                            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+                            byte[] bArray = bos.toByteArray();
+                            updateProfilePicture(bArray);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     } else {
                         Toast.makeText(getActivity(), "no data", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
+        }
+    }
+
+    private void updateProfilePicture(byte[] data) {
+        try {
+            SQLConnection connectionHelper = new SQLConnection();
+            connect = connectionHelper.connectionclass();
+            if (connect != null) {
+                PreparedStatement stmt = connect.prepareStatement("UPDATE " + SQLConnection.profilesTable + " SET Image = ? WHERE Username = ?");
+                stmt.setBytes(1, data);
+                stmt.setString(2, username);
+                stmt.executeUpdate();
+            }
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 }

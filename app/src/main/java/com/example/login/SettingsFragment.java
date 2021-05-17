@@ -51,7 +51,6 @@ public class SettingsFragment extends Fragment {
 
     private TextView eNotifs;
     private SwitchCompat eNotifsbtn;
-    private TextView eProfilepic;
     private TextView eEmail;
     private TextView eUsername;
     private TextView eFeedback;
@@ -94,7 +93,6 @@ public class SettingsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         eNotifs = view.findViewById(R.id.tv_notifs);
         eNotifsbtn = view.findViewById(R.id.sw_notifs);
-        eProfilepic = view.findViewById(R.id.tv_profile);
         eEmail = view.findViewById(R.id.tv_email);
         eUsername = view.findViewById(R.id.tv_username);
         eFeedback = view.findViewById(R.id.tv_feedback);
@@ -232,60 +230,64 @@ public class SettingsFragment extends Fragment {
     }
 
     private void trySubmit(String currentData, String newData, String dataType) {
-        if (!currentData.equals(newData)) {
-            try {
-                SQLConnection connectionHelper = new SQLConnection();
-                connect = connectionHelper.connectionclass();
-                if (connect != null) {
-                    boolean k = true;
-                    String query = "Select * from " + SQLConnection.accountsTable;
-                    Statement st = connect.createStatement();
-                    ResultSet rs = st.executeQuery(query);
-                    while (rs.next()) {
-                        if (newData.equals(rs.getString(1)) || newData.equals(rs.getString(2)))
-                            k = false;
-                    }
-                    if (k) {
-                        if (dataType.equals("Username")) {
-                            PreparedStatement stmt1 = connect.prepareStatement("UPDATE " + SQLConnection.profilesTable + " SET Username = ? WHERE Username = ?");
-                            stmt1.setString(1, newData);
-                            stmt1.setString(2, currentData);
-                            stmt1.executeUpdate();
+        if (newData.length()>4) {
+            if (!currentData.equals(newData)) {
+                try {
+                    SQLConnection connectionHelper = new SQLConnection();
+                    connect = connectionHelper.connectionclass();
+                    if (connect != null) {
+                        boolean k = true;
+                        String query = "Select * from " + SQLConnection.accountsTable;
+                        Statement st = connect.createStatement();
+                        ResultSet rs = st.executeQuery(query);
+                        while (rs.next()) {
+                            if (newData.equals(rs.getString(1)) || newData.equals(rs.getString(2)))
+                                k = false;
                         }
-                        PreparedStatement stmt = connect.prepareStatement("UPDATE " + SQLConnection.accountsTable + " SET " + dataType + "= ? WHERE " + dataType + " = ?");
-                        stmt.setString(1, newData);
-                        stmt.setString(2, currentData);
-                        try {
-                            stmt.executeUpdate();
-                            Toast.makeText(getContext(), "Succes", Toast.LENGTH_LONG).show();
-                            GetStartedPage.specialLogin = true;
-                            Intent intent = new Intent(getContext(), GetStartedPage.class);
-                            startActivity(intent);
-                        } catch (Exception e) {
-                            Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
+                        if (k) {
+                            if (dataType.equals("Username")) {
+                                PreparedStatement stmt1 = connect.prepareStatement("UPDATE " + SQLConnection.profilesTable + " SET Username = ? WHERE Username = ?");
+                                stmt1.setString(1, newData);
+                                stmt1.setString(2, currentData);
+                                stmt1.executeUpdate();
+                            }
+                            PreparedStatement stmt = connect.prepareStatement("UPDATE " + SQLConnection.accountsTable + " SET " + dataType + "= ? WHERE " + dataType + " = ?");
+                            stmt.setString(1, newData);
+                            stmt.setString(2, currentData);
+                            try {
+                                stmt.executeUpdate();
+                                Toast.makeText(getContext(), "Succes", Toast.LENGTH_LONG).show();
+                                GetStartedPage.specialLogin = true;
+                                Intent intent = new Intent(getContext(), GetStartedPage.class);
+                                startActivity(intent);
+                            } catch (Exception e) {
+                                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Toast.makeText(getContext(), newData + " deja exista", Toast.LENGTH_LONG).show();
                         }
-                    } else {
-                        Toast.makeText(getContext(), newData + " deja exista", Toast.LENGTH_LONG).show();
                     }
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
                 }
-            } catch (Exception e) {
-                Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
-            }
-        } else Toast.makeText(getActivity(), "date identice", Toast.LENGTH_SHORT).show();
+            } else Toast.makeText(getActivity(), "date identice", Toast.LENGTH_SHORT).show();
+        } else Toast.makeText(getActivity(), "introduceti macar 5 caractere", Toast.LENGTH_LONG).show();
     }
 
     private void trySend(String Data) {
-        final String to = "sebastianturbut@gmail.com";
-        String subject = "New Feedback from " + username;
+        if (Data.length()>10) {
+            final String to = "sebastianturbut@gmail.com";
+            String subject = "New Feedback from " + username;
 
-        Intent email = new Intent(Intent.ACTION_SEND);
-        email.putExtra(Intent.EXTRA_EMAIL, new String[] {to});
-        email.putExtra(Intent.EXTRA_SUBJECT, subject);
-        email.putExtra(Intent.EXTRA_TEXT, Data);
+            Intent email = new Intent(Intent.ACTION_SEND);
+            email.putExtra(Intent.EXTRA_EMAIL, new String[]{to});
+            email.putExtra(Intent.EXTRA_SUBJECT, subject);
+            email.putExtra(Intent.EXTRA_TEXT, Data);
 
-        email.setType("message/rfc822");
+            email.setType("message/rfc822");
 
-        startActivity(Intent.createChooser(email, "Choose an Email client :"));
+            startActivity(Intent.createChooser(email, "Choose an Email client :"));
+        } else Toast.makeText(getActivity(), "Textul e prea scurt!", Toast.LENGTH_SHORT).show();
     }
 
     private void resetPref() {
