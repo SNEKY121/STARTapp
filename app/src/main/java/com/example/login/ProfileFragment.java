@@ -13,6 +13,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -29,7 +30,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -52,7 +55,7 @@ public class ProfileFragment extends Fragment {
     private TextView eLevel;
     private TextView eCursuri;
     private TextView eStreak;
-    public static ImageView eAvatar;
+    public ImageView eAvatar;
 
     private String username;
     private Integer xp = 0;
@@ -94,7 +97,7 @@ public class ProfileFragment extends Fragment {
         eBar = view.findViewById(R.id.pb_XP);
         eAvatar = view.findViewById(R.id.iv_avatar);
 
-        getData();
+        setData();
 
         eAvatar.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.DialogTheme);
@@ -105,7 +108,6 @@ public class ProfileFragment extends Fragment {
             dialog.setView(dialogLayout, 0, 0, 0, 0);
             dialog.setCanceledOnTouchOutside(true);
             dialog.setCancelable(true);
-            //dialog.getWindow().getDecorView().setPadding(0,0,0,0);
             WindowManager.LayoutParams wlmp = dialog.getWindow().getAttributes();
             wlmp.gravity = Gravity.BOTTOM;
 
@@ -133,69 +135,15 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-
-
-    private void getData() {
-        try {
-            SQLConnection connectionHelper = new SQLConnection();
-            connect = connectionHelper.connectionclass();
-            if (connect != null) {
-                String query = "SELECT * FROM " + SQLConnection.profilesTable;
-                Statement st = connect.createStatement();
-                ResultSet rs = st.executeQuery(query);
-
-                while (rs.next())
-                    if (username.equals(rs.getString(1))) {
-                        xp = rs.getInt(4);
-                        eCursuri.setText(rs.getString(2) + " cursuri finalizate");
-                        eStreak.setText(getStreaks() + " day streak");
-                        eLevel.setText("Nivel " + xp/100);
-                        eBar.setProgress(xp);
-
-                        setXp();
-                        return;
-                    }
-            }
-        } catch (Exception e) {
-            Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
-            Log.e("getData() ", e.toString());
-        }
-    }
-
-    private void setXp() {
-        try {
-            SQLConnection connectionHelper = new SQLConnection();
-            connect = connectionHelper.connectionclass();
-            if (connect != null) {
-                PreparedStatement stmt = connect.prepareStatement("UPDATE " + SQLConnection.profilesTable + " SET Xp = ? WHERE Username = ?");
-                stmt.setInt(1, xp);
-                stmt.setString(2, username);
-                stmt.executeUpdate();
-            }
-        } catch (Exception e) {
-            Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
-            Log.e("setXp() ", e.toString());
-        }
-    }
-
-    private int getStreaks() {
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("StreaksKey", Context.MODE_PRIVATE);
-        Calendar c = Calendar.getInstance();
-
-        int thisDay = c.get(Calendar.DAY_OF_YEAR); // GET THE CURRENT DAY OF THE YEAR
-        int lastDay = sharedPreferences.getInt("LAST_DAY", 0); //If we don't have a saved value, use 0.
-        int counterOfConsecutiveDays = sharedPreferences.getInt("STREAKS_COUNTER", 0); //If we don't have a saved value, use 0.
-
-        if(lastDay == thisDay - 1){
-            counterOfConsecutiveDays = counterOfConsecutiveDays + 1;
-            sharedPreferences.edit().putInt("THIS_DAY", thisDay);
-            sharedPreferences.edit().putInt("STREAKS_COUNTER", counterOfConsecutiveDays).commit();
-            xp = xp + 10 * counterOfConsecutiveDays;
-        } else {
-            sharedPreferences.edit().putInt("THIS_DAY", thisDay);
-            sharedPreferences.edit().putInt("STREAKS_COUNTER", 1).commit();
-        }
-        return counterOfConsecutiveDays;
+    private void setData() {
+        xp = HomePage.user.getXp();
+        eCursuri.setText(HomePage.user.getCursuri() + " cursuri finalizate");
+        eStreak.setText(HomePage.user.getStreak() + " day streak");
+        eLevel.setText("Nivel " + xp/100);
+        eBar.setProgress(xp%100);
+        byte[] barray = HomePage.user.getBarray();
+        Bitmap bitmap = BitmapFactory.decodeByteArray(barray, 0, barray.length);
+        eAvatar.setImageBitmap(bitmap);
     }
 
     private void getImageFromAlbum() {
@@ -214,17 +162,43 @@ public class ProfileFragment extends Fragment {
                         Bitmap Image = (Bitmap) data.getExtras().get("data");
                         eAvatar.setImageBitmap(Image);
                     }
-
                     break;
                 case 100:
                     Uri selectedImageUri = data.getData();
                     if (selectedImageUri != null) {
                         eAvatar.setImageURI(selectedImageUri);
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getActivity().getContentResolver(), selectedImageUri);
+                            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+                            byte[] bArray = bos.toByteArray();
+                            if (updateProfilePicture(bArray))
+                                HomePage.user.setBarray(bArray);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     } else {
                         Toast.makeText(getActivity(), "no data", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
         }
+    }
+
+    private boolean updateProfilePicture(byte[] data) {
+        try {
+            SQLConnection connectionHelper = new SQLConnection();
+            connect = connectionHelper.connectionclass();
+            if (connect != null) {
+                PreparedStatement stmt = connect.prepareStatement("UPDATE " + SQLConnection.profilesTable + " SET Image = ? WHERE Username = ?");
+                stmt.setBytes(1, data);
+                stmt.setString(2, username);
+                stmt.executeUpdate();
+                return true;
+            }
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+        }
+        return false;
     }
 }

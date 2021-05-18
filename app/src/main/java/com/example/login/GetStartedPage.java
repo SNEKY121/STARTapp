@@ -20,7 +20,6 @@ public class GetStartedPage extends AppCompatActivity {
     public static final String PREF_USERNAME = "username";
     public static boolean specialLogin = false;
 
-
     private EditText eName;
     private EditText ePassword;
     private CheckBox eCheckBox;

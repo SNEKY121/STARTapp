@@ -15,8 +15,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class HomePage extends AppCompatActivity {
 
-    public String username;
-    public static String email;
+    public static User user = new User();
 
     public void openFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -30,12 +29,14 @@ public class HomePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
-        try {
-            username = getIntent().getStringExtra("username");
-            email = getIntent().getStringExtra("email");
-        } catch (Exception e) {
-            username = "not working";
-        }
+        String username = getIntent().getStringExtra("username");
+        user.setUsername(username);
+        Log.e("username: ", user.getUsername());
+        String email = getIntent().getStringExtra("email");
+        user.setEmail(email);
+        user.getData();
+        Log.e("byte: ", user.getBarray().toString());
+
         BottomNavigationView eNav = findViewById(R.id.home_nav);
         eNav.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
         openFragment(ProfileFragment.newInstance(username));
@@ -71,10 +72,10 @@ public class HomePage extends AppCompatActivity {
                 openFragment(LeaderboardFragment.newInstance("", ""));
                 return true;
             case profile_id:
-                openFragment(ProfileFragment.newInstance(username));
+                openFragment(ProfileFragment.newInstance(user.getUsername()));
                 return true;
             case settings_id:
-                openFragment(SettingsFragment.newInstance(email, username));
+                openFragment(SettingsFragment.newInstance(user));
                 return true;
         }
         return false;

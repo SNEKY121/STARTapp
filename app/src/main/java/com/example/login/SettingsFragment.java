@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
+import android.renderscript.Element;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,12 +47,10 @@ import java.sql.Statement;
  * create an instance of this fragment.
  */
 public class SettingsFragment extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static User USER = null;
 
     private TextView eNotifs;
     private SwitchCompat eNotifsbtn;
-    private TextView eProfilepic;
     private TextView eEmail;
     private TextView eUsername;
     private TextView eFeedback;
@@ -63,28 +62,29 @@ public class SettingsFragment extends Fragment {
     private String newEmail;
     private String feedbackText;
 
+
+
     Connection connect;
 
     public SettingsFragment() {
         // Required empty public constructor
     }
     // TODO: Rename and change types and number of parameters
-    public static SettingsFragment newInstance(String getEmail, String getUsername) {
+    public static SettingsFragment newInstance(User user) {
         SettingsFragment fragment = new SettingsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, getEmail);
-        args.putString(ARG_PARAM2, getUsername);
-        fragment.setArguments(args);
+        //Bundle args = new Bundle();
+        USER = user;
+        //fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+        /*if (getArguments() != null) {
             email = getArguments().getString(ARG_PARAM1);
             username = getArguments().getString(ARG_PARAM2);
-        } else email = "null";
+        } else email = "null";*/
     }
 
     @Override
@@ -94,7 +94,6 @@ public class SettingsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         eNotifs = view.findViewById(R.id.tv_notifs);
         eNotifsbtn = view.findViewById(R.id.sw_notifs);
-        eProfilepic = view.findViewById(R.id.tv_profile);
         eEmail = view.findViewById(R.id.tv_email);
         eUsername = view.findViewById(R.id.tv_username);
         eFeedback = view.findViewById(R.id.tv_feedback);
@@ -147,12 +146,12 @@ public class SettingsFragment extends Fragment {
             TextView tvData = dialogLayout.findViewById(R.id.tv_datashow);
             EditText etData = dialogLayout.findViewById(R.id.etNewData);
 
-            tvData.setText(email);
+            tvData.setText(USER.getEmail());
             builder.setView(tvData);
 
             btnChange.setOnClickListener(v1 -> {
                 newEmail = etData.getText().toString();
-                trySubmit(email, newEmail, "Email");
+                trySubmit(USER.getEmail(), newEmail, "Email");
                 dialog.dismiss();
             });
             btnCancel.setOnClickListener(v2 -> dialog.dismiss());
@@ -181,7 +180,7 @@ public class SettingsFragment extends Fragment {
             EditText etData = dialogLayout.findViewById(R.id.etNewData);
             TextView tvTitle = dialogLayout.findViewById(R.id.tv_title);
 
-            tvData.setText(username);
+            tvData.setText(USER.getUsername());
             builder.setView(tvData);
 
             etData.setHint("Nume utilizator nou");
@@ -192,7 +191,7 @@ public class SettingsFragment extends Fragment {
 
             btnChange.setOnClickListener(v1 -> {
                 newUsername = etData.getText().toString();
-                trySubmit(username, newUsername, "Username");
+                trySubmit(USER.getUsername(), newUsername, "Username");
                 dialog.dismiss();
             });
             btnCancel.setOnClickListener(v2 -> dialog.dismiss());
@@ -232,60 +231,67 @@ public class SettingsFragment extends Fragment {
     }
 
     private void trySubmit(String currentData, String newData, String dataType) {
-        if (!currentData.equals(newData)) {
-            try {
-                SQLConnection connectionHelper = new SQLConnection();
-                connect = connectionHelper.connectionclass();
-                if (connect != null) {
-                    boolean k = true;
-                    String query = "Select * from " + SQLConnection.accountsTable;
-                    Statement st = connect.createStatement();
-                    ResultSet rs = st.executeQuery(query);
-                    while (rs.next()) {
-                        if (newData.equals(rs.getString(1)) || newData.equals(rs.getString(2)))
-                            k = false;
-                    }
-                    if (k) {
-                        if (dataType.equals("Username")) {
-                            PreparedStatement stmt1 = connect.prepareStatement("UPDATE " + SQLConnection.profilesTable + " SET Username = ? WHERE Username = ?");
-                            stmt1.setString(1, newData);
-                            stmt1.setString(2, currentData);
-                            stmt1.executeUpdate();
+        if (newData.length()>4) {
+            if (!currentData.equals(newData)) {
+                try {
+                    SQLConnection connectionHelper = new SQLConnection();
+                    connect = connectionHelper.connectionclass();
+                    if (connect != null) {
+                        boolean k = true;
+                        String query = "Select * from " + SQLConnection.accountsTable;
+                        Statement st = connect.createStatement();
+                        ResultSet rs = st.executeQuery(query);
+                        while (rs.next()) {
+                            if (newData.equals(rs.getString(1)) || newData.equals(rs.getString(2)))
+                                k = false;
                         }
-                        PreparedStatement stmt = connect.prepareStatement("UPDATE " + SQLConnection.accountsTable + " SET " + dataType + "= ? WHERE " + dataType + " = ?");
-                        stmt.setString(1, newData);
-                        stmt.setString(2, currentData);
-                        try {
-                            stmt.executeUpdate();
-                            Toast.makeText(getContext(), "Succes", Toast.LENGTH_LONG).show();
-                            GetStartedPage.specialLogin = true;
-                            Intent intent = new Intent(getContext(), GetStartedPage.class);
-                            startActivity(intent);
-                        } catch (Exception e) {
-                            Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
+                        if (k) {
+                            if (dataType.equals("Username")) {
+                                PreparedStatement stmt1 = connect.prepareStatement("UPDATE " + SQLConnection.profilesTable + " SET Username = ? WHERE Username = ?");
+                                stmt1.setString(1, newData);
+                                stmt1.setString(2, currentData);
+                                stmt1.executeUpdate();
+                            }
+                            PreparedStatement stmt = connect.prepareStatement("UPDATE " + SQLConnection.accountsTable + " SET " + dataType + "= ? WHERE " + dataType + " = ?");
+                            stmt.setString(1, newData);
+                            stmt.setString(2, currentData);
+                            try {
+                                stmt.executeUpdate();
+                                Toast.makeText(getContext(), "Succes", Toast.LENGTH_LONG).show();
+                                if (dataType.equals("Username"))
+                                    USER.setUsername(newData);
+                                else USER.setEmail(newData);
+                                /*GetStartedPage.specialLogin = true;
+                                Intent intent = new Intent(getContext(), GetStartedPage.class);
+                                startActivity(intent);*/
+                            } catch (Exception e) {
+                                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Toast.makeText(getContext(), newData + " deja exista", Toast.LENGTH_LONG).show();
                         }
-                    } else {
-                        Toast.makeText(getContext(), newData + " deja exista", Toast.LENGTH_LONG).show();
                     }
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
                 }
-            } catch (Exception e) {
-                Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
-            }
-        } else Toast.makeText(getActivity(), "date identice", Toast.LENGTH_SHORT).show();
+            } else Toast.makeText(getActivity(), "date identice", Toast.LENGTH_SHORT).show();
+        } else Toast.makeText(getActivity(), "introduceti macar 5 caractere", Toast.LENGTH_LONG).show();
     }
 
     private void trySend(String Data) {
-        final String to = "sebastianturbut@gmail.com";
-        String subject = "New Feedback from " + username;
+        if (Data.length()>10) {
+            final String to = "sebastianturbut@gmail.com";
+            String subject = "New Feedback from " + username;
 
-        Intent email = new Intent(Intent.ACTION_SEND);
-        email.putExtra(Intent.EXTRA_EMAIL, new String[] {to});
-        email.putExtra(Intent.EXTRA_SUBJECT, subject);
-        email.putExtra(Intent.EXTRA_TEXT, Data);
+            Intent email = new Intent(Intent.ACTION_SEND);
+            email.putExtra(Intent.EXTRA_EMAIL, new String[]{to});
+            email.putExtra(Intent.EXTRA_SUBJECT, subject);
+            email.putExtra(Intent.EXTRA_TEXT, Data);
 
-        email.setType("message/rfc822");
+            email.setType("message/rfc822");
 
-        startActivity(Intent.createChooser(email, "Choose an Email client :"));
+            startActivity(Intent.createChooser(email, "Choose an Email client :"));
+        } else Toast.makeText(getActivity(), "Textul e prea scurt!", Toast.LENGTH_SHORT).show();
     }
 
     private void resetPref() {

@@ -1,19 +1,25 @@
 package com.example.login;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.ByteArrayOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -156,11 +162,17 @@ public class RegisterPage extends AppCompatActivity {
             SQLConnection connectionHelper = new SQLConnection();
             connect = connectionHelper.connectionclass();
             if (connect != null) {
-                PreparedStatement stmt = connect.prepareStatement("INSERT INTO " + SQLConnection.profilesTable + "(Username, Courses, Image, Xp) VALUES (?, ?, ?, ?)");
+                PreparedStatement stmt = connect.prepareStatement("INSERT INTO " + SQLConnection.profilesTable + "(Username, Courses, Image, Xp, Lastlogin, Streakcounter) VALUES (?, ?, ?, ?, ?, ?)");
                 stmt.setString(1, username);
                 stmt.setString(2, "");
-                stmt.setString(3, "");
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.defaultpic);
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+                byte[] bArray = bos.toByteArray();
+                stmt.setBytes(3, bArray);
                 stmt.setInt(4, 0);
+                stmt.setInt(5, Calendar.DAY_OF_YEAR);
+                stmt.setInt(6, 0);
                 stmt.executeUpdate();
 
                 return true;

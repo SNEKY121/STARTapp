@@ -87,17 +87,6 @@
                 app:layout_constraintTop_toTopOf="@+id/tv_notifs" />
 
             <TextView
-                android:id="@+id/tv_profile"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginVertical="10dp"
-                android:background="@color/grey_lightdark"
-                android:padding="10dp"
-                android:text="Schimba poza de profil"
-                android:textSize="25sp"
-                app:layout_constraintTop_toBottomOf="@+id/tv_notifs" />
-
-            <TextView
                 android:id="@+id/tv_email"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -107,7 +96,7 @@
                 android:text="Schimba email"
                 android:textSize="25sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_profile" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_notifs" />
 
             <TextView
                 android:id="@+id/tv_username"
