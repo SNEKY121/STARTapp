@@ -3,15 +3,14 @@ package com.example.login;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
-import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
+import android.os.Bundle;
+
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+
 
 public class HomePage extends AppCompatActivity {
 
@@ -39,6 +38,7 @@ public class HomePage extends AppCompatActivity {
 
         BottomNavigationView eNav = findViewById(R.id.home_nav);
         eNav.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
+        eNav.setItemIconTintList(null);
         openFragment(ProfileFragment.newInstance(username));
 
     }
@@ -58,12 +58,12 @@ public class HomePage extends AppCompatActivity {
         }
         pressedTime = System.currentTimeMillis();
     }
-
     BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener = item -> {
         final int profile_id = R.id.profile;
         final int settings_id = R.id.settings;
         final int courses_id = R.id.courses;
         final int leaderbd_id = R.id.leaderboard;
+
         switch (item.getItemId()) {
             case courses_id:
                 openFragment(CoursesFragment.newInstance("", ""));
