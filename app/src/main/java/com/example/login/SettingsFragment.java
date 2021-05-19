@@ -1,41 +1,23 @@
 package com.example.login;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Rect;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
-import android.os.ParcelFileDescriptor;
-import android.provider.MediaStore;
-import android.renderscript.Element;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -246,12 +228,14 @@ public class SettingsFragment extends Fragment {
                                 k = false;
                         }
                         if (k) {
+                            String val;
                             if (dataType.equals("Username")) {
                                 PreparedStatement stmt1 = connect.prepareStatement("UPDATE " + SQLConnection.profilesTable + " SET Username = ? WHERE Username = ?");
                                 stmt1.setString(1, newData);
                                 stmt1.setString(2, currentData);
-                                stmt1.executeUpdate();
-                            }
+                                stmt1.execute();
+                                val = GetStartedPage.PREF_USERNAME;
+                            } else val = GetStartedPage.PREF_EMAIL;
                             PreparedStatement stmt = connect.prepareStatement("UPDATE " + SQLConnection.accountsTable + " SET " + dataType + "= ? WHERE " + dataType + " = ?");
                             stmt.setString(1, newData);
                             stmt.setString(2, currentData);
@@ -261,6 +245,7 @@ public class SettingsFragment extends Fragment {
                                 if (dataType.equals("Username"))
                                     USER.setUsername(newData);
                                 else USER.setEmail(newData);
+                                getActivity().getSharedPreferences(GetStartedPage.PREFS_NAME, Context.MODE_PRIVATE).edit().putString(val, newData);
                                 /*GetStartedPage.specialLogin = true;
                                 Intent intent = new Intent(getContext(), GetStartedPage.class);
                                 startActivity(intent);*/

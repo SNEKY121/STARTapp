@@ -83,7 +83,7 @@ public class User {
 
                 xp = rs.getInt(4);
                 cursuri = rs.getString(2);
-                streak = rs.getInt(5);
+                streak = rs.getInt(6);
                 barray = rs.getBytes(3);
                 int lastDay = rs.getInt(4);
                 int thisDay = c.get(Calendar.DAY_OF_YEAR);
@@ -107,13 +107,13 @@ public class User {
             SQLConnection connectionHelper = new SQLConnection();
             connect = connectionHelper.connectionclass();
             if (connect != null) {
-                PreparedStatement stmt = connect.prepareStatement("UPDATE " + SQLConnection.profilesTable + " WHERE Username = ? SET " + column + " = ?");
-                stmt.setString(1, username);
-                stmt.setInt(2, val);
+                PreparedStatement stmt = connect.prepareStatement("UPDATE " + SQLConnection.profilesTable + " SET " + column + " = ? WHERE Username = ?");
+                stmt.setInt(1, val);
+                stmt.setString(2, username);
                 stmt.execute();
             }
         } catch (Exception e) {
-            Log.e("", "Check connection");
+            Log.e("", "Check connection " + e);
         }
     }
 }

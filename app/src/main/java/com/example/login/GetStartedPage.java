@@ -18,6 +18,7 @@ public class GetStartedPage extends AppCompatActivity {
 
     public static final String PREFS_NAME = "RememberMe";
     public static final String PREF_USERNAME = "username";
+    public static final String PREF_EMAIL = "email";
     public static boolean specialLogin = false;
 
     private EditText eName;
@@ -63,7 +64,7 @@ public class GetStartedPage extends AppCompatActivity {
                         getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
                                 .edit()
                                 .putString(PREF_USERNAME, username)
-                                .putString("email", email)
+                                .putString(PREF_EMAIL, email)
                                 .apply();
                     eName.getText().clear();
                     redirect(username, email);
