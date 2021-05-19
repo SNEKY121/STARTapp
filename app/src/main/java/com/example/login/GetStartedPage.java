@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
@@ -18,6 +19,7 @@ public class GetStartedPage extends AppCompatActivity {
 
     public static final String PREFS_NAME = "RememberMe";
     public static final String PREF_USERNAME = "username";
+    public static final String PREF_EMAIL = "email";
     public static boolean specialLogin = false;
 
     private EditText eName;
@@ -37,7 +39,7 @@ public class GetStartedPage extends AppCompatActivity {
 
         SharedPreferences pref = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         String savedUsername = pref.getString(PREF_USERNAME, null);
-        String savedEmail = pref.getString("email", null);
+        String savedEmail = pref.getString(PREF_EMAIL, null);
 
         Button eRegister = findViewById(R.id.btnCreate);
         eName = findViewById(R.id.etName);
@@ -63,7 +65,7 @@ public class GetStartedPage extends AppCompatActivity {
                         getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
                                 .edit()
                                 .putString(PREF_USERNAME, username)
-                                .putString("email", email)
+                                .putString(PREF_EMAIL, email)
                                 .apply();
                     eName.getText().clear();
                     redirect(username, email);
@@ -98,20 +100,23 @@ public class GetStartedPage extends AppCompatActivity {
             SQLConnection connectionHelper = new SQLConnection();
             connect = connectionHelper.connectionclass();
             if (connect != null) {
-                String query = "Select * from " + SQLConnection.accountsTable;
-                Statement st = connect.createStatement();
-                ResultSet rs = st.executeQuery(query);
+                String type;
+                if (name.contains("@"))
+                    type = "Email";
+                else type = "Username";
 
-                while (rs.next()) {
-                    if (name.equals(rs.getString(1)) || name.equals(rs.getString(2))) {
-                        password = PasswordHash.generate(password, rs.getBytes(4));
-                        if (password.equals(rs.getString(3))) {
-                            email = rs.getString(2);
-                            username = rs.getString(1);
-                            return true;
-                        }
-                    }
+                PreparedStatement stmt = connect.prepareStatement("SELECT * from " + SQLConnection.accountsTable + " WHERE " + type + " = ?");
+                stmt.setString(1, name);
+                ResultSet resultSet = stmt.executeQuery();
+                resultSet.next();
+
+                password = PasswordHash.generate(password, resultSet.getBytes(4));
+                if (password.equals(resultSet.getString(3))) {
+                    email = resultSet.getString(2);
+                    username = resultSet.getString(1);
+                    return true;
                 }
+
                 return false;
             } else {
                 Toast.makeText(GetStartedPage.this, "Verificati Conexiunea", Toast.LENGTH_LONG).show();
