@@ -51,8 +51,8 @@ public class RegisterPage extends AppCompatActivity {
             String inputPasswordConfirm = ePasswordConfirm.getText().toString();
 
             if (CheckCreds(inputEmail, inputName, inputPassword, inputPasswordConfirm)) {
-                if(SubmitRegister(inputName, inputEmail, inputPassword)) {
-                    if(CreateProfile(inputName)) {
+                if (SubmitRegister(inputName, inputEmail, inputPassword)) {
+                    if (CreateProfile(inputName)) {
                         Toast.makeText(RegisterPage.this, "Inregistrat!", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(RegisterPage.this, GetStartedPage.class);
                         startActivity(intent);
@@ -112,21 +112,32 @@ public class RegisterPage extends AppCompatActivity {
     }
 
     private boolean CheckCreds(String email, String name, String password, String passwordConfirm) {
-        if (email.contains("@") && email.contains(".") && email.length() > 4) {
-            if (EmailCheck(email, name)) {
-                if (password.equals(passwordConfirm)) {
-                    if (password.length() > 7)
-                        return true;
-                    Toast.makeText(RegisterPage.this, "Introduceti o parola de macar 8 caractere", Toast.LENGTH_LONG).show();
+        if (checkName(name)) {
+            if (email.contains("@") && email.contains(".") && email.length() > 4) {
+                if (EmailCheck(email, name)) {
+                    if (password.equals(passwordConfirm)) {
+                        if (password.length() > 7)
+                            return true;
+                        Toast.makeText(RegisterPage.this, "Introduceti o parola de macar 8 caractere", Toast.LENGTH_LONG).show();
+                        return false;
+                    }
+                    Toast.makeText(RegisterPage.this, "Parolele nu coincid!", Toast.LENGTH_LONG).show();
                     return false;
                 }
-                Toast.makeText(RegisterPage.this, "Parolele nu coincid!", Toast.LENGTH_LONG).show();
                 return false;
             }
+            Toast.makeText(RegisterPage.this, "Email invalid!", Toast.LENGTH_LONG).show();
             return false;
         }
-        Toast.makeText(RegisterPage.this, "Email invalid!", Toast.LENGTH_LONG).show();
+        Toast.makeText(RegisterPage.this, "Numele contine caractere speciale!", Toast.LENGTH_LONG).show();
         return false;
+    }
+
+    private boolean checkName(String name) {
+        for (int i=0; i<name.length(); ++i)
+            if (!Character.isLetterOrDigit(name.charAt(i)))
+                return false;
+        return true;
     }
 
     private boolean EmailCheck(String email, String name) {
@@ -157,6 +168,10 @@ public class RegisterPage extends AppCompatActivity {
         return true;
     }
 
+    public void createUserProfile(String username) {
+        CreateProfile(username);
+    }
+
     private boolean CreateProfile(String username) {
         try {
             SQLConnection connectionHelper = new SQLConnection();
@@ -164,7 +179,7 @@ public class RegisterPage extends AppCompatActivity {
             if (connect != null) {
                 PreparedStatement stmt = connect.prepareStatement("INSERT INTO " + SQLConnection.profilesTable + "(Username, Courses, Image, Xp, Lastlogin, Streakcounter) VALUES (?, ?, ?, ?, ?, ?)");
                 stmt.setString(1, username);
-                stmt.setString(2, "");
+                stmt.setInt(2, 0);
                 Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.defaultpic);
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);

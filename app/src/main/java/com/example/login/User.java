@@ -1,9 +1,6 @@
 package com.example.login;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -78,22 +75,29 @@ public class User {
                 PreparedStatement stmt = connect.prepareStatement("SELECT * FROM " + SQLConnection.profilesTable + " WHERE Username = ?");
                 stmt.setString(1, username);
                 ResultSet rs = stmt.executeQuery();
+                RegisterPage create = new RegisterPage();
                 rs.next();
                 Calendar c = Calendar.getInstance();
 
                 xp = rs.getInt(4);
+                if(rs.wasNull()) create.createUserProfile(username);
                 cursuri = rs.getString(2);
-                streak = rs.getInt(5);
+                if(rs.wasNull()) create.createUserProfile(username);
+                streak = rs.getInt(6);
+                if(rs.wasNull()) create.createUserProfile(username);
                 barray = rs.getBytes(3);
-                int lastDay = rs.getInt(4);
+                if(rs.wasNull()) create.createUserProfile(username);
+                int lastDay = rs.getInt(5);
                 int thisDay = c.get(Calendar.DAY_OF_YEAR);
+                if(rs.wasNull()) create.createUserProfile(username);
                 updateProfile("Lastlogin", thisDay);
                 if (lastDay == thisDay - 1 || (lastDay == 365 || lastDay == 366) && thisDay == 1) {
                     streak++;
                     updateProfile("Streakcounter", streak);
                     xp += 10 * streak;
                 } else {
-                    updateProfile("Streakcounter", 0);
+                    if (thisDay != lastDay)
+                        updateProfile("Streakcounter", 0);
                 }
                 updateProfile("Xp", xp);
             }
@@ -107,13 +111,13 @@ public class User {
             SQLConnection connectionHelper = new SQLConnection();
             connect = connectionHelper.connectionclass();
             if (connect != null) {
-                PreparedStatement stmt = connect.prepareStatement("UPDATE " + SQLConnection.profilesTable + " WHERE Username = ? SET " + column + " = ?");
-                stmt.setString(1, username);
-                stmt.setInt(2, val);
+                PreparedStatement stmt = connect.prepareStatement("UPDATE " + SQLConnection.profilesTable + " SET " + column + " = ? WHERE Username = ?");
+                stmt.setInt(1, val);
+                stmt.setString(2, username);
                 stmt.execute();
             }
         } catch (Exception e) {
-            Log.e("", "Check connection");
+            Log.e("", "Check connection " + e);
         }
     }
 }

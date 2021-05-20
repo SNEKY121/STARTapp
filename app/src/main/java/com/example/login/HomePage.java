@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.Arrays;
 
 
 public class HomePage extends AppCompatActivity {
@@ -30,16 +31,15 @@ public class HomePage extends AppCompatActivity {
 
         String username = getIntent().getStringExtra("username");
         user.setUsername(username);
-        Log.e("username: ", user.getUsername());
         String email = getIntent().getStringExtra("email");
         user.setEmail(email);
+
         user.getData();
-        Log.e("byte: ", user.getBarray().toString());
 
         BottomNavigationView eNav = findViewById(R.id.home_nav);
         eNav.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
         eNav.setItemIconTintList(null);
-        openFragment(ProfileFragment.newInstance(username));
+        openFragment(ProfileFragment.newInstance(user));
 
     }
 
@@ -72,7 +72,7 @@ public class HomePage extends AppCompatActivity {
                 openFragment(LeaderboardFragment.newInstance("", ""));
                 return true;
             case profile_id:
-                openFragment(ProfileFragment.newInstance(user.getUsername()));
+                openFragment(ProfileFragment.newInstance(user));
                 return true;
             case settings_id:
                 openFragment(SettingsFragment.newInstance(user));

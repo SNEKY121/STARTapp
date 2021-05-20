@@ -41,7 +41,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
-            android:layout_height="270dp"
+            android:layout_height="300dp"
             android:background="@drawable/bg_gradient"
             android:translationZ="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -89,10 +89,10 @@
                 android:textSize="24sp"
                 app:layout_constraintBottom_toTopOf="@+id/iv_avatarcard"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.9"
+                app:layout_constraintVertical_bias="0.673"
                 tools:text="Username" />
 
             <TextView
@@ -108,7 +108,7 @@
                 app:layout_constraintHorizontal_bias="0.163"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.872" />
+                app:layout_constraintVertical_bias="0.85" />
 
             <TextView
                 android:id="@+id/tv_level"
@@ -122,7 +122,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.876" />
+                app:layout_constraintVertical_bias="0.85" />
 
             <TextView
                 android:id="@+id/tv_streak"
@@ -137,7 +137,7 @@
                 app:layout_constraintHorizontal_bias="0.958"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.893" />
+                app:layout_constraintVertical_bias="0.847" />
 
             <ProgressBar
                 android:id="@+id/pb_XP"
@@ -164,7 +164,7 @@
                 app:layout_constraintHorizontal_bias="0.043"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.913" />
+                app:layout_constraintVertical_bias="0.888" />
 
             <ImageView
                 android:id="@+id/imageView4"
@@ -173,10 +173,10 @@
                 android:src="@drawable/ic_streaksfilled_01"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.9"
+                app:layout_constraintHorizontal_bias="0.892"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.913" />
+                app:layout_constraintVertical_bias="0.876" />
 
             <ImageView
                 android:id="@+id/imageView5"

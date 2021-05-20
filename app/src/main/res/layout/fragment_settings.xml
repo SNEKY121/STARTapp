@@ -46,6 +46,7 @@
                 android:fontFamily="@font/cocogoose_regular"
                 android:text="Settings"
                 android:textSize="30sp"
+                android:textAlignment="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

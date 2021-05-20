@@ -1,45 +1,28 @@
 package com.example.login;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Rect;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
-import android.os.ParcelFileDescriptor;
-import android.provider.MediaStore;
-import android.renderscript.Element;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,19 +55,13 @@ public class SettingsFragment extends Fragment {
     // TODO: Rename and change types and number of parameters
     public static SettingsFragment newInstance(User user) {
         SettingsFragment fragment = new SettingsFragment();
-        //Bundle args = new Bundle();
         USER = user;
-        //fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*if (getArguments() != null) {
-            email = getArguments().getString(ARG_PARAM1);
-            username = getArguments().getString(ARG_PARAM2);
-        } else email = "null";*/
     }
 
     @Override
@@ -237,30 +214,30 @@ public class SettingsFragment extends Fragment {
                     SQLConnection connectionHelper = new SQLConnection();
                     connect = connectionHelper.connectionclass();
                     if (connect != null) {
-                        boolean k = true;
-                        String query = "Select * from " + SQLConnection.accountsTable;
-                        Statement st = connect.createStatement();
-                        ResultSet rs = st.executeQuery(query);
-                        while (rs.next()) {
-                            if (newData.equals(rs.getString(1)) || newData.equals(rs.getString(2)))
-                                k = false;
-                        }
-                        if (k) {
+                        PreparedStatement stmt = connect.prepareStatement("SELECT * from " + SQLConnection.accountsTable + " WHERE " + dataType + " = ?");
+                        stmt.setString(1, currentData);
+                        ResultSet resultSet = stmt.executeQuery();
+                        resultSet.next();
+
+                        if (resultSet.getString(1) != null) {
+                            String val;
                             if (dataType.equals("Username")) {
                                 PreparedStatement stmt1 = connect.prepareStatement("UPDATE " + SQLConnection.profilesTable + " SET Username = ? WHERE Username = ?");
                                 stmt1.setString(1, newData);
                                 stmt1.setString(2, currentData);
-                                stmt1.executeUpdate();
-                            }
-                            PreparedStatement stmt = connect.prepareStatement("UPDATE " + SQLConnection.accountsTable + " SET " + dataType + "= ? WHERE " + dataType + " = ?");
-                            stmt.setString(1, newData);
-                            stmt.setString(2, currentData);
+                                stmt1.execute();
+                                val = GetStartedPage.PREF_USERNAME;
+                            } else val = GetStartedPage.PREF_EMAIL;
+                            PreparedStatement stmt1 = connect.prepareStatement("UPDATE " + SQLConnection.accountsTable + " SET " + dataType + "= ? WHERE " + dataType + " = ?");
+                            stmt1.setString(1, newData);
+                            stmt1.setString(2, currentData);
                             try {
-                                stmt.executeUpdate();
+                                stmt1.executeUpdate();
                                 Toast.makeText(getContext(), "Succes", Toast.LENGTH_LONG).show();
                                 if (dataType.equals("Username"))
                                     USER.setUsername(newData);
                                 else USER.setEmail(newData);
+                                requireActivity().getSharedPreferences(GetStartedPage.PREFS_NAME, Context.MODE_PRIVATE).edit().putString(val, newData).apply();
                                 /*GetStartedPage.specialLogin = true;
                                 Intent intent = new Intent(getContext(), GetStartedPage.class);
                                 startActivity(intent);*/
@@ -295,7 +272,7 @@ public class SettingsFragment extends Fragment {
     }
 
     private void resetPref() {
-        getActivity().getSharedPreferences(GetStartedPage.PREFS_NAME, 0)
+        requireActivity().getSharedPreferences(GetStartedPage.PREFS_NAME, 0)
                 .edit()
                 .putString(GetStartedPage.PREF_USERNAME, null)
                 .apply();

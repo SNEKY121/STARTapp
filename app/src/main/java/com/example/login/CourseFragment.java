@@ -1,23 +1,24 @@
 package com.example.login;
 
-import android.content.Intent;
+import android.app.Activity;
 import android.os.Bundle;
 
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link CoursesFragment#newInstance} factory method to
+ * Use the {@link CourseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CoursesFragment extends Fragment {
+public class CourseFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,12 +28,9 @@ public class CoursesFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private CardView cv1;
-    private CardView cv2;
-    private CardView cv3;
-    private CardView cv4;
+    private Button btnStart;
 
-    public CoursesFragment() {
+    public CourseFragment() {
         // Required empty public constructor
     }
 
@@ -42,11 +40,11 @@ public class CoursesFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment CoursesFragment.
+     * @return A new instance of fragment CourseFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CoursesFragment newInstance(String param1, String param2) {
-        CoursesFragment fragment = new CoursesFragment();
+    public static CourseFragment newInstance(String param1, String param2) {
+        CourseFragment fragment = new CourseFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -67,37 +65,13 @@ public class CoursesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_courses, container, false);
+        View view = inflater.inflate(R.layout.fragment_course, container, false);
 
-        cv1 = view.findViewById(R.id.cv_course1);
-        cv2 = view.findViewById(R.id.cv_course2);
-        cv3 = view.findViewById(R.id.cv_course3);
-        cv4 = view.findViewById(R.id.cv_course4);
+        btnStart = view.findViewById(R.id.btn_start);
+        btnStart.setOnClickListener(v -> {
 
-        cv1.setOnClickListener(v -> {
-            startCourse(1);
-        });
-
-        cv2.setOnClickListener(v -> {
-            startCourse(2);
-        });
-
-        cv3.setOnClickListener(v -> {
-            startCourse(3);
-        });
-
-        cv4.setOnClickListener(v -> {
-            startCourse(4);
         });
 
         return view;
-    }
-
-    private void startCourse(int c) {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.container, CourseFragment.newInstance("", ""));
-        transaction.addToBackStack(null);
-        transaction.commit();
     }
 }

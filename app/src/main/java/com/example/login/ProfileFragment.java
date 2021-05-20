@@ -1,20 +1,15 @@
 package com.example.login;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,20 +21,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import org.w3c.dom.Text;
-
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.Calendar;
-
-import static java.lang.Integer.parseInt;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,9 +32,7 @@ import static java.lang.Integer.parseInt;
  * create an instance of this fragment.
  */
 public class ProfileFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
+
     private TextView eUsername;
     private ProgressBar eBar;
     private TextView eLevel;
@@ -57,30 +40,23 @@ public class ProfileFragment extends Fragment {
     private TextView eStreak;
     public ImageView eAvatar;
 
-    private String username;
-    private Integer xp = 0;
+    private static User USER = null;
+    Connection connect;
 
 
     public ProfileFragment() {
         // Required empty public constructor
     }
-    Connection connect;
 
     // TODO: Rename and change types and number of parameters
-    public static ProfileFragment newInstance(String param1) {
+    public static ProfileFragment newInstance(User user) {
         ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        fragment.setArguments(args);
+        USER = user;
         return fragment;
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            // TODO: Rename and change types of parameters
-            username = getArguments().getString(ARG_PARAM1);
-        }
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,7 +65,7 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         eUsername = view.findViewById(R.id.tv_username);
-        eUsername.setText(username);
+        eUsername.setText(USER.getUsername());
 
         eStreak = view.findViewById(R.id.tv_streak);
         eLevel = view.findViewById(R.id.tv_level);
@@ -136,12 +112,12 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setData() {
-        xp = HomePage.user.getXp();
-        eCursuri.setText(HomePage.user.getCursuri() + " cursuri finalizate");
-        eStreak.setText(HomePage.user.getStreak() + " day streak");
-        eLevel.setText("Nivel " + xp/100);
-        eBar.setProgress(xp%100);
-        byte[] barray = HomePage.user.getBarray();
+        int xp = USER.getXp();
+        eCursuri.setText("Cursuri: " + USER.getCursuri());
+        eStreak.setText(USER.getStreak() + "");
+        eLevel.setText("Nivel " + xp /100);
+        eBar.setProgress(xp %100);
+        byte[] barray = USER.getBarray();
         Bitmap bitmap = BitmapFactory.decodeByteArray(barray, 0, barray.length);
         eAvatar.setImageBitmap(bitmap);
     }
@@ -173,7 +149,7 @@ public class ProfileFragment extends Fragment {
                             bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
                             byte[] bArray = bos.toByteArray();
                             if (updateProfilePicture(bArray))
-                                HomePage.user.setBarray(bArray);
+                                USER.setBarray(bArray);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -192,7 +168,7 @@ public class ProfileFragment extends Fragment {
             if (connect != null) {
                 PreparedStatement stmt = connect.prepareStatement("UPDATE " + SQLConnection.profilesTable + " SET Image = ? WHERE Username = ?");
                 stmt.setBytes(1, data);
-                stmt.setString(2, username);
+                stmt.setString(2, USER.getUsername());
                 stmt.executeUpdate();
                 return true;
             }
