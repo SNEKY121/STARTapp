@@ -15,6 +15,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import static com.example.login.SQLConnection.ACCOUNTS_TABLE;
+
 public class GetStartedPage extends AppCompatActivity {
 
     public static final String PREFS_NAME = "RememberMe";
@@ -97,15 +99,14 @@ public class GetStartedPage extends AppCompatActivity {
 
     private boolean checkCred(String name, String password) {
         try {
-            SQLConnection connectionHelper = new SQLConnection();
-            connect = connectionHelper.connectionclass();
+            connect = SQLConnection.getConnection();
             if (connect != null) {
                 String type;
                 if (name.contains("@"))
                     type = "Email";
                 else type = "Username";
 
-                PreparedStatement stmt = connect.prepareStatement("SELECT * from " + SQLConnection.accountsTable + " WHERE " + type + " = ?");
+                PreparedStatement stmt = connect.prepareStatement("SELECT * from " + ACCOUNTS_TABLE + " WHERE " + type + " = ?");
                 stmt.setString(1, name);
                 ResultSet resultSet = stmt.executeQuery();
                 resultSet.next();

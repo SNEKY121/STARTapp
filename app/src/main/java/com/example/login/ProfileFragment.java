@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
+import static com.example.login.SQLConnection.PROFILES_TABLE;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ProfileFragment#newInstance} factory method to
@@ -163,10 +165,9 @@ public class ProfileFragment extends Fragment {
 
     private boolean updateProfilePicture(byte[] data) {
         try {
-            SQLConnection connectionHelper = new SQLConnection();
-            connect = connectionHelper.connectionclass();
+            connect = SQLConnection.getConnection();
             if (connect != null) {
-                PreparedStatement stmt = connect.prepareStatement("UPDATE " + SQLConnection.profilesTable + " SET Image = ? WHERE Username = ?");
+                PreparedStatement stmt = connect.prepareStatement("UPDATE " + PROFILES_TABLE + " SET Image = ? WHERE Username = ?");
                 stmt.setBytes(1, data);
                 stmt.setString(2, USER.getUsername());
                 stmt.executeUpdate();

@@ -66,10 +66,10 @@ public class HomePage extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case courses_id:
-                openFragment(CoursesFragment.newInstance("", ""));
+                openFragment(CoursesFragment.newInstance());
                 return true;
             case leaderbd_id:
-                openFragment(LeaderboardFragment.newInstance("", ""));
+                openFragment(LeaderboardFragment.newInstance());
                 return true;
             case profile_id:
                 openFragment(ProfileFragment.newInstance(user));

@@ -7,6 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Calendar;
 
+import static com.example.login.SQLConnection.PROFILES_TABLE;
+
 public class User {
     private String username;
     private String email;
@@ -69,10 +71,9 @@ public class User {
 
     private void getDataFromDB() {
         try {
-            SQLConnection connectionHelper = new SQLConnection();
-            connect = connectionHelper.connectionclass();
+            connect = SQLConnection.getConnection();
             if (connect != null) {
-                PreparedStatement stmt = connect.prepareStatement("SELECT * FROM " + SQLConnection.profilesTable + " WHERE Username = ?");
+                PreparedStatement stmt = connect.prepareStatement("SELECT * FROM " + PROFILES_TABLE + " WHERE Username = ?");
                 stmt.setString(1, username);
                 ResultSet rs = stmt.executeQuery();
                 RegisterPage create = new RegisterPage();
@@ -108,10 +109,9 @@ public class User {
 
     private void updateProfile(String column, int val) {
         try {
-            SQLConnection connectionHelper = new SQLConnection();
-            connect = connectionHelper.connectionclass();
+            connect = SQLConnection.getConnection();
             if (connect != null) {
-                PreparedStatement stmt = connect.prepareStatement("UPDATE " + SQLConnection.profilesTable + " SET " + column + " = ? WHERE Username = ?");
+                PreparedStatement stmt = connect.prepareStatement("UPDATE " + PROFILES_TABLE + " SET " + column + " = ? WHERE Username = ?");
                 stmt.setInt(1, val);
                 stmt.setString(2, username);
                 stmt.execute();

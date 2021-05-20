@@ -21,8 +21,10 @@ import android.widget.Toast;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.Objects;
+
+import static com.example.login.SQLConnection.ACCOUNTS_TABLE;
+import static com.example.login.SQLConnection.PROFILES_TABLE;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,9 +41,7 @@ public class SettingsFragment extends Fragment {
     private TextView eFeedback;
     private TextView eLogout;
 
-    private String username;
     private String newUsername;
-    private String email;
     private String newEmail;
     private String feedbackText;
 
@@ -78,7 +78,7 @@ public class SettingsFragment extends Fragment {
 
         eNotifs.setOnClickListener(v -> eNotifsbtn.setChecked(!eNotifsbtn.isChecked()));
 
-        eLogout.setOnClickListener(vv -> {
+        eLogout.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DialogTheme);
             View dialogLayout = inflater.inflate(R.layout.logout_popup, null);
             final AlertDialog dialog = builder.create();
@@ -211,10 +211,9 @@ public class SettingsFragment extends Fragment {
         if (newData.length()>4) {
             if (!currentData.equals(newData)) {
                 try {
-                    SQLConnection connectionHelper = new SQLConnection();
-                    connect = connectionHelper.connectionclass();
+                    connect = SQLConnection.getConnection();
                     if (connect != null) {
-                        PreparedStatement stmt = connect.prepareStatement("SELECT * from " + SQLConnection.accountsTable + " WHERE " + dataType + " = ?");
+                        PreparedStatement stmt = connect.prepareStatement("SELECT * from " + ACCOUNTS_TABLE + " WHERE " + dataType + " = ?");
                         stmt.setString(1, currentData);
                         ResultSet resultSet = stmt.executeQuery();
                         resultSet.next();
@@ -222,13 +221,14 @@ public class SettingsFragment extends Fragment {
                         if (resultSet.getString(1) != null) {
                             String val;
                             if (dataType.equals("Username")) {
-                                PreparedStatement stmt1 = connect.prepareStatement("UPDATE " + SQLConnection.profilesTable + " SET Username = ? WHERE Username = ?");
+                                PreparedStatement stmt1 = connect.prepareStatement("UPDATE " + PROFILES_TABLE + " SET Username = ? WHERE Username = ?");
                                 stmt1.setString(1, newData);
                                 stmt1.setString(2, currentData);
                                 stmt1.execute();
                                 val = GetStartedPage.PREF_USERNAME;
                             } else val = GetStartedPage.PREF_EMAIL;
-                            PreparedStatement stmt1 = connect.prepareStatement("UPDATE " + SQLConnection.accountsTable + " SET " + dataType + "= ? WHERE " + dataType + " = ?");
+
+                            PreparedStatement stmt1 = connect.prepareStatement("UPDATE " + ACCOUNTS_TABLE + " SET " + dataType + "= ? WHERE " + dataType + " = ?");
                             stmt1.setString(1, newData);
                             stmt1.setString(2, currentData);
                             try {
@@ -258,7 +258,7 @@ public class SettingsFragment extends Fragment {
     private void trySend(String Data) {
         if (Data.length()>10) {
             final String to = "sebastianturbut@gmail.com";
-            String subject = "New Feedback from " + username;
+            String subject = "New Feedback from " + USER.getUsername();
 
             Intent email = new Intent(Intent.ACTION_SEND);
             email.putExtra(Intent.EXTRA_EMAIL, new String[]{to});

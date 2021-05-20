@@ -23,6 +23,9 @@ import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.example.login.SQLConnection.ACCOUNTS_TABLE;
+import static com.example.login.SQLConnection.PROFILES_TABLE;
+
 public class RegisterPage extends AppCompatActivity {
 
     private EditText eEmail;
@@ -87,12 +90,11 @@ public class RegisterPage extends AppCompatActivity {
 
     public boolean SubmitRegister(String usr, String email, String pass) {
         try {
-            SQLConnection connectionHelper = new SQLConnection();
-            connect = connectionHelper.connectionclass();
+            connect = SQLConnection.getConnection();
             if (connect != null) {
                 pass = pass.trim();
                 pass = PasswordHash.generate(pass, null);
-                PreparedStatement stmt = connect.prepareStatement("INSERT INTO " + SQLConnection.accountsTable + "(Username, Email, Password, Salt) VALUES (?, ?, ?, ?)");
+                PreparedStatement stmt = connect.prepareStatement("INSERT INTO " + ACCOUNTS_TABLE + "(Username, Email, Password, Salt) VALUES (?, ?, ?, ?)");
                 stmt.setString(1, usr.trim());
                 stmt.setString(2, email.trim());
                 stmt.setString(3, pass);
@@ -142,10 +144,9 @@ public class RegisterPage extends AppCompatActivity {
 
     private boolean EmailCheck(String email, String name) {
         try {
-            SQLConnection connectionHelper = new SQLConnection();
-            connect = connectionHelper.connectionclass();
+            connect = SQLConnection.getConnection();
             if (connect != null) {
-                String query = "Select * from " + SQLConnection.accountsTable;
+                String query = "Select * from " + ACCOUNTS_TABLE;
                 Statement st = connect.createStatement();
                 ResultSet rs = st.executeQuery(query);
 
@@ -174,10 +175,9 @@ public class RegisterPage extends AppCompatActivity {
 
     private boolean CreateProfile(String username) {
         try {
-            SQLConnection connectionHelper = new SQLConnection();
-            connect = connectionHelper.connectionclass();
+            connect = SQLConnection.getConnection();
             if (connect != null) {
-                PreparedStatement stmt = connect.prepareStatement("INSERT INTO " + SQLConnection.profilesTable + "(Username, Courses, Image, Xp, Lastlogin, Streakcounter) VALUES (?, ?, ?, ?, ?, ?)");
+                PreparedStatement stmt = connect.prepareStatement("INSERT INTO " + PROFILES_TABLE + "(Username, Courses, Image, Xp, Lastlogin, Streakcounter) VALUES (?, ?, ?, ?, ?, ?)");
                 stmt.setString(1, username);
                 stmt.setInt(2, 0);
                 Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.defaultpic);
