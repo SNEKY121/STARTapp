@@ -13,142 +13,156 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout3"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@color/cardview_dark_background"
+            android:layout_height="0dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bg_gradient"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cursuri"
-                android:textColor="@color/white"
-                android:textSize="25sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="bottom"
-            android:background="@color/lightgrey"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_course1"
-                android:layout_width="160dp"
-                android:layout_height="240dp"
-                android:layout_margin="20dp"
+                android:layout_width="180dp"
+                android:layout_height="210dp"
+                android:layout_margin="10dp"
                 app:cardCornerRadius="20dp"
-                app:layout_constraintEnd_toStartOf="@+id/cv_course2"
-                app:layout_constraintHorizontal_bias="0.5"
+                app:cardElevation="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.1">
 
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg_gradient" />
+                    android:layout_height="180dp"
+                    android:background="@drawable/ic_bookfilled_01" />
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:layout_gravity="bottom"
-                    android:paddingBottom="5dp"
-                    android:text="Curs 1"
+                    android:fontFamily="@font/tommy_soft"
+                    android:paddingBottom="0dp"
+                    android:text="Educatie financiara"
                     android:textAlignment="center"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     tools:ignore="RtlCompat" />
 
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_course2"
-                android:layout_width="160dp"
-                android:layout_height="240dp"
-                android:layout_margin="20dp"
+                android:layout_width="180dp"
+                android:layout_height="210dp"
+                android:layout_margin="10dp"
                 app:cardCornerRadius="20dp"
+                app:cardElevation="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toEndOf="@+id/cv_course1"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.1">
 
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg_gradient" />
+                    android:layout_height="180dp"
+                    android:background="@drawable/ic_bookfilled_01" />
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:layout_gravity="bottom"
-                    android:paddingBottom="5dp"
-                    android:text="Curs 2"
+                    android:fontFamily="@font/tommy_soft"
+                    android:paddingBottom="0dp"
+                    android:text="Educatie financiara"
                     android:textAlignment="center"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     tools:ignore="RtlCompat" />
+
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_course3"
-                android:layout_width="160dp"
-                android:layout_height="240dp"
-                android:layout_margin="20dp"
+                android:layout_width="180dp"
+                android:layout_height="210dp"
+                android:layout_margin="10dp"
                 app:cardCornerRadius="20dp"
-                app:layout_constraintEnd_toStartOf="@+id/cv_course4"
-                app:layout_constraintHorizontal_bias="0.5"
+                app:cardElevation="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cv_course1">
+                app:layout_constraintTop_toBottomOf="@+id/cv_course1"
+                app:layout_constraintVertical_bias="0">
 
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg_gradient" />
+                    android:layout_height="180dp"
+                    android:background="@drawable/ic_bookfilled_01" />
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:layout_gravity="bottom"
-                    android:paddingBottom="5dp"
-                    android:text="Curs 3"
+                    android:fontFamily="@font/tommy_soft"
+                    android:paddingBottom="0dp"
+                    android:text="Educatie financiara"
                     android:textAlignment="center"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     tools:ignore="RtlCompat" />
+
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_course4"
-                android:layout_width="160dp"
-                android:layout_height="240dp"
-                android:layout_margin="20dp"
+                android:layout_width="180dp"
+                android:layout_height="210dp"
+                android:layout_margin="10dp"
                 app:cardCornerRadius="20dp"
+                app:cardElevation="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toEndOf="@+id/cv_course3"
-                app:layout_constraintTop_toBottomOf="@+id/cv_course2">
+                app:layout_constraintTop_toBottomOf="@+id/cv_course2"
+                app:layout_constraintVertical_bias="0">
 
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg_gradient" />
+                    android:layout_height="180dp"
+                    android:background="@drawable/ic_bookfilled_01" />
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:layout_gravity="bottom"
-                    android:paddingBottom="5dp"
-                    android:text="Curs 4"
+                    android:fontFamily="@font/tommy_soft"
+                    android:paddingBottom="0dp"
+                    android:text="Educatie financiara"
                     android:textAlignment="center"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     tools:ignore="RtlCompat" />
+
             </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/cocogoose_regular"
+                android:text="Cursuri"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.023" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
