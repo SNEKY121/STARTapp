@@ -82,13 +82,7 @@ public class SettingsFragment extends Fragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DialogTheme);
             View dialogLayout = inflater.inflate(R.layout.logout_popup, null);
             final AlertDialog dialog = builder.create();
-            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-            dialog.setView(dialogLayout, 0, 0, 0, 0);
-            dialog.setCanceledOnTouchOutside(true);
-            dialog.setCancelable(true);
-
-            WindowManager.LayoutParams wlmp = dialog.getWindow().getAttributes();
-            wlmp.gravity = Gravity.BOTTOM;
+            setDialog(dialog, dialogLayout);
 
             Button btnLogout = dialogLayout.findViewById(R.id.btnLogout);
             Button btnCancel = dialogLayout.findViewById(R.id.btnCancel);
@@ -103,20 +97,13 @@ public class SettingsFragment extends Fragment {
 
             builder.setView(dialogLayout);
             dialog.show();
-
         });
 
         eEmail.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DialogTheme);
             View dialogLayout = inflater.inflate(R.layout.datachange_popup, null);
             final AlertDialog dialog = builder.create();
-            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-            dialog.setView(dialogLayout, 0, 0, 0, 0);
-            dialog.setCanceledOnTouchOutside(true);
-            dialog.setCancelable(true);
-            
-            WindowManager.LayoutParams wlmp = dialog.getWindow().getAttributes();
-            wlmp.gravity = Gravity.BOTTOM;
+            setDialog(dialog, dialogLayout);
 
             Button btnChange = dialogLayout.findViewById(R.id.btnChange);
             Button btnCancel = dialogLayout.findViewById(R.id.btnCancel);
@@ -133,8 +120,6 @@ public class SettingsFragment extends Fragment {
             });
             btnCancel.setOnClickListener(v2 -> dialog.dismiss());
 
-
-            
             builder.setView(dialogLayout);
             dialog.show();
         });
@@ -143,13 +128,7 @@ public class SettingsFragment extends Fragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DialogTheme);
             View dialogLayout = inflater.inflate(R.layout.datachange_popup, null);
             final AlertDialog dialog = builder.create();
-            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-            dialog.setView(dialogLayout, 0, 0, 0, 0);
-            dialog.setCanceledOnTouchOutside(true);
-            dialog.setCancelable(true);
-
-            WindowManager.LayoutParams wlmp = dialog.getWindow().getAttributes();
-            wlmp.gravity = Gravity.BOTTOM;
+            setDialog(dialog, dialogLayout);
 
             Button btnChange = dialogLayout.findViewById(R.id.btnChange);
             Button btnCancel = dialogLayout.findViewById(R.id.btnCancel);
@@ -181,13 +160,7 @@ public class SettingsFragment extends Fragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DialogTheme);
             View dialogLayout = inflater.inflate(R.layout.feedback_popup, null);
             final AlertDialog dialog = builder.create();
-            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-            dialog.setView(dialogLayout, 0, 0, 0, 0);
-            dialog.setCanceledOnTouchOutside(true);
-            dialog.setCancelable(true);
-
-            WindowManager.LayoutParams wlmp = dialog.getWindow().getAttributes();
-            wlmp.gravity = Gravity.BOTTOM;
+            setDialog(dialog, dialogLayout);
 
             Button btnChange = dialogLayout.findViewById(R.id.btnChange);
             Button btnCancel = dialogLayout.findViewById(R.id.btnCancel);
@@ -205,6 +178,16 @@ public class SettingsFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void setDialog(AlertDialog dialog, View dialogLayout) {
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        dialog.setView(dialogLayout, 0, 0, 0, 0);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
+
+        WindowManager.LayoutParams wlmp = dialog.getWindow().getAttributes();
+        wlmp.gravity = Gravity.BOTTOM;
     }
 
     private void trySubmit(String currentData, String newData, String dataType) {

@@ -4,10 +4,16 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
+import static com.example.login.SQLConnection.FINANCE_TABLE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,9 +45,24 @@ public class CourseFragment extends Fragment {
 
         Button btnStart = view.findViewById(R.id.btn_start);
         btnStart.setOnClickListener(v -> {
-
+            addUserToFinanceTable();
         });
 
         return view;
+    }
+
+    private void addUserToFinanceTable() {
+        Connection connect = SQLConnection.getConnection();
+        try {
+            if (connect != null) {
+                PreparedStatement statement = connect.prepareStatement("INSERT INTO " + FINANCE_TABLE + " (Username, Progress, Capitol) VALUES (?, ?, ?)");
+                statement.setString(1, HomePage.user.getUsername());
+                statement.setFloat(2, 0.0f);
+                statement.setInt(3, 1);
+                statement.execute();
+            }
+        } catch (Exception e) {
+            Log.e("addUserToFinanceTable: ", e.toString());
+        }
     }
 }
