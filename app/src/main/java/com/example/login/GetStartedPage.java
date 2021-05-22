@@ -13,7 +13,6 @@ import android.widget.Toast;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 
 import static com.example.login.SQLConnection.ACCOUNTS_TABLE;
 
@@ -22,7 +21,6 @@ public class GetStartedPage extends AppCompatActivity {
     public static final String PREFS_NAME = "RememberMe";
     public static final String PREF_USERNAME = "username";
     public static final String PREF_EMAIL = "email";
-    public static boolean specialLogin = false;
 
     private EditText eName;
     private EditText ePassword;
@@ -49,7 +47,7 @@ public class GetStartedPage extends AppCompatActivity {
         eCheckBox = findViewById(R.id.cb_rememberme);
         Button eLogin = findViewById(R.id.btnLogin);
 
-        if (savedUsername != null && savedEmail != null && !specialLogin)
+        if (savedUsername != null && savedEmail != null)
             redirect(savedUsername, savedEmail);
         eLogin.setOnClickListener(v -> {
             String inputName = eName.getText().toString().trim();
@@ -106,9 +104,9 @@ public class GetStartedPage extends AppCompatActivity {
                     type = "Email";
                 else type = "Username";
 
-                PreparedStatement stmt = connect.prepareStatement("SELECT * from " + ACCOUNTS_TABLE + " WHERE " + type + " = ?");
-                stmt.setString(1, name);
-                ResultSet resultSet = stmt.executeQuery();
+                PreparedStatement statement = connect.prepareStatement("SELECT * from " + ACCOUNTS_TABLE + " WHERE " + type + " = ?");
+                statement.setString(1, name);
+                ResultSet resultSet = statement.executeQuery();
                 resultSet.next();
 
                 password = PasswordHash.generate(password, resultSet.getBytes(4));

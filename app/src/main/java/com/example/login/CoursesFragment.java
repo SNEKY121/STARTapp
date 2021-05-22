@@ -1,6 +1,5 @@
 package com.example.login;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
@@ -8,15 +7,17 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CoursesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+
 public class CoursesFragment extends Fragment {
 
     private CardView cv1;
@@ -46,14 +47,19 @@ public class CoursesFragment extends Fragment {
 
         cv1 = view.findViewById(R.id.cv_course1);
         cv2 = view.findViewById(R.id.cv_course2);
+        cv2.setClickable(false);
         cv3 = view.findViewById(R.id.cv_course3);
+        cv3.setClickable(false);
         cv4 = view.findViewById(R.id.cv_course4);
+        cv4.setClickable(false);
 
         cv1.setOnClickListener(v -> {
-            startCourse(1);
+            if (!checkEnrolled(SQLConnection.FINANCE_TABLE))
+                startCourse();
+            else resumeCourse();
         });
 
-        cv2.setOnClickListener(v -> {
+        /*cv2.setOnClickListener(v -> {
             startCourse(2);
         });
 
@@ -63,16 +69,46 @@ public class CoursesFragment extends Fragment {
 
         cv4.setOnClickListener(v -> {
             startCourse(4);
-        });
+        });*/
 
         return view;
     }
 
-    private void startCourse(int c) {
+    private void resumeCourse() {
+        /*FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.container, CourseFragment.newInstance());
+        transaction.addToBackStack(null);
+        transaction.commit();*/
+        Toast.makeText(getContext(), "Finance Course", Toast.LENGTH_LONG).show();
+    }
+
+    private void startCourse() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.replace(R.id.container, CourseFragment.newInstance());
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    private boolean checkEnrolled(String table) {
+        Connection connect = SQLConnection.getConnection();
+        try {
+            if (connect != null) {
+                PreparedStatement statement = connect.prepareStatement("SELECT * FROM " + table + " WHERE Username = ?");
+                statement.setString(1, HomePage.user.getUsername());
+                ResultSet resultSet = statement.executeQuery();
+                resultSet.next();
+
+                if (resultSet.getString(1) != null) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (Exception e) {
+            Log.e("checkEnrolled: ", e.toString());
+        }
+        return false;
     }
 }

@@ -1,6 +1,7 @@
 package com.example.login;
 
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -99,6 +100,7 @@ public class ProfileFragment extends Fragment {
             });
 
             btnTake.setOnClickListener(v4 -> {
+                takePicture();
                 dialog.dismiss();
             });
 
@@ -124,6 +126,15 @@ public class ProfileFragment extends Fragment {
         eAvatar.setImageBitmap(bitmap);
     }
 
+    private void takePicture() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
+            startActivityForResult(takePictureIntent, 101);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(getContext(), "Eroare", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void getImageFromAlbum() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -139,6 +150,12 @@ public class ProfileFragment extends Fragment {
                     if (resultCode == getActivity().RESULT_OK && data != null) {
                         Bitmap Image = (Bitmap) data.getExtras().get("data");
                         eAvatar.setImageBitmap(Image);
+
+                        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+                        Image.compress(Bitmap.CompressFormat.PNG, 100, byteOut);
+                        byte[] bArray = byteOut.toByteArray();
+                        if (updateProfilePicture(bArray))
+                            USER.setBarray(bArray);
                     }
                     break;
                 case 100:
