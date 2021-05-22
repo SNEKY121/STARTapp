@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.sql.Connection;
@@ -19,11 +20,7 @@ import java.sql.ResultSet;
 
 
 public class CoursesFragment extends Fragment {
-
-    private CardView cv1;
-    private CardView cv2;
-    private CardView cv3;
-    private CardView cv4;
+    private int progress = 0;
 
     public CoursesFragment() {
         // Required empty public constructor
@@ -45,16 +42,23 @@ public class CoursesFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_courses, container, false);
 
-        cv1 = view.findViewById(R.id.cv_course1);
-        cv2 = view.findViewById(R.id.cv_course2);
+        CardView cv1 = view.findViewById(R.id.cv_course1);
+        ProgressBar financeProgressBar = view.findViewById(R.id.pb_course1);
+        boolean isEnrolledFinance = checkEnrolled(SQLConnection.FINANCE_TABLE);
+        if (isEnrolledFinance) {
+            financeProgressBar.setVisibility(View.VISIBLE);
+            financeProgressBar.setProgress(progress);
+        }
+        
+        CardView cv2 = view.findViewById(R.id.cv_course2);
         cv2.setClickable(false);
-        cv3 = view.findViewById(R.id.cv_course3);
+        CardView cv3 = view.findViewById(R.id.cv_course3);
         cv3.setClickable(false);
-        cv4 = view.findViewById(R.id.cv_course4);
+        CardView cv4 = view.findViewById(R.id.cv_course4);
         cv4.setClickable(false);
 
         cv1.setOnClickListener(v -> {
-            if (!checkEnrolled(SQLConnection.FINANCE_TABLE))
+            if (!isEnrolledFinance)
                 startCourse();
             else resumeCourse();
         });
@@ -101,6 +105,7 @@ public class CoursesFragment extends Fragment {
                 resultSet.next();
 
                 if (resultSet.getString(1) != null) {
+                    progress = resultSet.getInt(2);
                     return true;
                 } else {
                     return false;

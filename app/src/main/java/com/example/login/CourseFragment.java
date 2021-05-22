@@ -57,7 +57,7 @@ public class CourseFragment extends Fragment {
             if (connect != null) {
                 PreparedStatement statement = connect.prepareStatement("INSERT INTO " + FINANCE_TABLE + " (Username, Progress, Capitol) VALUES (?, ?, ?)");
                 statement.setString(1, HomePage.user.getUsername());
-                statement.setFloat(2, 0.0f);
+                statement.setInt(2, 0);
                 statement.setInt(3, 1);
                 statement.execute();
             }
