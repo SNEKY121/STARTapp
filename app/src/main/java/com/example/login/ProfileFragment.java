@@ -43,7 +43,7 @@ public class ProfileFragment extends Fragment {
     private TextView eStreak;
     public ImageView eAvatar;
 
-    private static User USER = null;
+    private static User USER;
     Connection connect;
 
 
