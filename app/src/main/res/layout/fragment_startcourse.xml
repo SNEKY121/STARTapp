@@ -37,7 +37,7 @@
                         android:layout_gravity="center_horizontal"
                         app:cardBackgroundColor="@color/transparent"
                         app:cardCornerRadius="175dp"
-                        app:cardElevation="15dp">
+                        app:cardElevation="0dp">
 
                         <ImageButton
                             android:id="@+id/btn_start"
@@ -57,7 +57,7 @@
                         android:layout_marginTop="50dp"
                         app:cardBackgroundColor="@color/transparent"
                         app:cardCornerRadius="175dp"
-                        app:cardElevation="15dp">
+                        app:cardElevation="0dp">
 
                         <ImageButton
                             android:id="@+id/btn_start2"
@@ -86,7 +86,7 @@
                         android:background="@drawable/ic_finalstagecourse_01"
                         app:cardBackgroundColor="@color/transparent"
                         app:cardCornerRadius="200dp"
-                        app:cardElevation="15dp">
+                        app:cardElevation="0dp">
 
                         <ImageButton
                             android:id="@+id/btn_start3"
