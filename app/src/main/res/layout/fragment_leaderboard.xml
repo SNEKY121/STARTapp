@@ -28,6 +28,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginBottom="50dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -35,93 +36,58 @@
             app:layout_constraintTop_toBottomOf="@+id/textView4">
 
             <LinearLayout
+                android:id="@+id/llLeaderboard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
-                <TextView
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
-                    android:text="USER"
-                    android:textSize="30sp"
-                    android:textAlignment="center"
-                    android:gravity="center" />
+                    android:layout_margin="15dp">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:text="USER"
-                    android:textSize="30sp"
-                    android:textAlignment="center"
-                    android:gravity="center" />
+                    <TextView
+                        android:id="@+id/textView13"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="Pozitie"
+                        android:textAlignment="center"
+                        android:textSize="30sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:text="USER"
-                    android:textSize="30sp"
-                    android:textAlignment="center"
-                    android:gravity="center" />
+                    <TextView
+                        android:id="@+id/textView12"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="Utilizator"
+                        android:textAlignment="center"
+                        android:textSize="30sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/textView13"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:text="USER"
-                    android:textSize="30sp"
-                    android:textAlignment="center"
-                    android:gravity="center" />
+                    <TextView
+                        android:id="@+id/textView14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="Xp"
+                        android:textAlignment="center"
+                        android:textSize="30sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:text="USER"
-                    android:textSize="30sp"
-                    android:textAlignment="center"
-                    android:gravity="center" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:text="USER"
-                    android:textSize="30sp"
-                    android:textAlignment="center"
-                    android:gravity="center" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:text="USER"
-                    android:textSize="30sp"
-                    android:textAlignment="center"
-                    android:gravity="center" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:text="USER"
-                    android:textSize="30sp"
-                    android:textAlignment="center"
-                    android:gravity="center" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:text="USER"
-                    android:textSize="30sp"
-                    android:textAlignment="center"
-                    android:gravity="center" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:text="USER"
-                    android:textSize="30sp"
-                    android:textAlignment="center"
-                    android:gravity="center" />
-
-
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </LinearLayout>
-        </ScrollView>
 
+        </ScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
