@@ -52,10 +52,7 @@ public class CoursesFragment extends Fragment {
         
         CardView cv2 = view.findViewById(R.id.cv_course2);
         cv2.setClickable(false);
-        CardView cv3 = view.findViewById(R.id.cv_course3);
-        cv3.setClickable(false);
-        CardView cv4 = view.findViewById(R.id.cv_course4);
-        cv4.setClickable(false);
+
 
         cv1.setOnClickListener(v -> {
             if (!isEnrolledFinance)
