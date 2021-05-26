@@ -88,12 +88,24 @@ public class StartCourseFragment extends Fragment {
         Connection connect = SQLConnection.getConnection();
         try {
             if (connect != null) {
-                PreparedStatement statement = connect.prepareStatement("INSERT INTO " + FINANCE_TABLE + " (Username, Progress, Capitol, LastQuestion) VALUES (?, ?, ?, ?)");
-                statement.setString(1, HomePage.user.getUsername());
-                statement.setInt(2, 0);
-                statement.setInt(3, 1);
-                statement.setInt(4, 1);
-                statement.execute();
+                PreparedStatement checkUsernameStatement = connect.prepareStatement("SELECT * FROM " + FINANCE_TABLE + " WHERE Username = ?");
+                checkUsernameStatement.setString(1, HomePage.user.getUsername());
+                ResultSet resultSet = checkUsernameStatement.executeQuery();
+                resultSet.next();
+
+                if (resultSet.getString(1) == null) {
+                    PreparedStatement createProfileStatement = connect.prepareStatement("INSERT INTO " + FINANCE_TABLE + " (Username, Progress, Capitol, LastQuestion) VALUES (?, ?, ?, ?)");
+                    createProfileStatement.setString(1, HomePage.user.getUsername());
+                    createProfileStatement.setInt(2, 0);
+                    createProfileStatement.setInt(3, 1);
+                    createProfileStatement.setInt(4, 1);
+                    createProfileStatement.execute();
+                } else {
+                    PreparedStatement updateProfileStatement = connect.prepareStatement("UPDATE " + FINANCE_TABLE + " SET Progress = ? WHERE Username = ?");
+                    updateProfileStatement.setInt(1, 0);
+                    updateProfileStatement.setString(2, HomePage.user.getUsername());
+                    updateProfileStatement.execute();
+                }
             }
         } catch (Exception e) {
             Log.e("addUserToFinanceTable: ", e.toString());
