@@ -1,6 +1,5 @@
 package com.example.login;
 
-import android.media.Image;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,14 +9,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
-import static com.example.login.SQLConnection.FINANCE_TABLE;
+import static com.example.login.SQLConnection.CAPITOLE_TABLE;
+import static com.example.login.SQLConnection.COURSESUSERS_TABLE;
+import static com.example.login.SQLConnection.COURSES_TABLE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,11 +31,14 @@ public class StartCourseFragment extends Fragment {
     public StartCourseFragment() {
         // Required empty public constructor
     }
-
+    Connection connect = SQLConnection.getConnection();
+    private static int course_id;
+    private int numberOfQuestions;
 
     // TODO: Rename and change types and number of parameters
-    public static StartCourseFragment newInstance() {
+    public static StartCourseFragment newInstance(int courseId) {
         StartCourseFragment fragment = new StartCourseFragment();
+        course_id = courseId;
         return fragment;
     }
 
@@ -47,12 +53,12 @@ public class StartCourseFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_startcourse, container, false);
 
-
-
         ImageButton btnChapter1 = view.findViewById(R.id.btn_node1);
         ImageButton btnChapter2 = view.findViewById(R.id.btn_node2);
         ImageButton btnChapter3 = view.findViewById(R.id.btn_node3);
-
+        TextView chapterProgress = view.findViewById(R.id.course_progress1);
+        ProgressBar progressBar = view.findViewById(R.id.course_progress2);
+        TextView tvProgress = view.findViewById(R.id.progress_percent);
         ImageView lock2 = view.findViewById(R.id.lock3);
         ImageView lock3 = view.findViewById(R.id.lock3);
 
@@ -60,9 +66,13 @@ public class StartCourseFragment extends Fragment {
 
         btnChapter1.setOnClickListener(v -> {
             addUserToFinanceTable();
+            getCapitol(1);
             getQuestions();
         });
 
+        chapterProgress.setText(CoursesFragment.getCapitol()-1 + "/" + getNumarCapitole());
+        progressBar.setProgress(CoursesFragment.getProgress());
+        tvProgress.setText(String.valueOf(CoursesFragment.getProgress()));
 
         return view;
     }
@@ -84,16 +94,40 @@ public class StartCourseFragment extends Fragment {
 
     }
 
-    private void addUserToFinanceTable() {
-        Connection connect = SQLConnection.getConnection();
+    private void getCapitol(int index) {
         try {
             if (connect != null) {
-                PreparedStatement statement = connect.prepareStatement("INSERT INTO " + FINANCE_TABLE + " (Username, Progress, Capitol, LastQuestion) VALUES (?, ?, ?, ?)");
-                statement.setString(1, HomePage.user.getUsername());
-                statement.setInt(2, 0);
-                statement.setInt(3, 1);
-                statement.setInt(4, 1);
-                statement.execute();
+                PreparedStatement checkUsernameStatement = connect.prepareStatement("SELECT * FROM " + CAPITOLE_TABLE + " WHERE CapitolIndex = ?");
+                checkUsernameStatement.setInt(1, index);
+                ResultSet resultSet = checkUsernameStatement.executeQuery();
+                resultSet.next();
+                if (resultSet.getString(1) != null) {
+                    numberOfQuestions = resultSet.getInt(6);
+                    //other stuff
+                }
+            }
+        } catch (Exception e) {
+            Log.e("getCapitol: ", e.toString());
+        }
+    }
+
+    private void addUserToFinanceTable() {
+        try {
+            if (connect != null) {
+                PreparedStatement checkUsernameStatement = connect.prepareStatement("SELECT * FROM " + COURSESUSERS_TABLE + " WHERE Username = ?");
+                checkUsernameStatement.setString(1, HomePage.user.getUsername());
+                ResultSet resultSet = checkUsernameStatement.executeQuery();
+                resultSet.next();
+
+                if (resultSet.getString(2) == null) {
+                    PreparedStatement createProfileStatement = connect.prepareStatement("INSERT INTO " + COURSESUSERS_TABLE + " (Username, CourseId, Progress, Capitol, LastQuestion) VALUES (?,?, ?, ?, ?)");
+                    createProfileStatement.setString(1, HomePage.user.getUsername());
+                    createProfileStatement.setInt(2, course_id);
+                    createProfileStatement.setInt(3, 0);
+                    createProfileStatement.setInt(4, 1);
+                    createProfileStatement.setInt(5, 1);
+                    createProfileStatement.execute();
+                }
             }
         } catch (Exception e) {
             Log.e("addUserToFinanceTable: ", e.toString());
@@ -101,8 +135,29 @@ public class StartCourseFragment extends Fragment {
     }
 
     private void getQuestions() {
+        int lastQuestion = CoursesFragment.getLastQuestion();
+        if (lastQuestion == 0)
+            lastQuestion = 1;
+        if (lastQuestion + 1 < numberOfQuestions)
+            lastQuestion++;
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, CourseFragment.newInstance(1));
+        transaction.replace(R.id.container, QuestionnaireFragment.newInstance(lastQuestion, course_id, numberOfQuestions));
         transaction.commit();
     }
+
+    private int getNumarCapitole() {
+        try {
+            if (connect != null) {
+                PreparedStatement statement = connect.prepareStatement("SELECT NumarCapitole FROM " + COURSES_TABLE + " WHERE id = ?");
+                statement.setInt(1, course_id );
+                ResultSet resultSet = statement.executeQuery();
+                resultSet.next();
+                return resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+            Log.e("getCourse: ", e.toString());
+        }
+        return 0;
+    }
+
 }

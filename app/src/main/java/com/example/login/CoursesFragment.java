@@ -12,15 +12,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import static com.example.login.SQLConnection.COURSESUSERS_TABLE;
+import static com.example.login.SQLConnection.COURSES_TABLE;
 
 
 public class CoursesFragment extends Fragment {
-    private int progress = 0;
+    private static int progress = 0;
+    Connection connect = SQLConnection.getConnection();
+    private static int capitol;
+    private static int lastQuestion;
+    private static int numarCapitole;
+    private int course_id;
 
     public CoursesFragment() {
         // Required empty public constructor
@@ -44,7 +52,7 @@ public class CoursesFragment extends Fragment {
 
         CardView cv1 = view.findViewById(R.id.cv_course1);
         ProgressBar financeProgressBar = view.findViewById(R.id.pb_course1);
-        boolean isEnrolledFinance = checkEnrolled(SQLConnection.FINANCE_TABLE);
+        boolean isEnrolledFinance = checkEnrolled(getSet(COURSESUSERS_TABLE));
         if (isEnrolledFinance) {
             financeProgressBar.setVisibility(View.VISIBLE);
             financeProgressBar.setProgress(progress);
@@ -55,9 +63,9 @@ public class CoursesFragment extends Fragment {
 
 
         cv1.setOnClickListener(v -> {
-            if (!isEnrolledFinance)
-                startCourse();
-            else resumeCourse();
+            course_id = 1;
+            getCourse(course_id);
+            startCourse(course_id);
         });
 
         /*cv2.setOnClickListener(v -> {
@@ -75,25 +83,39 @@ public class CoursesFragment extends Fragment {
         return view;
     }
 
-    private void resumeCourse() {
+    /*private void resumeCourse() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.container, CourseFragment.newInstance(1));
+        transaction.replace(R.id.container, QuestionnaireFragment.newInstance(1, capitol));
         transaction.addToBackStack(null);
         transaction.commit();
         //Toast.makeText(getContext(), "Finance Course", Toast.LENGTH_LONG).show();
-    }
+    }*/
 
-    private void startCourse() {
+    private void startCourse(int id) {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.container, StartCourseFragment.newInstance());
+        transaction.replace(R.id.container, StartCourseFragment.newInstance(id));
         transaction.addToBackStack(null);
         transaction.commit();
     }
 
-    private boolean checkEnrolled(String table) {
-        Connection connect = SQLConnection.getConnection();
+    private boolean checkEnrolled(ResultSet resultSet) {
+        try {
+            if (resultSet != null) {
+                //to be changed when more courses are added
+                capitol = resultSet.getInt(5);
+                lastQuestion = resultSet.getInt(6);
+                progress = resultSet.getInt(4);
+                return progress != 100;
+            }
+        } catch (Exception e) {
+            Log.e("checkEnrolled: ", e.toString());
+        }
+        return false;
+    }
+
+    private ResultSet getSet(String table) {
         try {
             if (connect != null) {
                 PreparedStatement statement = connect.prepareStatement("SELECT * FROM " + table + " WHERE Username = ?");
@@ -101,16 +123,38 @@ public class CoursesFragment extends Fragment {
                 ResultSet resultSet = statement.executeQuery();
                 resultSet.next();
 
-                if (resultSet.getString(1) != null) {
-                    progress = resultSet.getInt(2);
-                    return progress != 100;
-                } else {
-                    return false;
-                }
+                if (resultSet.getString(1) != null)
+                    return resultSet;
             }
         } catch (Exception e) {
             Log.e("checkEnrolled: ", e.toString());
         }
-        return false;
+        return null;
+    }
+
+    private void getCourse(int id) {
+        try {
+            if (connect != null) {
+                PreparedStatement statement = connect.prepareStatement("SELECT * FROM " + COURSES_TABLE + " WHERE id = ?");
+                statement.setInt(1, id);
+                ResultSet resultSet = statement.executeQuery();
+                resultSet.next();
+                numarCapitole = resultSet.getInt(7);
+            }
+        } catch (Exception e) {
+            Log.e("getCourse: ", e.toString());
+        }
+    }
+
+    public static int getCapitol() {
+        return capitol;
+    }
+
+    public static int getLastQuestion() {
+        return lastQuestion;
+    }
+
+    public static int getProgress() {
+        return progress;
     }
 }
