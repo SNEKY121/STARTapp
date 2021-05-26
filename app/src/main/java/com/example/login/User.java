@@ -17,7 +17,6 @@ public class User {
     private int streak;
     private byte[] barray;
 
-
     Connection connect;
 
     public String getUsername() {

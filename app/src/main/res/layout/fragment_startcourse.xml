@@ -22,8 +22,12 @@
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:layout_editor_absoluteX="0dp"
-                tools:layout_editor_absoluteY="215dp">
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginBottom="50dp"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -40,7 +44,7 @@
                         app:cardElevation="0dp">
 
                         <ImageButton
-                            android:id="@+id/btn_start"
+                            android:id="@+id/btn_node1"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@color/transparent"
@@ -60,7 +64,7 @@
                         app:cardElevation="0dp">
 
                         <ImageButton
-                            android:id="@+id/btn_start2"
+                            android:id="@+id/btn_node2"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@color/transparent"
@@ -68,7 +72,7 @@
                             android:src="@drawable/progress_background" />
 
                         <ImageView
-                            android:id="@+id/lock"
+                            android:id="@+id/lock3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
@@ -89,7 +93,7 @@
                         app:cardElevation="0dp">
 
                         <ImageButton
-                            android:id="@+id/btn_start3"
+                            android:id="@+id/btn_node3"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:adjustViewBounds="true"
@@ -100,7 +104,7 @@
                             android:src="@drawable/ic_finalstagecourse_01" />
 
                         <ImageView
-                            android:id="@+id/lock2"
+                            android:id="@+id/lock3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
@@ -167,7 +171,6 @@
                     style="?android:attr/progressBarStyle"
                     android:layout_width="75dp"
                     android:layout_height="75dp"
-                    android:indeterminate="false"
                     android:max="100"
                     android:progress="45" />
 
