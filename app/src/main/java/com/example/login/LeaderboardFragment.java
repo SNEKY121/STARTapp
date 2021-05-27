@@ -57,6 +57,7 @@ public class LeaderboardFragment extends Fragment {
         return view;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void setData() {
         Connection connect = SQLConnection.getConnection();
         try {
@@ -73,6 +74,7 @@ public class LeaderboardFragment extends Fragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void makeConstraint(String username, String xp, int index) {
         LinearLayout linearlayout = view.findViewById(R.id.llLeaderboard);
         ConstraintLayout constraintLayout = new ConstraintLayout(getContext());
@@ -96,15 +98,17 @@ public class LeaderboardFragment extends Fragment {
         constraintSet.connect(placement.getId(), ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT, pxToDp(10));
         constraintSet.connect(placement.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
         constraintSet.connect(placement.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-        constraintSet.connect(user.getId(), ConstraintSet.LEFT, placement.getId(), ConstraintSet.RIGHT);
-        constraintSet.connect(user.getId(), ConstraintSet.RIGHT, score.getId(), ConstraintSet.LEFT);
+        constraintSet.connect(user.getId(), ConstraintSet.LEFT, placement.getId(), ConstraintSet.RIGHT, pxToDp(35));
         constraintSet.connect(user.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
         constraintSet.connect(user.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
         constraintSet.connect(score.getId(), ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, pxToDp(10));
         constraintSet.connect(score.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
         constraintSet.connect(score.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
         constraintSet.applyTo(constraintLayout);
-
+        /*
+        straintSet.connect(user.getId(), ConstraintSet.LEFT, placement.getId(), ConstraintSet.RIGHT);
+        constraintSet.connect(user.getId(), ConstraintSet.RIGHT, score.getId(), ConstraintSet.LEFT);
+         */
         linearlayout.addView(constraintLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, pxToDp(60)));
 
     }
@@ -121,7 +125,6 @@ public class LeaderboardFragment extends Fragment {
         tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         tv.setTextSize(30);
         Typeface tf = getResources().getFont(R.font.tommy_soft);
-        tv.setTextColor(getResources().getColor(R.color.white));
         tv.setTypeface(tf);
     }
 

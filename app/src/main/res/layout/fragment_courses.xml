@@ -132,16 +132,15 @@
                 android:id="@+id/textView9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="808dp"
                 android:fontFamily="@font/cocogoose_regular"
                 android:text="Cursuri"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="@+id/tableLayout"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.03" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
