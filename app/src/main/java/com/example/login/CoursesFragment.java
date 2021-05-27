@@ -139,7 +139,7 @@ public class CoursesFragment extends Fragment {
                 statement.setInt(1, id);
                 ResultSet resultSet = statement.executeQuery();
                 resultSet.next();
-                numarCapitole = resultSet.getInt(7);
+                numarCapitole = resultSet.getInt(4);
             }
         } catch (Exception e) {
             Log.e("getCourse: ", e.toString());

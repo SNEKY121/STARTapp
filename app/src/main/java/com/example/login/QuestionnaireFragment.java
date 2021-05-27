@@ -108,14 +108,16 @@ public class QuestionnaireFragment extends Fragment {
     private void setChapterCompleted() {
         try {
             if (connect != null) {
-                PreparedStatement capitolIndexStatement = connect.prepareStatement("SELECT CapitolIndex FROM " + COURSESUSERS_TABLE + " WHERE CapitolId = ?");
-                capitolIndexStatement.setInt(1, capitol_id);
+                int course_id = StartCourseFragment.getCourse_id();
+                PreparedStatement capitolIndexStatement = connect.prepareStatement("SELECT Capitol FROM " + COURSESUSERS_TABLE + " WHERE CourseId = ?");
+                capitolIndexStatement.setInt(1, course_id);
                 ResultSet rs = capitolIndexStatement.executeQuery();
                 rs.next();
-                int capitolIndex = rs.getInt(4);
-                PreparedStatement statement = connect.prepareStatement("UPDATE " + COURSESUSERS_TABLE + " SET Capitol = ? WHERE Username = ?");
+                int capitolIndex = rs.getInt(1);
+                PreparedStatement statement = connect.prepareStatement("UPDATE " + COURSESUSERS_TABLE + " SET Capitol = ? WHERE Username = ? AND CourseId = ?");
                 statement.setInt(1, capitolIndex+1);
                 statement.setString(2, HomePage.user.getUsername());
+                statement.setInt(3, course_id);
                 statement.execute();
             }
         } catch (Exception e) {

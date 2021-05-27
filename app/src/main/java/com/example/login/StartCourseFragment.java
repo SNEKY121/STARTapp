@@ -1,5 +1,6 @@
 package com.example.login;
 
+import android.graphics.drawable.RotateDrawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -57,9 +58,9 @@ public class StartCourseFragment extends Fragment {
         ImageButton btnChapter2 = view.findViewById(R.id.btn_node2);
         ImageButton btnChapter3 = view.findViewById(R.id.btn_node3);
         TextView chapterProgress = view.findViewById(R.id.course_progress1);
-        ProgressBar progressBar = view.findViewById(R.id.course_progress2);
+        //ProgressBar progressBar = view.findViewById(R.id.course_progress2);
         TextView tvProgress = view.findViewById(R.id.progress_percent);
-        ImageView lock2 = view.findViewById(R.id.lock3);
+        ImageView lock2 = view.findViewById(R.id.lock2);
         ImageView lock3 = view.findViewById(R.id.lock3);
 
         setClickable(btnChapter1,btnChapter2,btnChapter3, lock2, lock3);
@@ -71,8 +72,8 @@ public class StartCourseFragment extends Fragment {
         });
 
         chapterProgress.setText(CoursesFragment.getCapitol()-1 + "/" + getNumarCapitole());
-        progressBar.setProgress(CoursesFragment.getProgress());
-        tvProgress.setText(String.valueOf(CoursesFragment.getProgress()));
+        //progressBar.setProgress(CoursesFragment.getProgress());
+        tvProgress.setText(String.valueOf(CoursesFragment.getProgress()) + "%");
 
         return view;
     }
@@ -158,6 +159,10 @@ public class StartCourseFragment extends Fragment {
             Log.e("getCourse: ", e.toString());
         }
         return 0;
+    }
+
+    public static int getCourse_id() {
+        return course_id;
     }
 
 }
