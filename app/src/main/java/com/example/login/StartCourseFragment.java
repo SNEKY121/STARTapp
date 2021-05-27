@@ -70,8 +70,12 @@ public class StartCourseFragment extends Fragment {
             getCapitol(1);
             getQuestions();
         });
+	
+	int capitoleTerminate = CoursesFragment.getCapitol();
+        if (capitoleTerminate > 0)
+            capitoleTerminate--;
 
-        chapterProgress.setText(CoursesFragment.getCapitol()-1 + "/" + getNumarCapitole());
+        chapterProgress.setText(capitoleTerminate + "/" + getNumarCapitole());
         //progressBar.setProgress(CoursesFragment.getProgress());
         tvProgress.setText(String.valueOf(CoursesFragment.getProgress()) + "%");
 
