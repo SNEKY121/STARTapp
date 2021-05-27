@@ -29,6 +29,10 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/bg_leaderboard"
+            android:elevation="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -43,8 +47,8 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:layout_margin="15dp">
+                    android:layout_height="70dp"
+                    android:layout_margin="10dp">
 
                     <TextView
                         android:id="@+id/textView13"
@@ -54,6 +58,8 @@
                         android:text="Pozitie"
                         android:textAlignment="center"
                         android:textSize="30sp"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/tommy_soft"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -66,6 +72,8 @@
                         android:text="Utilizator"
                         android:textAlignment="center"
                         android:textSize="30sp"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/tommy_soft"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/textView13"
@@ -79,6 +87,8 @@
                         android:text="Xp"
                         android:textAlignment="center"
                         android:textSize="30sp"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/tommy_soft"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />

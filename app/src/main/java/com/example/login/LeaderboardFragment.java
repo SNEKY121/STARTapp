@@ -1,7 +1,10 @@
 package com.example.login;
 
+import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
@@ -110,13 +113,16 @@ public class LeaderboardFragment extends Fragment {
         constraintLayout.addView(tv, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void setTextView(TextView tv) {
         //tv.setLayoutParams(new ViewGroup.LayoutParams(60, ViewGroup.LayoutParams.MATCH_PARENT));
         tv.setId(View.generateViewId());
         tv.setGravity(Gravity.CENTER);
         tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         tv.setTextSize(30);
-
+        Typeface tf = getResources().getFont(R.font.tommy_soft);
+        tv.setTextColor(getResources().getColor(R.color.white));
+        tv.setTypeface(tf);
     }
 
     private int pxToDp(int dp) {

@@ -16,7 +16,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Schimba adresa email"
+        android:fontFamily="@font/tommy_soft"
+        android:text="Schimba adresa de email"
         android:textColor="@color/white"
         android:textSize="18sp" />
 
@@ -24,6 +25,7 @@
         android:id="@+id/tv_datashow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/tommy_soft"
         android:text="example@gmail.com"
         android:layout_marginTop="5dp"
         android:textSize="18sp"
@@ -51,14 +53,15 @@
 
         <Button
             android:id="@+id/btnChange"
-            android:layout_width="120dp"
+            android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_alignEnd="@+id/btnCancel"
             android:layout_gravity="center_horizontal"
             android:layout_marginEnd="30dp"
             android:background="@drawable/rounded_textedit"
             android:text="Schimba"
-            android:textColor="#3A86CF"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/cocogoose_regular"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -66,11 +69,12 @@
 
         <Button
             android:id="@+id/btnCancel"
-            android:layout_width="120dp"
+            android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:text="Inapoi"
             android:layout_marginLeft="30dp"
-            android:textColor="#3A86CF"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/cocogoose_regular"
             android:textSize="16sp"
             android:background="@drawable/rounded_textedit"
             app:layout_constraintBottom_toBottomOf="parent"

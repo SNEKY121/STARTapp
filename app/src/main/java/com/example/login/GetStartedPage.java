@@ -56,11 +56,14 @@ public class GetStartedPage extends AppCompatActivity {
             if (inputName.isEmpty() || inputPassword.isEmpty()) {
                 Toast.makeText(GetStartedPage.this, "Completati toate formularele!", Toast.LENGTH_SHORT).show();
             } else {
+                eLogin.setClickable(false);
                 isValid = checkCred(inputName, inputPassword);
 
                 if (!isValid) {
                     Toast.makeText(GetStartedPage.this, "Date Introduse Invalide", Toast.LENGTH_LONG).show();
+                    eLogin.setClickable(true);
                 } else {
+
                     if (eCheckBox.isChecked())
                         getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
                                 .edit()
@@ -71,6 +74,7 @@ public class GetStartedPage extends AppCompatActivity {
                     redirect(username, email);
                 }
                 ePassword.getText().clear();
+
             }
         });
 

@@ -52,7 +52,7 @@ public class RegisterPage extends AppCompatActivity {
             String inputName = eName.getText().toString();
             String inputPassword = ePassword.getText().toString();
             String inputPasswordConfirm = ePasswordConfirm.getText().toString();
-
+            eRegister.setClickable(false);
             if (CheckCreds(inputEmail, inputName, inputPassword, inputPasswordConfirm)) {
                 if (SubmitRegister(inputName, inputEmail, inputPassword)) {
                     if (CreateProfile(inputName)) {
@@ -62,6 +62,7 @@ public class RegisterPage extends AppCompatActivity {
                     }
                 }
             } else {
+                eRegister.setClickable(true);
                 ePassword.getText().clear();
                 ePasswordConfirm.getText().clear();
             }

@@ -10,32 +10,38 @@
         android:id="@+id/btnUpload"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:text="Incarca Poza"
         android:layout_margin="20dp"
+        android:background="@drawable/rounded_textedit"
+        android:fontFamily="@font/cocogoose_regular"
         android:gravity="center"
-        android:textSize="20sp"
-        android:background="@drawable/rounded_textedit" />
+        android:text="Incarca o Poza"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/btnTake"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:text="Fa o Poza"
         android:layout_marginHorizontal="20dp"
         android:layout_marginBottom="20dp"
+        android:background="@drawable/rounded_textedit"
+        android:fontFamily="@font/cocogoose_regular"
         android:gravity="center"
-        android:textSize="20sp"
-        android:background="@drawable/rounded_textedit" />
+        android:text="Fa o Poza"
+        android:textColor="#FFFDFD"
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/btnCancel"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:text="Inapoi"
         android:layout_marginHorizontal="20dp"
         android:layout_marginBottom="20dp"
+        android:background="@drawable/rounded_textedit"
+        android:fontFamily="@font/cocogoose_regular"
         android:gravity="center"
-        android:textSize="20sp"
-        android:background="@drawable/rounded_textedit" />
+        android:text="Inapoi"
+        android:textColor="#FBF6F6"
+        android:textSize="20sp" />
 
 </LinearLayout>
