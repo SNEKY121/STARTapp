@@ -17,7 +17,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.HashMap;
 
-import static com.example.login.SQLConnection.FINANCE_TABLE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -116,7 +115,7 @@ public class CourseFragment extends Fragment {
             if (connect != null) {
                 int progress = questionNumber/QuestionsAndAnswers.getFinanceTotalQuestions()*100;
 
-                PreparedStatement statement = connect.prepareStatement("UPDATE " + FINANCE_TABLE + " SET Progress = ? WHERE Username = ?");
+                PreparedStatement statement = connect.prepareStatement("UPDATE " + " SET Progress = ? WHERE Username = ?");
                 statement.setInt(1, progress);
                 statement.setString(2, HomePage.user.getUsername());
                 statement.execute();

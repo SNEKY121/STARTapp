@@ -52,7 +52,9 @@
                             android:layout_height="match_parent"
                             android:background="@color/transparent"
                             android:contentDescription="Capitol"
-                            android:src="@drawable/bg_progress" />
+                            android:scaleX="2.1"
+                            android:scaleY="2.1"
+                            android:src="@drawable/ic_capitol1_01" />
 
                     </androidx.cardview.widget.CardView>
 
@@ -70,9 +72,12 @@
                             android:id="@+id/btn_node2"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:alpha="0.7"
                             android:background="@color/transparent"
                             android:contentDescription="Capitol"
-                            android:src="@drawable/bg_progress" />
+                            android:scaleX="2.1"
+                            android:scaleY="2.1"
+                            android:src="@drawable/ic_capitol2_01" />
 
                         <ImageView
                             android:id="@+id/lock2"
@@ -90,7 +95,6 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="35dp"
                         android:layout_marginBottom="10dp"
-                        android:background="@drawable/ic_finalstagecourse_01"
                         app:cardBackgroundColor="@color/transparent"
                         app:cardCornerRadius="200dp"
                         app:cardElevation="0dp">
@@ -100,11 +104,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:adjustViewBounds="true"
+                            android:alpha="0.7"
                             android:background="@color/transparent"
                             android:contentDescription="Capitol final"
                             android:scaleX="2.7"
                             android:scaleY="2.7"
-                            android:src="@drawable/ic_finalstagecourse_01" />
+                            android:src="@drawable/ic_capitol3_01" />
 
                         <ImageView
                             android:id="@+id/lock3"
@@ -120,11 +125,11 @@
                         android:layout_width="350dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="50dp"
+                        android:layout_marginBottom="10dp"
                         android:fontFamily="@font/cocogoose_regular"
                         android:text="Curs realizat de Silvia Bogdan"
                         android:textAlignment="center"
-                        android:textSize="18dp" />
+                        android:textSize="15dp" />
 
                 </LinearLayout>
             </ScrollView>

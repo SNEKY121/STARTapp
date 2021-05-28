@@ -3,9 +3,14 @@ package com.example.login;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import android.graphics.Color;
+import android.os.Build;
 import android.util.Log;
 import android.os.Bundle;
 
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -86,5 +91,13 @@ public class HomePage extends AppCompatActivity {
                 .edit()
                 .putString(GetStartedPage.PREF_USERNAME, null)
                 .apply();
+    }
+
+    public void updateStatusBarColor(String color){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.parseColor(color));
+        }
     }
 }

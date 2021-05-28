@@ -55,13 +55,9 @@ public class StartCourseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // create ContextThemeWrapper from the original Activity Context with the custom theme
-        final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.Theme_CursSDV);
-        // clone the inflater using the ContextThemeWrapper
-        LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
-        // inflate the layout using the cloned inflater, not default inflater
-        View view = localInflater.inflate(R.layout.fragment_startcourse, container, false);
+        View view = inflater.inflate(R.layout.fragment_startcourse, container, false);
 
+        ((HomePage)getActivity()).updateStatusBarColor("#7A1A85");
 
         ImageButton btnChapter1 = view.findViewById(R.id.btn_node1);
         ImageButton btnChapter2 = view.findViewById(R.id.btn_node2);

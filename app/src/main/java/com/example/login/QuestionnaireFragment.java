@@ -59,6 +59,8 @@ public class QuestionnaireFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_course, container, false);
 
+        ((HomePage)getActivity()).updateStatusBarColor("#7A1A85");
+
         TextView Question = view.findViewById(R.id.tv_question);
         Button Answer1 = view.findViewById(R.id.btn_answer1);
         Button Answer2 = view.findViewById(R.id.btn_answer2);
