@@ -52,10 +52,24 @@
                             android:layout_height="match_parent"
                             android:orientation="vertical">
 
-                            <ImageView
+                            <FrameLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="180dp"
-                                android:background="@drawable/ic_cursfinanciarvector_01" />
+                                android:layout_height="wrap_content">
+
+                                <ImageView
+                                    android:id="@+id/img_curs1"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="180dp"
+                                    android:background="@drawable/ic_cursfinanciarvector_01" />
+
+                                <ImageView
+                                    android:id="@+id/logoSdV"
+                                    android:layout_gravity="top|right"
+                                    android:layout_margin="10dp"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:src="@drawable/logosdv1" />
+                            </FrameLayout>
 
                             <ProgressBar
                                 android:id="@+id/pb_course1"
@@ -67,6 +81,7 @@
                                 android:visibility="gone" />
 
                             <TextView
+                                android:id="@+id/txt_curs1"
                                 android:layout_width="match_parent"
                                 android:layout_height="30dp"
                                 android:layout_gravity="bottom"
@@ -96,10 +111,16 @@
                             android:layout_height="match_parent"
                             android:orientation="vertical">
 
-                            <ImageView
+                            <FrameLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="180dp"
-                                android:background="@drawable/ic_bookfilled_01" />
+                                android:layout_height="wrap_content">
+
+                                <ImageView
+                                    android:id="@+id/img_curs2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="180dp"
+                                    android:background="@drawable/ic_workinprogressfilled_01" />
+                            </FrameLayout>
 
                             <ProgressBar
                                 android:id="@+id/pb_course2"
@@ -111,6 +132,7 @@
                                 android:visibility="gone" />
 
                             <TextView
+                                android:id="@+id/txt_curs2"
                                 android:layout_width="match_parent"
                                 android:layout_height="30dp"
                                 android:layout_gravity="bottom"
