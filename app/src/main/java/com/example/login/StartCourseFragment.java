@@ -36,7 +36,9 @@ public class StartCourseFragment extends Fragment {
     }
     Connection connect = SQLConnection.getConnection();
     private static int course_id;
-    private int numberOfQuestions;
+    private static int numberOfQuestions;
+    private static int capitol_id;
+    private static int nrCapitole;
 
     // TODO: Rename and change types and number of parameters
     public static StartCourseFragment newInstance(int courseId) {
@@ -55,10 +57,8 @@ public class StartCourseFragment extends Fragment {
                              Bundle savedInstanceState) {
         // create ContextThemeWrapper from the original Activity Context with the custom theme
         final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.Theme_CursSDV);
-
         // clone the inflater using the ContextThemeWrapper
         LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
-
         // inflate the layout using the cloned inflater, not default inflater
         View view = localInflater.inflate(R.layout.fragment_startcourse, container, false);
 
@@ -67,7 +67,6 @@ public class StartCourseFragment extends Fragment {
         ImageButton btnChapter2 = view.findViewById(R.id.btn_node2);
         ImageButton btnChapter3 = view.findViewById(R.id.btn_node3);
         TextView chapterProgress = view.findViewById(R.id.course_progress1);
-        //ProgressBar progressBar = view.findViewById(R.id.course_progress2);
         TextView tvProgress = view.findViewById(R.id.progress_percent);
         ImageView lock2 = view.findViewById(R.id.lock2);
         ImageView lock3 = view.findViewById(R.id.lock3);
@@ -75,18 +74,32 @@ public class StartCourseFragment extends Fragment {
         setClickable(btnChapter1,btnChapter2,btnChapter3, lock2, lock3);
 
         btnChapter1.setOnClickListener(v -> {
+            capitol_id = 1;
             addUserToFinanceTable();
             getCapitol(1);
             getQuestions();
         });
+
+        btnChapter2.setOnClickListener(v -> {
+            capitol_id = 2;
+            addUserToFinanceTable();
+            getCapitol(2);
+            getQuestions();
+        });
+
+        btnChapter3.setOnClickListener(v -> {
+            capitol_id = 3;
+            addUserToFinanceTable();
+            getCapitol(3);
+            getQuestions();
+        });
 	
-	int capitoleTerminate = CoursesFragment.getCapitol();
+	    int capitoleTerminate = CoursesFragment.getCapitol();
         if (capitoleTerminate > 0)
             capitoleTerminate--;
 
         chapterProgress.setText(capitoleTerminate + "/" + getNumarCapitole());
-        //progressBar.setProgress(CoursesFragment.getProgress());
-        tvProgress.setText(String.valueOf(CoursesFragment.getProgress()) + "%");
+        tvProgress.setText(CoursesFragment.getProgress() + "%");
 
         return view;
     }
@@ -111,12 +124,12 @@ public class StartCourseFragment extends Fragment {
     private void getCapitol(int index) {
         try {
             if (connect != null) {
-                PreparedStatement checkUsernameStatement = connect.prepareStatement("SELECT * FROM " + CAPITOLE_TABLE + " WHERE CapitolIndex = ?");
+                PreparedStatement checkUsernameStatement = connect.prepareStatement("SELECT * FROM " + CAPITOLE_TABLE + " WHERE id = ?");
                 checkUsernameStatement.setInt(1, index);
                 ResultSet resultSet = checkUsernameStatement.executeQuery();
                 resultSet.next();
                 if (resultSet.getString(1) != null) {
-                    numberOfQuestions = resultSet.getInt(6);
+                    numberOfQuestions = resultSet.getInt(5);
                     //other stuff
                 }
             }
@@ -128,8 +141,9 @@ public class StartCourseFragment extends Fragment {
     private void addUserToFinanceTable() {
         try {
             if (connect != null) {
-                PreparedStatement checkUsernameStatement = connect.prepareStatement("SELECT * FROM " + COURSESUSERS_TABLE + " WHERE Username = ?");
+                PreparedStatement checkUsernameStatement = connect.prepareStatement("SELECT * FROM " + COURSESUSERS_TABLE + " WHERE Username = ? AND CourseId = ?");
                 checkUsernameStatement.setString(1, HomePage.user.getUsername());
+                checkUsernameStatement.setInt(2, course_id);
                 ResultSet resultSet = checkUsernameStatement.executeQuery();
                 resultSet.next();
 
@@ -155,7 +169,7 @@ public class StartCourseFragment extends Fragment {
         if (lastQuestion + 1 < numberOfQuestions)
             lastQuestion++;
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, QuestionnaireFragment.newInstance(lastQuestion, course_id, numberOfQuestions));
+        transaction.replace(R.id.container, QuestionnaireFragment.newInstance(lastQuestion, capitol_id, numberOfQuestions));
         transaction.commit();
     }
 
@@ -166,7 +180,8 @@ public class StartCourseFragment extends Fragment {
                 statement.setInt(1, course_id );
                 ResultSet resultSet = statement.executeQuery();
                 resultSet.next();
-                return resultSet.getInt(1);
+                nrCapitole = resultSet.getInt(1);
+                return nrCapitole;
             }
         } catch (Exception e) {
             Log.e("getCourse: ", e.toString());
@@ -177,5 +192,15 @@ public class StartCourseFragment extends Fragment {
     public static int getCourse_id() {
         return course_id;
     }
+
+    public static int getNrCapitole() {
+        return nrCapitole;
+    }
+
+    /*public static int getCapitol_id() { return capitol_id; }
+
+    public static int getTotalQuestions() {
+        return numberOfQuestions;
+    }*/
 
 }

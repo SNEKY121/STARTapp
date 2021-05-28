@@ -14,7 +14,6 @@ public class SQLConnection {
     private static final String PORT = "1433";
     public static final String ACCOUNTS_TABLE = "Accounts";
     public static final String PROFILES_TABLE = "Profiles";
-    public static final String FINANCE_TABLE = "FinanceTable";
     public static final String COURSESUSERS_TABLE = "CoursesUsers";
     public static final String COURSES_TABLE = "Courses";
     public static final String CAPITOLE_TABLE = "Capitole";

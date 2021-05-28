@@ -83,15 +83,6 @@ public class CoursesFragment extends Fragment {
         return view;
     }
 
-    /*private void resumeCourse() {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.container, QuestionnaireFragment.newInstance(1, capitol));
-        transaction.addToBackStack(null);
-        transaction.commit();
-        //Toast.makeText(getContext(), "Finance Course", Toast.LENGTH_LONG).show();
-    }*/
-
     private void startCourse(int id) {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();

@@ -109,11 +109,7 @@ public class QuestionnaireFragment extends Fragment {
         try {
             if (connect != null) {
                 int course_id = StartCourseFragment.getCourse_id();
-                PreparedStatement capitolIndexStatement = connect.prepareStatement("SELECT Capitol FROM " + COURSESUSERS_TABLE + " WHERE CourseId = ?");
-                capitolIndexStatement.setInt(1, course_id);
-                ResultSet rs = capitolIndexStatement.executeQuery();
-                rs.next();
-                int capitolIndex = rs.getInt(1);
+                int capitolIndex = capitol_id;
                 PreparedStatement statement = connect.prepareStatement("UPDATE " + COURSESUSERS_TABLE + " SET Capitol = ? WHERE Username = ? AND CourseId = ?");
                 statement.setInt(1, capitolIndex+1);
                 statement.setString(2, HomePage.user.getUsername());
@@ -132,12 +128,13 @@ public class QuestionnaireFragment extends Fragment {
     private void setProgress() {
         try {
             if (connect != null) {
-                int progress = (int)((float)(questionNumber)/(float)(QuestionsAndAnswers.getFinanceTotalQuestions())*100);
+                int progress = (int)((float)(questionNumber)/(float)(numberOfQuestions)*100/(float)StartCourseFragment.getNrCapitole());
 
-                PreparedStatement statement = connect.prepareStatement("UPDATE " + COURSESUSERS_TABLE + " SET Progress = ?, LastQuestion = ? WHERE Username = ?");
+                PreparedStatement statement = connect.prepareStatement("UPDATE " + COURSESUSERS_TABLE + " SET Progress = ?, LastQuestion = ? WHERE Username = ? AND CourseId = ?");
                 statement.setInt(1, progress);
                 statement.setInt(2, questionNumber);
                 statement.setString(3, HomePage.user.getUsername());
+                statement.setInt(4, StartCourseFragment.getCourse_id());
                 statement.execute();
             }
         } catch (Exception e) {
