@@ -14,4 +14,22 @@
         <item name="android:statusBarColor" tools:targetApi="l">@color/blue</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="Theme.CursSDV" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/grcurs_end</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/grcurs_end</item>
+        <item name="colorSecondaryVariant">@color/grcurs_end</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="android:navigationBarColor">@color/grcurs_end</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">@color/grcurs_end</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+
+
 </resources>

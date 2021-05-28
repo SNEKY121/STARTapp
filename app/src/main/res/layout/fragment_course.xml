@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_gradient">
+        android:background="@drawable/bg_curs">
 
         <TextView
             android:id="@+id/tv_question"
@@ -53,8 +53,8 @@
             android:id="@+id/btn_answer2"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:layout_marginTop="20dp"
             android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/custom_button"
             android:text="Answer"
             android:textSize="20sp"
@@ -66,8 +66,8 @@
             android:id="@+id/btn_answer3"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:layout_marginTop="20dp"
             android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/custom_button"
             android:text="Answer"
             android:textSize="20sp"
@@ -79,8 +79,8 @@
             android:id="@+id/btn_answer4"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:layout_marginTop="20dp"
             android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/custom_button"
             android:text="Answer"
             android:textSize="20sp"
