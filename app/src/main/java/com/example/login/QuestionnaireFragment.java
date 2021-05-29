@@ -166,7 +166,7 @@ public class QuestionnaireFragment extends Fragment {
         } else {
             setChapterCompleted();
 
-            transaction.replace(R.id.container, StartCourseFragment.newInstance());
+            transaction.replace(R.id.container, CoursesFragment.newInstance());
         }
         transaction.commit();
     }
