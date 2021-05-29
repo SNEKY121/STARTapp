@@ -16,6 +16,15 @@ public class User {
     private String cursuri;
     private int streak;
     private byte[] barray;
+    private float progress;
+
+    public float getProgress() {
+        return progress;
+    }
+
+    public void setProgress(float progress) {
+        this.progress = progress;
+    }
 
     Connection connect;
 
@@ -41,6 +50,7 @@ public class User {
 
     public void setXp(int xp) {
         this.xp = xp;
+        updateProfile("Xp", xp);
     }
 
     public String getCursuri() {
@@ -113,7 +123,7 @@ public class User {
                 PreparedStatement stmt = connect.prepareStatement("UPDATE " + PROFILES_TABLE + " SET " + column + " = ? WHERE Username = ?");
                 stmt.setInt(1, val);
                 stmt.setString(2, username);
-                stmt.execute();
+                stmt.executeUpdate();
             }
         } catch (Exception e) {
             Log.e("", "Check connection " + e);
