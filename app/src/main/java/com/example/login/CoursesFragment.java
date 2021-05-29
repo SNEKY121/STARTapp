@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -68,17 +69,9 @@ public class CoursesFragment extends Fragment {
             startCourse(course_id);
         });
 
-        /*cv2.setOnClickListener(v -> {
-            startCourse(2);
+        cv2.setOnClickListener(v -> {
+            Toast.makeText(getContext(), "Curs In Lucru", Toast.LENGTH_LONG).show();
         });
-
-        cv3.setOnClickListener(v -> {
-            startCourse(3);
-        });
-
-        cv4.setOnClickListener(v -> {
-            startCourse(4);
-        });*/
 
         return view;
     }
@@ -96,7 +89,7 @@ public class CoursesFragment extends Fragment {
             if (resultSet != null) {
                 //to be changed when more courses are added
                 capitol = resultSet.getInt(5);
-                lastQuestion = resultSet.getInt(6);
+                //lastQuestion = resultSet.getInt(6);
                 progress = resultSet.getInt(4);
                 return progress != 100;
             }
@@ -141,9 +134,9 @@ public class CoursesFragment extends Fragment {
         return capitol;
     }
 
-    public static int getLastQuestion() {
+    /*public static int getLastQuestion() {
         return lastQuestion;
-    }
+    }*/
 
     public static int getProgress() {
         return progress;
