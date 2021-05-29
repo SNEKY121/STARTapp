@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -39,6 +40,8 @@ public class StartCourseFragment extends Fragment {
     private static int numberOfQuestions;
     private static int capitol_id;
     private static int nrCapitole;
+    private boolean chapter2Locked = true;
+    private boolean chapter3Locked = true;
 
     // TODO: Rename and change types and number of parameters
     public static StartCourseFragment newInstance(int courseId) {
@@ -67,7 +70,7 @@ public class StartCourseFragment extends Fragment {
         ImageView lock2 = view.findViewById(R.id.lock2);
         ImageView lock3 = view.findViewById(R.id.lock3);
 
-        setClickable(btnChapter1,btnChapter2,btnChapter3, lock2, lock3);
+        setClickable(lock2, lock3, btnChapter2, btnChapter3);
 
         btnChapter1.setOnClickListener(v -> {
             capitol_id = 1;
@@ -77,17 +80,21 @@ public class StartCourseFragment extends Fragment {
         });
 
         btnChapter2.setOnClickListener(v -> {
-            capitol_id = 2;
-            addUserToFinanceTable();
-            getCapitol(2);
-            getQuestions();
+            if (!chapter2Locked) {
+                capitol_id = 2;
+                addUserToFinanceTable();
+                getCapitol(2);
+                getQuestions();
+            } else Toast.makeText(getContext(), "Completeaza capitolul anterior", Toast.LENGTH_SHORT).show();
         });
 
         btnChapter3.setOnClickListener(v -> {
+            if (!chapter3Locked) {
             capitol_id = 3;
             addUserToFinanceTable();
             getCapitol(3);
             getQuestions();
+            } else Toast.makeText(getContext(), "Completeaza capitolul anterior", Toast.LENGTH_SHORT).show();
         });
 	
 	    int capitoleTerminate = CoursesFragment.getCapitol();
@@ -100,13 +107,18 @@ public class StartCourseFragment extends Fragment {
         return view;
     }
 
-    private void setClickable(ImageButton btn1, ImageButton btn2, ImageButton btn3, ImageView lock2, ImageView lock3){
-
-        btn1.setClickable(true);
-        btn2.setClickable(false);
-        btn3.setClickable(false);
-        lock2.setVisibility(View.VISIBLE);
-        lock3.setVisibility(View.VISIBLE);
+    private void setClickable(ImageView lock2, ImageView lock3, ImageView ch2, ImageView ch3){
+        int capitol = CoursesFragment.getCapitol();
+        if (capitol >= 2) {
+            chapter2Locked = false;
+            lock2.setVisibility(View.INVISIBLE);
+            ch2.setAlpha(1.0f);
+            if (capitol >= 3) {
+                chapter3Locked = false;
+                lock3.setVisibility(View.INVISIBLE);
+                ch3.setAlpha(1.0f);
+            }
+        }
 
         /*
         HomePage.user.getUsername()
@@ -159,11 +171,11 @@ public class StartCourseFragment extends Fragment {
     }
 
     private void getQuestions() {
-        int lastQuestion = CoursesFragment.getLastQuestion();
-        if (lastQuestion == 0)
+        int lastQuestion = 1;//CoursesFragment.getLastQuestion();
+        /*if (lastQuestion == 0)
             lastQuestion = 1;
         if (lastQuestion + 1 < numberOfQuestions)
-            lastQuestion++;
+            lastQuestion++;*/
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, QuestionnaireFragment.newInstance(lastQuestion, capitol_id, numberOfQuestions));
         transaction.commit();
