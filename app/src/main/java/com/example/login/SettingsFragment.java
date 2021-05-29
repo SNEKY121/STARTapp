@@ -142,10 +142,10 @@ public class SettingsFragment extends Fragment {
             tvData.setText(USER.getUsername());
             builder.setView(tvData);
 
-            etData.setHint("Parola Noua");
+            etData.setHint("Nume de utilizator nou");
             builder.setView(etData);
 
-            tvTitle.setText("Schimba parola");
+            tvTitle.setText("Schimba numele de utilizator");
             builder.setView(tvTitle);
 
             btnChange.setOnClickListener(v1 -> {
