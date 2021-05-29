@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -64,21 +65,15 @@ public class CoursesFragment extends Fragment {
 
         cv1.setOnClickListener(v -> {
             course_id = 1;
+            if (!isEnrolledFinance)
+                addUserToFinanceTable();
             getCourse(course_id);
             startCourse(course_id);
         });
 
-        /*cv2.setOnClickListener(v -> {
-            startCourse(2);
+        cv2.setOnClickListener(v -> {
+            Toast.makeText(getContext(), "Curs In Lucru", Toast.LENGTH_LONG).show();
         });
-
-        cv3.setOnClickListener(v -> {
-            startCourse(3);
-        });
-
-        cv4.setOnClickListener(v -> {
-            startCourse(4);
-        });*/
 
         return view;
     }
@@ -96,9 +91,10 @@ public class CoursesFragment extends Fragment {
             if (resultSet != null) {
                 //to be changed when more courses are added
                 capitol = resultSet.getInt(5);
-                lastQuestion = resultSet.getInt(6);
+                //lastQuestion = resultSet.getInt(6);
                 progress = resultSet.getInt(4);
-                return progress != 100;
+                HomePage.user.setProgress(progress);
+                return true;
             }
         } catch (Exception e) {
             Log.e("checkEnrolled: ", e.toString());
@@ -107,20 +103,43 @@ public class CoursesFragment extends Fragment {
     }
 
     private ResultSet getSet(String table) {
+        ResultSet resultSet = null;
         try {
             if (connect != null) {
                 PreparedStatement statement = connect.prepareStatement("SELECT * FROM " + table + " WHERE Username = ?");
                 statement.setString(1, HomePage.user.getUsername());
-                ResultSet resultSet = statement.executeQuery();
-                resultSet.next();
-
-                if (resultSet.getString(1) != null)
+                resultSet = statement.executeQuery();
+                if(resultSet.next())
                     return resultSet;
             }
         } catch (Exception e) {
             Log.e("checkEnrolled: ", e.toString());
         }
-        return null;
+        return resultSet;
+    }
+
+    private void addUserToFinanceTable() {
+        try {
+            if (connect != null) {
+                PreparedStatement checkUsernameStatement = connect.prepareStatement("SELECT * FROM " + COURSESUSERS_TABLE + " WHERE Username = ? AND CourseId = ?");
+                checkUsernameStatement.setString(1, HomePage.user.getUsername());
+                checkUsernameStatement.setInt(2, course_id);
+                ResultSet resultSet = checkUsernameStatement.executeQuery();
+
+
+                if (!resultSet.next()) {
+                    PreparedStatement createProfileStatement = connect.prepareStatement("INSERT INTO " + COURSESUSERS_TABLE + " (Username, CourseId, Progress, Capitol, LastQuestion) VALUES (?,?, ?, ?, ?)");
+                    createProfileStatement.setString(1, HomePage.user.getUsername());
+                    createProfileStatement.setInt(2, course_id);
+                    createProfileStatement.setInt(3, 0);
+                    createProfileStatement.setInt(4, 1);
+                    createProfileStatement.setInt(5, 0);
+                    createProfileStatement.execute();
+                }
+            }
+        } catch (Exception e) {
+            Log.e("addUserToFinanceTable: ", e.toString());
+        }
     }
 
     private void getCourse(int id) {

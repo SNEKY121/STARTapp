@@ -11,6 +11,18 @@
         android:layout_height="match_parent"
         android:background="@drawable/bg_curs">
 
+        <TextView
+            android:id="@+id/tv_questionCounter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:fontFamily="@font/tommy_soft"
+            android:text="x/y"
+            android:textSize="30sp"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:id="@+id/imageView6"
             android:layout_width="225dp"
@@ -38,7 +50,8 @@
         <Button
             android:id="@+id/btn_answer1"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="wrap_content"
+            android:minHeight="70dp"
             android:layout_marginHorizontal="30dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/rounded_btn"
@@ -55,7 +68,8 @@
         <Button
             android:id="@+id/btn_answer2"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="wrap_content"
+            android:minHeight="70dp"
             android:layout_marginHorizontal="30dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/rounded_btn"
@@ -71,7 +85,8 @@
         <Button
             android:id="@+id/btn_answer3"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="wrap_content"
+            android:minHeight="70dp"
             android:layout_marginHorizontal="30dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/rounded_btn"
@@ -87,7 +102,8 @@
         <Button
             android:id="@+id/btn_answer4"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="wrap_content"
+            android:minHeight="70dp"
             android:layout_marginHorizontal="30dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/rounded_btn"
