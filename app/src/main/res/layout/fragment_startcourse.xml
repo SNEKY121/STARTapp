@@ -41,7 +41,7 @@
                         android:layout_width="150dp"
                         android:layout_height="150dp"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="15dp"
                         app:cardBackgroundColor="@color/transparent"
                         app:cardCornerRadius="175dp"
                         app:cardElevation="0dp">
@@ -52,8 +52,8 @@
                             android:layout_height="match_parent"
                             android:background="@color/transparent"
                             android:contentDescription="Capitol"
-                            android:scaleX="2.1"
-                            android:scaleY="2.1"
+                            android:scaleX="2"
+                            android:scaleY="2"
                             android:src="@drawable/ic_capitol1_01" />
 
                     </androidx.cardview.widget.CardView>
@@ -63,7 +63,7 @@
                         android:layout_width="150dp"
                         android:layout_height="150dp"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="30dp"
+                        android:layout_marginTop="15dp"
                         app:cardBackgroundColor="@color/transparent"
                         app:cardCornerRadius="175dp"
                         app:cardElevation="0dp">
@@ -75,8 +75,8 @@
                             android:alpha="0.7"
                             android:background="@color/transparent"
                             android:contentDescription="Capitol"
-                            android:scaleX="2.1"
-                            android:scaleY="2.1"
+                            android:scaleX="2"
+                            android:scaleY="2"
                             android:src="@drawable/ic_capitol2_01" />
 
                         <ImageView
@@ -93,7 +93,7 @@
                         android:layout_width="265dp"
                         android:layout_height="265dp"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="35dp"
+                        android:layout_marginTop="0dp"
                         android:layout_marginBottom="10dp"
                         app:cardBackgroundColor="@color/transparent"
                         app:cardCornerRadius="200dp"
@@ -107,8 +107,8 @@
                             android:alpha="0.7"
                             android:background="@color/transparent"
                             android:contentDescription="Capitol final"
-                            android:scaleX="2.7"
-                            android:scaleY="2.7"
+                            android:scaleX="2.5"
+                            android:scaleY="2.5"
                             android:src="@drawable/ic_capitol3_01" />
 
                         <ImageView
