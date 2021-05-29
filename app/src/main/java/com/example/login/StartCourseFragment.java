@@ -107,7 +107,7 @@ public class StartCourseFragment extends Fragment {
             capitoleTerminate--;
 
         chapterProgress.setText(capitoleTerminate + "/" + getNumarCapitole());
-        tvProgress.setText(CoursesFragment.getProgress() + "%");
+        tvProgress.setText((int)HomePage.user.getProgress() + "%");
 
         return view;
     }
@@ -169,10 +169,10 @@ public class StartCourseFragment extends Fragment {
 
     private void getQuestions() {
         int lastQuestion = CoursesFragment.getLastQuestion();
-        if (lastQuestion == 0)
-            lastQuestion = 1;
+        /*if (lastQuestion == 0)
+            lastQuestion = 1;*/
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, QuestionnaireFragment.newInstance(lastQuestion, capitol_id, numberOfQuestions));
+        transaction.replace(R.id.container, QuestionnaireFragment.newInstance(lastQuestion+1, capitol_id, numberOfQuestions));
         transaction.commit();
     }
 

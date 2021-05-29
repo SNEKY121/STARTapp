@@ -17,6 +17,7 @@ public class User {
     private int streak;
     private byte[] barray;
     private float progress;
+    Connection connect;
 
     public float getProgress() {
         return progress;
@@ -25,8 +26,6 @@ public class User {
     public void setProgress(float progress) {
         this.progress = progress;
     }
-
-    Connection connect;
 
     public String getUsername() {
         return username;

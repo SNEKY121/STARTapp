@@ -24,7 +24,7 @@ import static com.example.login.SQLConnection.COURSES_TABLE;
 
 
 public class CoursesFragment extends Fragment {
-    private static int progress = 0;
+    private static float progress = 0;
     Connection connect = SQLConnection.getConnection();
     private static int capitol;
     private static int lastQuestion;
@@ -56,7 +56,7 @@ public class CoursesFragment extends Fragment {
         boolean isEnrolledFinance = checkEnrolled(getSet(COURSESUSERS_TABLE));
         if (isEnrolledFinance) {
             financeProgressBar.setVisibility(View.VISIBLE);
-            financeProgressBar.setProgress(progress);
+            financeProgressBar.setProgress((int)progress);
         }
         
         CardView cv2 = view.findViewById(R.id.cv_course2);
@@ -91,8 +91,8 @@ public class CoursesFragment extends Fragment {
             if (resultSet != null) {
                 //to be changed when more courses are added
                 capitol = resultSet.getInt(5);
-                //lastQuestion = resultSet.getInt(6);
-                progress = resultSet.getInt(4);
+                lastQuestion = resultSet.getInt(6);
+                progress = resultSet.getFloat(4);
                 HomePage.user.setProgress(progress);
                 return true;
             }
@@ -131,7 +131,7 @@ public class CoursesFragment extends Fragment {
                     PreparedStatement createProfileStatement = connect.prepareStatement("INSERT INTO " + COURSESUSERS_TABLE + " (Username, CourseId, Progress, Capitol, LastQuestion) VALUES (?,?, ?, ?, ?)");
                     createProfileStatement.setString(1, HomePage.user.getUsername());
                     createProfileStatement.setInt(2, course_id);
-                    createProfileStatement.setInt(3, 0);
+                    createProfileStatement.setFloat(3, 0);
                     createProfileStatement.setInt(4, 1);
                     createProfileStatement.setInt(5, 0);
                     createProfileStatement.execute();
@@ -164,7 +164,7 @@ public class CoursesFragment extends Fragment {
         return lastQuestion;
     }
 
-    public static int getProgress() {
+    public static float getProgress() {
         return progress;
     }
 }

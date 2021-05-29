@@ -217,8 +217,8 @@ public class QuestionnaireFragment extends Fragment {
         try {
             if (connect != null) {
                 float progress = HomePage.user.getProgress();
-                if (capitol_id == CoursesFragment.getCapitol()) {
-                    progress += (float)(1) / (float) (StartCourseFragment.getNrIntrebariCurs()) * 100;
+                if (capitol_id == CoursesFragment.getCapitol() /*&& questionNumber == lastQuestion*/) {
+                    progress += ((float)(1) / (float) (StartCourseFragment.getNrIntrebariCurs()) * 100);
                     HomePage.user.setProgress(progress);
                     PreparedStatement statement = connect.prepareStatement("UPDATE " + COURSESUSERS_TABLE + " SET Progress = ?, LastQuestion = ? WHERE Username = ? AND CourseId = ?");
                     statement.setFloat(1, progress);
