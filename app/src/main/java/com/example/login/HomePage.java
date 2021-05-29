@@ -34,6 +34,8 @@ public class HomePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.white));
+
         String username = getIntent().getStringExtra("username");
         user.setUsername(username);
         String email = getIntent().getStringExtra("email");

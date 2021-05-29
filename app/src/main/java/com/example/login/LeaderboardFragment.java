@@ -52,6 +52,8 @@ public class LeaderboardFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_leaderboard, container, false);
 
+        ((HomePage)getActivity()).updateStatusBarColor("#00B2E5");
+
         setData();
 
         return view;
