@@ -26,6 +26,16 @@ public class User {
         this.progress = progress;
     }
 
+    public int getProgress() {
+        return progress;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
+
+    private int progress;
+
     Connection connect;
 
     public String getUsername() {
