@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,21 +34,14 @@ import static com.example.login.SQLConnection.PROFILES_TABLE;
  */
 public class SettingsFragment extends Fragment {
     private static User USER = null;
-
-    private TextView eNotifs;
     private SwitchCompat eNotifsbtn;
-    private TextView eEmail;
-    private TextView eUsername;
-    private TextView eFeedback;
-    private TextView eLogout;
-
     private String newUsername;
-    private String newEmail;
+    private String newPassword;
     private String feedbackText;
 
 
 
-    Connection connect;
+    Connection connect = SQLConnection.getConnection();
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -69,12 +63,12 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        eNotifs = view.findViewById(R.id.tv_notifs);
+        TextView eNotifs = view.findViewById(R.id.tv_notifs);
         eNotifsbtn = view.findViewById(R.id.sw_notifs);
-        eEmail = view.findViewById(R.id.tv_email);
-        eUsername = view.findViewById(R.id.tv_username);
-        eFeedback = view.findViewById(R.id.tv_feedback);
-        eLogout = view.findViewById(R.id.tv_logout);
+        TextView eUsername = view.findViewById(R.id.tv_username);
+        TextView ePassword = view.findViewById(R.id.tv_password);
+        TextView eFeedback = view.findViewById(R.id.tv_feedback);
+        TextView eLogout = view.findViewById(R.id.tv_logout);
 
         eNotifs.setOnClickListener(v -> eNotifsbtn.setChecked(!eNotifsbtn.isChecked()));
 
@@ -99,7 +93,7 @@ public class SettingsFragment extends Fragment {
             dialog.show();
         });
 
-        eEmail.setOnClickListener(v -> {
+        ePassword.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DialogTheme);
             View dialogLayout = inflater.inflate(R.layout.datachange_popup, null);
             final AlertDialog dialog = builder.create();
@@ -109,13 +103,19 @@ public class SettingsFragment extends Fragment {
             Button btnCancel = dialogLayout.findViewById(R.id.btnCancel);
             TextView tvData = dialogLayout.findViewById(R.id.tv_datashow);
             EditText etData = dialogLayout.findViewById(R.id.etNewData);
+            TextView tvTitle = dialogLayout.findViewById(R.id.tv_title);
 
-            tvData.setText(USER.getEmail());
-            builder.setView(tvData);
+            tvData.setVisibility(View.GONE);
+
+            etData.setHint("Parola Noua");
+            builder.setView(etData);
+
+            tvTitle.setText("Schimba parola");
+            builder.setView(tvTitle);
 
             btnChange.setOnClickListener(v1 -> {
-                newEmail = etData.getText().toString();
-                trySubmit(USER.getEmail(), newEmail, "Email");
+                newPassword = etData.getText().toString();
+                changePass(newPassword);
                 dialog.dismiss();
             });
             btnCancel.setOnClickListener(v2 -> dialog.dismiss());
@@ -139,15 +139,15 @@ public class SettingsFragment extends Fragment {
             tvData.setText(USER.getUsername());
             builder.setView(tvData);
 
-            etData.setHint("Nume utilizator nou");
+            etData.setHint("Parola Noua");
             builder.setView(etData);
 
-            tvTitle.setText("Schimba nume utlizator");
+            tvTitle.setText("Schimba parola");
             builder.setView(tvTitle);
 
             btnChange.setOnClickListener(v1 -> {
                 newUsername = etData.getText().toString();
-                trySubmit(USER.getUsername(), newUsername, "Username");
+                trySubmit(USER.getUsername(), newUsername);
                 dialog.dismiss();
             });
             btnCancel.setOnClickListener(v2 -> dialog.dismiss());
@@ -180,6 +180,22 @@ public class SettingsFragment extends Fragment {
         return view;
     }
 
+    private void changePass(String pass) {
+        pass = pass.trim();
+        if (pass.length() > 7) {
+            try {
+                pass = PasswordHash.generate(pass, null);
+                PreparedStatement stmt = connect.prepareStatement("UPDATE " + ACCOUNTS_TABLE + " SET Password = ?, Salt = ? WHERE Username = ?");
+                stmt.setString(1, pass);
+                stmt.setBytes(2, PasswordHash.Salt);
+                stmt.setString(3, USER.getUsername());
+                stmt.executeUpdate();
+            } catch (Exception e) {
+                Log.e("changePass: ", e.toString());
+            }
+        }
+    }
+
     private void setDialog(AlertDialog dialog, View dialogLayout) {
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         dialog.setView(dialogLayout, 0, 0, 0, 0);
@@ -190,45 +206,33 @@ public class SettingsFragment extends Fragment {
         wlmp.gravity = Gravity.BOTTOM;
     }
 
-    private void trySubmit(String currentData, String newData, String dataType) {
+    private void trySubmit(String currentData, String newData) {
         if (newData.length()>4) {
             if (!currentData.equals(newData)) {
                 try {
-                    connect = SQLConnection.getConnection();
                     if (connect != null) {
-                        PreparedStatement stmt = connect.prepareStatement("SELECT * from " + ACCOUNTS_TABLE + " WHERE " + dataType + " = ?");
+                        PreparedStatement stmt = connect.prepareStatement("SELECT Username from " + ACCOUNTS_TABLE + " WHERE Username = ?");
                         stmt.setString(1, currentData);
                         ResultSet resultSet = stmt.executeQuery();
                         resultSet.next();
 
                         if (resultSet.getString(1) != null) {
-                            String val;
-                            if (dataType.equals("Username")) {
-                                PreparedStatement stmt1 = connect.prepareStatement("UPDATE " + PROFILES_TABLE + " SET Username = ? WHERE Username = ?");
-                                stmt1.setString(1, newData);
-                                stmt1.setString(2, currentData);
-                                stmt1.execute();
-                                val = GetStartedPage.PREF_USERNAME;
-                            } else val = GetStartedPage.PREF_EMAIL;
-
-                            PreparedStatement stmt1 = connect.prepareStatement("UPDATE " + ACCOUNTS_TABLE + " SET " + dataType + "= ? WHERE " + dataType + " = ?");
+                            PreparedStatement stmt1 = connect.prepareStatement("UPDATE " + PROFILES_TABLE + " SET Username = ? WHERE Username = ?");
                             stmt1.setString(1, newData);
                             stmt1.setString(2, currentData);
-                            try {
-                                stmt1.executeUpdate();
-                                Toast.makeText(getContext(), "Succes", Toast.LENGTH_LONG).show();
-                                if (dataType.equals("Username"))
-                                    USER.setUsername(newData);
-                                else USER.setEmail(newData);
-                                requireActivity().getSharedPreferences(GetStartedPage.PREFS_NAME, Context.MODE_PRIVATE).edit().putString(val, newData).apply();
-                                /*GetStartedPage.specialLogin = true;
-                                Intent intent = new Intent(getContext(), GetStartedPage.class);
-                                startActivity(intent);*/
-                            } catch (Exception e) {
-                                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
-                            }
-                        } else {
-                            Toast.makeText(getContext(), newData + " deja exista", Toast.LENGTH_LONG).show();
+                            stmt1.execute();
+                        }
+
+                        PreparedStatement stmt1 = connect.prepareStatement("UPDATE " + ACCOUNTS_TABLE + " SET Username = ? WHERE Username = ?");
+                        stmt1.setString(1, newData);
+                        stmt1.setString(2, currentData);
+                        try {
+                            stmt1.executeUpdate();
+                            Toast.makeText(getContext(), "Succes", Toast.LENGTH_LONG).show();
+                            USER.setUsername(newData);
+                            requireActivity().getSharedPreferences(GetStartedPage.PREFS_NAME, Context.MODE_PRIVATE).edit().putString(GetStartedPage.PREF_USERNAME, newData).apply();
+                        } catch (Exception e) {
+                            Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
                         }
                     }
                 } catch (Exception e) {

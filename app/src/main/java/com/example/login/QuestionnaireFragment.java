@@ -1,15 +1,19 @@
 package com.example.login;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +23,7 @@ import java.sql.ResultSet;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.zip.Inflater;
 
 import static com.example.login.SQLConnection.COURSESUSERS_TABLE;
 import static com.example.login.SQLConnection.QUESTIONS_TABLE;
@@ -35,6 +40,7 @@ public class QuestionnaireFragment extends Fragment {
     Connection connect = SQLConnection.getConnection();
     private String explanation;
     private String goodAnswer;
+    private int xp;
 
     public QuestionnaireFragment() {
         // Required empty public constructor
@@ -66,28 +72,31 @@ public class QuestionnaireFragment extends Fragment {
         Button Answer2 = view.findViewById(R.id.btn_answer2);
         Button Answer3 = view.findViewById(R.id.btn_answer3);
         Button Answer4 = view.findViewById(R.id.btn_answer4);
+        TextView QuestionCounter = view.findViewById(R.id.tv_questionCounter);
 
         setData(Question, Answer1, Answer2, Answer3, Answer4);
+
+        QuestionCounter.setText(questionNumber + "/" + numberOfQuestions);
 
         Answer1.setOnClickListener(v -> {
             if (Answer1.getText().equals(goodAnswer))
                 nextQuestion();
-            else showExplanation();
+            else showExplanation(inflater);
         });
         Answer2.setOnClickListener(v -> {
             if (Answer2.getText().equals(goodAnswer))
                 nextQuestion();
-            else showExplanation();
+            else showExplanation(inflater);
         });
         Answer3.setOnClickListener(v -> {
             if (Answer3.getText().equals(goodAnswer))
                 nextQuestion();
-            else showExplanation();
+            else showExplanation(inflater);
         });
         Answer4.setOnClickListener(v -> {
             if (Answer4.getText().equals(goodAnswer))
                 nextQuestion();
-            else showExplanation();
+            else showExplanation(inflater);
         });
 
         return view;
@@ -110,34 +119,60 @@ public class QuestionnaireFragment extends Fragment {
     private void setChapterCompleted() {
         try {
             if (connect != null) {
-                int course_id = StartCourseFragment.getCourse_id();
-                int capitolIndex = capitol_id;
-                PreparedStatement statement = connect.prepareStatement("UPDATE " + COURSESUSERS_TABLE + " SET Capitol = ? WHERE Username = ? AND CourseId = ?");
-                statement.setInt(1, capitolIndex+1);
-                statement.setString(2, HomePage.user.getUsername());
-                statement.setInt(3, course_id);
-                statement.execute();
+                if (capitol_id == CoursesFragment.getCapitol()) {
+                    int course_id = StartCourseFragment.getCourse_id();
+                    int capitolIndex = capitol_id;
+                    PreparedStatement statement = connect.prepareStatement("UPDATE " + COURSESUSERS_TABLE + " SET Capitol = ?, LastQuestion = ? WHERE Username = ? AND CourseId = ?");
+                    statement.setInt(1, capitolIndex + 1);
+                    statement.setInt(2, 0);
+                    statement.setString(3, HomePage.user.getUsername());
+                    statement.setInt(4, course_id);
+                    statement.executeUpdate();
+                }
             }
         } catch (Exception e) {
             Log.e("setChapterCompleted: ", e.toString());
         }
     }
 
-    private void showExplanation() {
-        Toast.makeText(getContext(), explanation, Toast.LENGTH_SHORT).show();
+    private void showExplanation(LayoutInflater inflater) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.ExplanationTheme);
+        View dialogLayout = inflater.inflate(R.layout.explanation_popup, null);
+        final AlertDialog dialog = builder.create();
+        setDialog(dialog, dialogLayout);
+
+        Button btnCancel = dialogLayout.findViewById(R.id.btnCancel);
+        btnCancel.setOnClickListener(v2 -> dialog.dismiss());
+
+        TextView tvExplanation = dialogLayout.findViewById(R.id.tv_showexplanation);
+        tvExplanation.setText(explanation);
+
+        builder.setView(dialogLayout);
+        dialog.show();
+    }
+
+    private void setDialog(AlertDialog dialog, View dialogLayout) {
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        dialog.setView(dialogLayout, 0, 0, 0, 0);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
     }
 
     private void setProgress() {
         try {
             if (connect != null) {
-                int progress = (int)((float)(questionNumber)/(float)(numberOfQuestions)*100/(float)StartCourseFragment.getNrCapitole());
-
-                PreparedStatement statement = connect.prepareStatement("UPDATE " + COURSESUSERS_TABLE + " SET Progress = ?, LastQuestion = ? WHERE Username = ? AND CourseId = ?");
-                statement.setInt(1, progress);
-                statement.setInt(2, questionNumber);
-                statement.setString(3, HomePage.user.getUsername());
-                statement.setInt(4, StartCourseFragment.getCourse_id());
-                statement.execute();
+                int progress = HomePage.user.getProgress();
+                if (capitol_id == CoursesFragment.getCapitol()) {
+                    progress += 1 / (float) StartCourseFragment.getNrIntrebariCurs() * 100;
+                    HomePage.user.setProgress(progress);
+                    PreparedStatement statement = connect.prepareStatement("UPDATE " + COURSESUSERS_TABLE + " SET Progress = ?, LastQuestion = ? WHERE Username = ? AND CourseId = ?");
+                    statement.setInt(1, progress);
+                    statement.setInt(2, questionNumber);
+                    statement.setString(3, HomePage.user.getUsername());
+                    statement.setInt(4, StartCourseFragment.getCourse_id());
+                    statement.execute();
+                    HomePage.user.setXp(HomePage.user.getXp() + xp);
+                }
             }
         } catch (Exception e) {
             Log.e("setProgress: ", e.toString());
@@ -153,17 +188,19 @@ public class QuestionnaireFragment extends Fragment {
                 ResultSet resultSet = statement.executeQuery();
                 resultSet.next();
 
-                Integer[] qIndex = {2, 3, 4, 5};
-                shuffle(qIndex);
+                if (resultSet.getInt(8) != 0) {
+                    Integer[] qIndex = {2, 3, 4, 5};
+                    shuffle(qIndex);
 
-                Question.setText(resultSet.getString(1));
-                Answer1.setText(resultSet.getString(qIndex[0]));
-                Answer2.setText(resultSet.getString(qIndex[1]));
-                Answer3.setText(resultSet.getString(qIndex[2]));
-                Answer4.setText(resultSet.getString(qIndex[3]));
-                explanation = resultSet.getString(7);
-                goodAnswer = resultSet.getString(2);
-
+                    Question.setText(resultSet.getString(1));
+                    Answer1.setText(resultSet.getString(qIndex[0]));
+                    Answer2.setText(resultSet.getString(qIndex[1]));
+                    Answer3.setText(resultSet.getString(qIndex[2]));
+                    Answer4.setText(resultSet.getString(qIndex[3]));
+                    explanation = resultSet.getString(7);
+                    goodAnswer = resultSet.getString(2);
+                    xp = resultSet.getInt(9);
+                }
             }
         } catch (Exception e) {
             Log.e("setData", e.toString());
