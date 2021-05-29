@@ -51,6 +51,8 @@ public class CoursesFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_courses, container, false);
 
+        ((HomePage)getActivity()).updateStatusBarColor("#00B2E5");
+
         CardView cv1 = view.findViewById(R.id.cv_course1);
         ProgressBar financeProgressBar = view.findViewById(R.id.pb_course1);
         boolean isEnrolledFinance = checkEnrolled(getSet(COURSESUSERS_TABLE));
