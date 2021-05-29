@@ -107,7 +107,7 @@ public class StartCourseFragment extends Fragment {
             capitoleTerminate--;
 
         chapterProgress.setText(capitoleTerminate + "/" + getNumarCapitole());
-        tvProgress.setText((int)HomePage.user.getProgress() + "%");
+        tvProgress.setText((int)(HomePage.user.getProgress()) + "%");
 
         return view;
     }
