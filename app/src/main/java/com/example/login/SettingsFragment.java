@@ -63,6 +63,9 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
+
+        ((HomePage)getActivity()).updateStatusBarColor("#00B2E5");
+
         TextView eNotifs = view.findViewById(R.id.tv_notifs);
         eNotifsbtn = view.findViewById(R.id.sw_notifs);
         TextView eUsername = view.findViewById(R.id.tv_username);

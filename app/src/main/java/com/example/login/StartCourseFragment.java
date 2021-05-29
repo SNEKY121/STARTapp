@@ -51,6 +51,10 @@ public class StartCourseFragment extends Fragment {
         return fragment;
     }
 
+    public static Fragment newInstance() {
+        return new StartCourseFragment();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

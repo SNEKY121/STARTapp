@@ -78,7 +78,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="10dp"
                                 android:max="100"
-                                android:visibility="gone" />
+                                android:visibility="invisible" />
 
                             <TextView
                                 android:id="@+id/txt_curs1"
@@ -129,7 +129,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="10dp"
                                 android:max="100"
-                                android:visibility="gone" />
+                                android:visibility="invisible" />
 
                             <TextView
                                 android:id="@+id/txt_curs2"

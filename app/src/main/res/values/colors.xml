@@ -16,6 +16,8 @@
     <color name="gr_start">#25A96B</color>
     <color name="grcurs_start">#C9006E</color>
     <color name="grcurs_end">#7A1A85</color>
+    <color name="corect">#41BD22</color>
+    <color name="incorect">#E5383B</color>
     <color name="green2">#1A9577</color>
     <color name="transparent">#00000000</color>
     <color name="grey">#808080</color>

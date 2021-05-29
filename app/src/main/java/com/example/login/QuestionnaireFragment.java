@@ -1,11 +1,13 @@
 package com.example.login;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -78,28 +80,81 @@ public class QuestionnaireFragment extends Fragment {
 
         QuestionCounter.setText(questionNumber + "/" + numberOfQuestions);
 
+        final Handler handler = new Handler();
+
         Answer1.setOnClickListener(v -> {
-            if (Answer1.getText().equals(goodAnswer))
-                nextQuestion();
-            else showExplanation(inflater);
+            if (Answer1.getText().equals(goodAnswer)) {
+                setCorect(Answer1);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        nextQuestion();
+                    }
+                }, 1000);
+            }
+            else {
+                setIncorect(Answer1);
+                showExplanation(inflater);
+            }
         });
         Answer2.setOnClickListener(v -> {
-            if (Answer2.getText().equals(goodAnswer))
-                nextQuestion();
-            else showExplanation(inflater);
+            if (Answer2.getText().equals(goodAnswer)) {
+                setCorect(Answer2);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        nextQuestion();
+                    }
+                }, 1000);
+            }
+            else {
+                setIncorect(Answer2);
+                showExplanation(inflater);
+            }
         });
         Answer3.setOnClickListener(v -> {
-            if (Answer3.getText().equals(goodAnswer))
-                nextQuestion();
-            else showExplanation(inflater);
+            if (Answer3.getText().equals(goodAnswer)) {
+                setCorect(Answer3);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        nextQuestion();
+                    }
+                }, 1000);
+            }
+            else {
+                setIncorect(Answer3);
+                showExplanation(inflater);
+            }
         });
         Answer4.setOnClickListener(v -> {
-            if (Answer4.getText().equals(goodAnswer))
-                nextQuestion();
-            else showExplanation(inflater);
+            if (Answer4.getText().equals(goodAnswer)) {
+                setCorect(Answer4);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        nextQuestion();
+                    }
+                }, 1000);
+            }
+            else {
+                setIncorect(Answer4);
+                showExplanation(inflater);
+            }
         });
 
         return view;
+    }
+
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private void setCorect(Button Ans) {
+        Ans.setBackground(getResources().getDrawable(R.drawable.btn_corect));
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private void setIncorect(Button Ans) {
+        Ans.setBackground(getResources().getDrawable(R.drawable.btn_incorect));
     }
 
     private void nextQuestion() {
@@ -111,7 +166,7 @@ public class QuestionnaireFragment extends Fragment {
         } else {
             setChapterCompleted();
 
-            transaction.replace(R.id.container, CoursesFragment.newInstance());
+            transaction.replace(R.id.container, StartCourseFragment.newInstance());
         }
         transaction.commit();
     }

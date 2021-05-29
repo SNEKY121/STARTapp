@@ -207,10 +207,11 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:fontFamily="@font/tommy_soft"
-                    android:text="75%"
+                    android:text="100%"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textSize="30sp" />
+                    android:textColor="@color/grcurs_end"
+                    android:textSize="28sp" />
 
             </androidx.cardview.widget.CardView>
 
