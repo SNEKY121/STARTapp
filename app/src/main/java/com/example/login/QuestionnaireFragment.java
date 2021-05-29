@@ -2,6 +2,7 @@ package com.example.login;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -16,9 +17,12 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -43,6 +47,7 @@ public class QuestionnaireFragment extends Fragment {
     private String explanation;
     private String goodAnswer;
     private int xp;
+    private String imgurl;
 
     public QuestionnaireFragment() {
         // Required empty public constructor
@@ -75,8 +80,9 @@ public class QuestionnaireFragment extends Fragment {
         Button Answer3 = view.findViewById(R.id.btn_answer3);
         Button Answer4 = view.findViewById(R.id.btn_answer4);
         TextView QuestionCounter = view.findViewById(R.id.tv_questionCounter);
+        ImageView ImagineCurs = view.findViewById(R.id.pic_curs);
 
-        setData(Question, Answer1, Answer2, Answer3, Answer4);
+        setData(Question, Answer1, Answer2, Answer3, Answer4, ImagineCurs);
 
         QuestionCounter.setText(questionNumber + "/" + numberOfQuestions);
 
@@ -171,6 +177,16 @@ public class QuestionnaireFragment extends Fragment {
         transaction.commit();
     }
 
+    public static Drawable LoadImageFromWebOperations(String url) {
+        try {
+            InputStream is = (InputStream) new URL(url).getContent();
+            Drawable d = Drawable.createFromStream(is, "src name");
+            return d;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     private void setChapterCompleted() {
         try {
             if (connect != null) {
@@ -234,7 +250,7 @@ public class QuestionnaireFragment extends Fragment {
         }
     }
 
-    private void setData(TextView Question, Button Answer1, Button Answer2, Button Answer3, Button Answer4) {
+    private void setData(TextView Question, Button Answer1, Button Answer2, Button Answer3, Button Answer4, ImageView ImagineCurs) {
         try {
             if (connect != null) {
                 PreparedStatement statement = connect.prepareStatement("SELECT * FROM " + QUESTIONS_TABLE + " WHERE CapitolId = ? AND QuestionIndex = ?");
@@ -252,9 +268,12 @@ public class QuestionnaireFragment extends Fragment {
                     Answer2.setText(resultSet.getString(qIndex[1]));
                     Answer3.setText(resultSet.getString(qIndex[2]));
                     Answer4.setText(resultSet.getString(qIndex[3]));
+
                     explanation = resultSet.getString(7);
                     goodAnswer = resultSet.getString(2);
                     xp = resultSet.getInt(9);
+                    imgurl = resultSet.getString(10);
+                    ImagineCurs.setBackground(LoadImageFromWebOperations(imgurl));
                 }
             }
         } catch (Exception e) {

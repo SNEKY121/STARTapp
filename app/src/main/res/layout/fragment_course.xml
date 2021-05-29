@@ -24,11 +24,11 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/imageView6"
+            android:id="@+id/pic_curs"
             android:layout_width="225dp"
             android:layout_height="225dp"
             android:layout_marginTop="10dp"
-            android:src="@drawable/ic_workinprogressfilled_01"
+            android:background="@drawable/ic_workinprogressfilled_01"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -45,7 +45,7 @@
             android:textSize="22sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+            app:layout_constraintTop_toBottomOf="@+id/pic_curs" />
 
         <ScrollView
             android:layout_width="match_parent"
