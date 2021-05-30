@@ -191,7 +191,7 @@ public class QuestionnaireFragment extends Fragment {
             Bitmap myBitmap = BitmapFactory.decodeStream(input);
             return myBitmap;
         } catch (IOException e) {
-            // Log exception
+            Log.e("getBitmapFromURL:", e.toString());
             return null;
         }
     }
@@ -208,6 +208,8 @@ public class QuestionnaireFragment extends Fragment {
                     statement.setString(3, HomePage.user.getUsername());
                     statement.setInt(4, course_id);
                     statement.executeUpdate();
+                    if (capitol_id == StartCourseFragment.getNrCapitole())
+                        HomePage.user.setCursuri(HomePage.user.getCursuri() + 1);
                 }
             }
         } catch (Exception e) {
