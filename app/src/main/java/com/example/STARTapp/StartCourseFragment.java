@@ -1,4 +1,4 @@
-package com.example.login;
+package com.example.STARTapp;
 
 
 import android.annotation.SuppressLint;
@@ -20,9 +20,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import static com.example.login.SQLConnection.CAPITOLE_TABLE;
-import static com.example.login.SQLConnection.COURSESUSERS_TABLE;
-import static com.example.login.SQLConnection.COURSES_TABLE;
+import static com.example.STARTapp.SQLConnection.CAPITOLE_TABLE;
+import static com.example.STARTapp.SQLConnection.COURSESUSERS_TABLE;
+import static com.example.STARTapp.SQLConnection.COURSES_TABLE;
 
 /**
  * Fragment inceput curs

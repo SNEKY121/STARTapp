@@ -1,4 +1,4 @@
-package com.example.login;
+package com.example.STARTapp;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
-import static com.example.login.SQLConnection.PROFILES_TABLE;
+import static com.example.STARTapp.SQLConnection.PROFILES_TABLE;
 
 /**
  * Fragment pentru profil

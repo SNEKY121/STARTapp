@@ -1,4 +1,4 @@
-package com.example.login;
+package com.example.STARTapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,7 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import static com.example.login.SQLConnection.ACCOUNTS_TABLE;
+import static com.example.STARTapp.SQLConnection.ACCOUNTS_TABLE;
 
 /**
  * Pagina de login

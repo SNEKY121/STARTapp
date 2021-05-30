@@ -1,4 +1,4 @@
-package com.example.login;
+package com.example.STARTapp;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -30,8 +30,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.example.login.SQLConnection.COURSESUSERS_TABLE;
-import static com.example.login.SQLConnection.QUESTIONS_TABLE;
+import static com.example.STARTapp.SQLConnection.COURSESUSERS_TABLE;
+import static com.example.STARTapp.SQLConnection.QUESTIONS_TABLE;
 
 /**
  * Fragment pentru continutul cursului

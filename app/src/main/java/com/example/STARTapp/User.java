@@ -1,4 +1,4 @@
-package com.example.login;
+package com.example.STARTapp;
 
 import android.util.Log;
 
@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Calendar;
 
-import static com.example.login.SQLConnection.PROFILES_TABLE;
+import static com.example.STARTapp.SQLConnection.PROFILES_TABLE;
 
 /**
  * Clasa pentru stocarea temporara a datelor
