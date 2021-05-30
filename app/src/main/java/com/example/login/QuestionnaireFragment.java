@@ -2,6 +2,8 @@ package com.example.login;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
@@ -21,7 +23,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -177,12 +181,17 @@ public class QuestionnaireFragment extends Fragment {
         transaction.commit();
     }
 
-    public static Drawable LoadImageFromWebOperations(String url) {
+    public static Bitmap getBitmapFromURL(String src) {
         try {
-            InputStream is = (InputStream) new URL(url).getContent();
-            Drawable d = Drawable.createFromStream(is, "src name");
-            return d;
-        } catch (Exception e) {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            // Log exception
             return null;
         }
     }
@@ -273,7 +282,7 @@ public class QuestionnaireFragment extends Fragment {
                     goodAnswer = resultSet.getString(2);
                     xp = resultSet.getInt(9);
                     imgurl = resultSet.getString(10);
-                    ImagineCurs.setBackground(LoadImageFromWebOperations(imgurl));
+                    ImagineCurs.setImageBitmap(getBitmapFromURL(imgurl));
                 }
             }
         } catch (Exception e) {
