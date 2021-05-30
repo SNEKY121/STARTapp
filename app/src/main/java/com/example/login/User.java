@@ -13,7 +13,7 @@ public class User {
     private String username;
     private String email;
     private int xp;
-    private String cursuri;
+    private int cursuri;
     private int streak;
     private byte[] barray;
     private float progress;
@@ -52,12 +52,13 @@ public class User {
         updateProfile("Xp", xp);
     }
 
-    public String getCursuri() {
+    public int getCursuri() {
         return cursuri;
     }
 
-    public void setCursuri(String cursuri) {
+    public void setCursuri(int cursuri) {
         this.cursuri = cursuri;
+        updateProfile("Cursuri", cursuri);
     }
 
     public int getStreak() {
@@ -90,7 +91,7 @@ public class User {
 
                 xp = rs.getInt(4);
                 if(rs.wasNull()) create.createUserProfile(username);
-                cursuri = rs.getString(2);
+                cursuri = rs.getInt(2);
                 if(rs.wasNull()) create.createUserProfile(username);
                 streak = rs.getInt(6);
                 if(rs.wasNull()) create.createUserProfile(username);
