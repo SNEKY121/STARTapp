@@ -95,7 +95,7 @@
                     android:layout_gravity="center_horizontal"
                     android:background="@drawable/circle"
                     android:contentDescription="Profile picture"
-                    android:src="@drawable/logosmall"
+                    android:src="@drawable/defaultpic"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
