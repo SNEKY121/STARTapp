@@ -253,7 +253,7 @@ public class SettingsFragment extends Fragment {
 
     private void trySend(String Data) {
         if (Data.length()>10) {
-            final String to = "sebastianturbut@gmail.com";
+            final String to = "startappv4@gmail.com";
             String subject = "New Feedback from " + USER.getUsername();
 
             Intent email = new Intent(Intent.ACTION_SEND);
