@@ -226,10 +226,14 @@ public class SettingsFragment extends Fragment {
                             changeProfilesUsername.setString(2, currentData);
                             changeProfilesUsername.execute();
 
-                            PreparedStatement changeCoursesUsernameStatement = connect.prepareStatement("UPDATE " + COURSESUSERS_TABLE + " SET Username = ? WHERE Username = ?");
-                            changeCoursesUsernameStatement.setString(1, newData);
-                            changeCoursesUsernameStatement.setString(2, currentData);
-                            changeCoursesUsernameStatement.executeUpdate();
+                            try {
+                                PreparedStatement changeCoursesUsernameStatement = connect.prepareStatement("UPDATE " + COURSESUSERS_TABLE + " SET Username = ? WHERE Username = ?");
+                                changeCoursesUsernameStatement.setString(1, newData);
+                                changeCoursesUsernameStatement.setString(2, currentData);
+                                changeCoursesUsernameStatement.executeUpdate();
+                            } catch (Exception ignored) {
+                                
+                            }
                         }
 
                         PreparedStatement changeAccountsUsername = connect.prepareStatement("UPDATE " + ACCOUNTS_TABLE + " SET Username = ? WHERE Username = ?");
