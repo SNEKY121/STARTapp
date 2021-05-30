@@ -24,6 +24,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import static com.example.login.SQLConnection.ACCOUNTS_TABLE;
+import static com.example.login.SQLConnection.COURSESUSERS_TABLE;
 import static com.example.login.SQLConnection.PROFILES_TABLE;
 
 
@@ -220,17 +221,22 @@ public class SettingsFragment extends Fragment {
                         resultSet.next();
 
                         if (resultSet.getString(1) != null) {
-                            PreparedStatement stmt1 = connect.prepareStatement("UPDATE " + PROFILES_TABLE + " SET Username = ? WHERE Username = ?");
-                            stmt1.setString(1, newData);
-                            stmt1.setString(2, currentData);
-                            stmt1.execute();
+                            PreparedStatement changeProfilesUsername = connect.prepareStatement("UPDATE " + PROFILES_TABLE + " SET Username = ? WHERE Username = ?");
+                            changeProfilesUsername.setString(1, newData);
+                            changeProfilesUsername.setString(2, currentData);
+                            changeProfilesUsername.execute();
+
+                            PreparedStatement changeCoursesUsernameStatement = connect.prepareStatement("UPDATE " + COURSESUSERS_TABLE + " SET Username = ? WHERE Username = ?");
+                            changeCoursesUsernameStatement.setString(1, newData);
+                            changeCoursesUsernameStatement.setString(2, currentData);
+                            changeCoursesUsernameStatement.executeUpdate();
                         }
 
-                        PreparedStatement stmt1 = connect.prepareStatement("UPDATE " + ACCOUNTS_TABLE + " SET Username = ? WHERE Username = ?");
-                        stmt1.setString(1, newData);
-                        stmt1.setString(2, currentData);
+                        PreparedStatement changeAccountsUsername = connect.prepareStatement("UPDATE " + ACCOUNTS_TABLE + " SET Username = ? WHERE Username = ?");
+                        changeAccountsUsername.setString(1, newData);
+                        changeAccountsUsername.setString(2, currentData);
                         try {
-                            stmt1.executeUpdate();
+                            changeAccountsUsername.executeUpdate();
                             Toast.makeText(getContext(), "Succes", Toast.LENGTH_LONG).show();
                             USER.setUsername(newData);
                             requireActivity().getSharedPreferences(GetStartedPage.PREFS_NAME, Context.MODE_PRIVATE).edit().putString(GetStartedPage.PREF_USERNAME, newData).apply();
