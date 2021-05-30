@@ -22,6 +22,9 @@ import java.util.logging.Logger;
 import static com.example.login.SQLConnection.ACCOUNTS_TABLE;
 import static com.example.login.SQLConnection.PROFILES_TABLE;
 
+/**
+ * Pagina de inregistrare user nou
+ */
 public class RegisterPage extends AppCompatActivity {
 
     private EditText eEmail;
@@ -85,6 +88,14 @@ public class RegisterPage extends AppCompatActivity {
         pressedTime = System.currentTimeMillis();
     }
 
+    /**
+     * Metoda pentru a introduce userul inregistrat in baza de date
+     *
+     * @param usr   username
+     * @param email email
+     * @param pass  parola
+     * @return intoarce true
+     */
     public boolean SubmitRegister(String usr, String email, String pass) {
         try {
             connect = SQLConnection.getConnection();
@@ -104,41 +115,62 @@ public class RegisterPage extends AppCompatActivity {
             }
         } catch (Exception ex) {
             Toast.makeText(RegisterPage.this, "Connection Error!", Toast.LENGTH_SHORT).show();
-            Logger logger = Logger.getAnonymousLogger();
-            logger.log(Level.FINE, "lol? : ", ex);
         }
         return false;
     }
 
+    /**
+     * Metoda pentru verificarea datelor introduse de utilizator
+     *
+     * @param email
+     * @param name
+     * @param password
+     * @param passwordConfirm
+     * @return intoarce true daca toate datele sunt valide sau false in caz contrar
+     */
     private boolean CheckCreds(String email, String name, String password, String passwordConfirm) {
-        if (checkName(name)) {
-            if (email.contains("@") && email.contains(".") && email.length() > 4) {
-                if (EmailCheck(email, name)) {
-                    if (password.equals(passwordConfirm)) {
-                        if (password.length() > 7)
-                            return true;
-                        Toast.makeText(RegisterPage.this, "Introduceti o parola de macar 8 caractere", Toast.LENGTH_LONG).show();
-                        return false;
-                    }
-                    Toast.makeText(RegisterPage.this, "Parolele nu coincid!", Toast.LENGTH_LONG).show();
-                    return false;
-                }
-                return false;
-            }
+        if (!checkName(name)) {
+            Toast.makeText(RegisterPage.this, "Numele contine caractere speciale!", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (!(email.contains("@") && email.contains(".") && email.length() > 4)) {
             Toast.makeText(RegisterPage.this, "Email invalid!", Toast.LENGTH_LONG).show();
             return false;
         }
-        Toast.makeText(RegisterPage.this, "Numele contine caractere speciale!", Toast.LENGTH_LONG).show();
-        return false;
+        if (!EmailCheck(email, name)) {
+            return false;
+        }
+        if (!password.equals(passwordConfirm)) {
+            Toast.makeText(RegisterPage.this, "Parolele nu coincid!", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (!(password.length() > 7)) {
+            Toast.makeText(RegisterPage.this, "Introduceti o parola de macar 8 caractere", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
     }
 
+    /**
+     * Metoda pentru verificarea numelui
+     *
+     * @param name
+     * @return intoarce true daca este valid sau false in caz contrar
+     */
     private boolean checkName(String name) {
-        for (int i=0; i<name.length(); ++i)
+        for (int i = 0; i < name.length(); ++i)
             if (!Character.isLetterOrDigit(name.charAt(i)))
                 return false;
         return true;
     }
 
+    /**
+     * Metoda pentru verificarea emailului si a numelui
+     *
+     * @param email
+     * @param name
+     * @return intoarce true daca este valid sau false in caz contrar
+     */
     private boolean EmailCheck(String email, String name) {
         try {
             connect = SQLConnection.getConnection();
@@ -170,6 +202,12 @@ public class RegisterPage extends AppCompatActivity {
         CreateProfile(username);
     }
 
+    /**
+     * Functie pentru a introduce datele noului utilizator in baza de date
+     *
+     * @param username
+     * @return intoarce true daca a reusit sau false in caz contrar
+     */
     private boolean CreateProfile(String username) {
         try {
             connect = SQLConnection.getConnection();

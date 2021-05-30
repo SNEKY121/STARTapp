@@ -1,20 +1,18 @@
 package com.example.login;
 
-import android.content.Context;
-import android.graphics.drawable.RotateDrawable;
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,14 +25,12 @@ import static com.example.login.SQLConnection.COURSESUSERS_TABLE;
 import static com.example.login.SQLConnection.COURSES_TABLE;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link StartCourseFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment inceput curs
  */
 public class StartCourseFragment extends Fragment {
     public StartCourseFragment() {
-        // Required empty public constructor
     }
+
     Connection connect = SQLConnection.getConnection();
     private static int course_id;
     private static int numberOfQuestions;
@@ -44,15 +40,10 @@ public class StartCourseFragment extends Fragment {
     private boolean chapter2Locked = true;
     private boolean chapter3Locked = true;
 
-    // TODO: Rename and change types and number of parameters
     public static StartCourseFragment newInstance(int courseId) {
         StartCourseFragment fragment = new StartCourseFragment();
         course_id = courseId;
         return fragment;
-    }
-
-    public static Fragment newInstance() {
-        return new StartCourseFragment();
     }
 
     @Override
@@ -60,12 +51,13 @@ public class StartCourseFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_startcourse, container, false);
 
-        ((HomePage)getActivity()).updateStatusBarColor("#7A1A85");
+        ((HomePage) requireActivity()).updateStatusBarColor("#7A1A85");
 
         ImageButton btnChapter1 = view.findViewById(R.id.btn_node1);
         ImageButton btnChapter2 = view.findViewById(R.id.btn_node2);
@@ -79,7 +71,7 @@ public class StartCourseFragment extends Fragment {
 
         btnChapter1.setOnClickListener(v -> {
             capitol_id = 1;
-            addUserToFinanceTable();
+            addUserToCoursesUsersTable();
             getCapitol(1);
             getQuestions();
         });
@@ -87,32 +79,42 @@ public class StartCourseFragment extends Fragment {
         btnChapter2.setOnClickListener(v -> {
             if (!chapter2Locked) {
                 capitol_id = 2;
-                addUserToFinanceTable();
+                addUserToCoursesUsersTable();
                 getCapitol(2);
                 getQuestions();
-            } else Toast.makeText(getContext(), "Completeaza capitolul anterior", Toast.LENGTH_SHORT).show();
+            } else
+                Toast.makeText(getContext(), "Completeaza capitolul anterior", Toast.LENGTH_SHORT).show();
         });
 
         btnChapter3.setOnClickListener(v -> {
             if (!chapter3Locked) {
-            capitol_id = 3;
-            addUserToFinanceTable();
-            getCapitol(3);
-            getQuestions();
-            } else Toast.makeText(getContext(), "Completeaza capitolul anterior", Toast.LENGTH_SHORT).show();
+                capitol_id = 3;
+                addUserToCoursesUsersTable();
+                getCapitol(3);
+                getQuestions();
+            } else
+                Toast.makeText(getContext(), "Completeaza capitolul anterior", Toast.LENGTH_SHORT).show();
         });
-	
-	    int capitoleTerminate = CoursesFragment.getCapitol();
+
+        int capitoleTerminate = CoursesFragment.getCapitol();
         if (capitoleTerminate > 0)
             capitoleTerminate--;
 
         chapterProgress.setText(capitoleTerminate + "/" + getNumarCapitole());
-        tvProgress.setText((int)(HomePage.user.getProgress()) + "%");
+        tvProgress.setText((int) (HomePage.user.getProgress()) + "%");
 
         return view;
     }
 
-    private void setClickable(ImageView lock2, ImageView lock3, ImageView ch2, ImageView ch3){
+    /**
+     * Functie pentru schimbare status elemente curs
+     *
+     * @param lock2 iconita lacat
+     * @param lock3 iconita lacat
+     * @param ch2   transparenta capitol
+     * @param ch3   transparenta capitol
+     */
+    private void setClickable(ImageView lock2, ImageView lock3, ImageView ch2, ImageView ch3) {
         int capitol = CoursesFragment.getCapitol();
         if (capitol >= 2) {
             chapter2Locked = false;
@@ -126,6 +128,11 @@ public class StartCourseFragment extends Fragment {
         }
     }
 
+    /**
+     * Functie pentru capitolul curent
+     *
+     * @param index numar capitol
+     */
     private void getCapitol(int index) {
         try {
             if (connect != null) {
@@ -135,7 +142,6 @@ public class StartCourseFragment extends Fragment {
                 resultSet.next();
                 if (resultSet.getString(1) != null) {
                     numberOfQuestions = resultSet.getInt(5);
-                    //other stuff
                 }
             }
         } catch (Exception e) {
@@ -143,7 +149,10 @@ public class StartCourseFragment extends Fragment {
         }
     }
 
-    private void addUserToFinanceTable() {
+    /**
+     * Functie pentru introducerea datelor in baza de de date
+     */
+    private void addUserToCoursesUsersTable() {
         try {
             if (connect != null) {
                 PreparedStatement checkUsernameStatement = connect.prepareStatement("SELECT * FROM " + COURSESUSERS_TABLE + " WHERE Username = ? AND CourseId = ?");
@@ -163,24 +172,30 @@ public class StartCourseFragment extends Fragment {
                 }
             }
         } catch (Exception e) {
-            Log.e("addUserToFinanceTable: ", e.toString());
+            Log.e("addUserToCoursesTable: ", e.toString());
         }
     }
 
+    /**
+     * Functie pentru pornirea cursului
+     */
     private void getQuestions() {
         int lastQuestion = CoursesFragment.getLastQuestion();
-        /*if (lastQuestion == 0)
-            lastQuestion = 1;*/
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, QuestionnaireFragment.newInstance(lastQuestion+1, capitol_id, numberOfQuestions));
+        transaction.replace(R.id.container, QuestionnaireFragment.newInstance(lastQuestion + 1, capitol_id, numberOfQuestions));
         transaction.commit();
     }
 
+    /**
+     * Metoda pentru numarul de capitole disponibile
+     *
+     * @return intoarce numarul de capitole sau 0
+     */
     private int getNumarCapitole() {
         try {
             if (connect != null) {
                 PreparedStatement statement = connect.prepareStatement("SELECT NumarCapitole, NumarIntrebari FROM " + COURSES_TABLE + " WHERE id = ?");
-                statement.setInt(1, course_id );
+                statement.setInt(1, course_id);
                 ResultSet resultSet = statement.executeQuery();
                 resultSet.next();
                 nrCapitole = resultSet.getInt(1);
@@ -204,11 +219,5 @@ public class StartCourseFragment extends Fragment {
     public static int getNrIntrebariCurs() {
         return nrIntrebariCurs;
     }
-
-    /*public static int getCapitol_id() { return capitol_id; }
-
-    public static int getTotalQuestions() {
-        return numberOfQuestions;
-    }*/
 
 }

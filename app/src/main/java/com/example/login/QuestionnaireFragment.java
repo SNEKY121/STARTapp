@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,16 +11,13 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Handler;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,15 +29,12 @@ import java.sql.ResultSet;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.zip.Inflater;
 
 import static com.example.login.SQLConnection.COURSESUSERS_TABLE;
 import static com.example.login.SQLConnection.QUESTIONS_TABLE;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link QuestionnaireFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment pentru continutul cursului
  */
 public class QuestionnaireFragment extends Fragment {
     private static int questionNumber;
@@ -51,10 +44,8 @@ public class QuestionnaireFragment extends Fragment {
     private String explanation;
     private String goodAnswer;
     private int xp;
-    private String imgurl;
 
     public QuestionnaireFragment() {
-        // Required empty public constructor
     }
 
     public static QuestionnaireFragment newInstance(int question, int capitolid, int numberofquestions) {
@@ -70,13 +61,14 @@ public class QuestionnaireFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_course, container, false);
 
-        ((HomePage)getActivity()).updateStatusBarColor("#7A1A85");
+        ((HomePage) requireActivity()).updateStatusBarColor("#7A1A85");
 
         TextView Question = view.findViewById(R.id.tv_question);
         Button Answer1 = view.findViewById(R.id.btn_answer1);
@@ -95,14 +87,8 @@ public class QuestionnaireFragment extends Fragment {
         Answer1.setOnClickListener(v -> {
             if (Answer1.getText().equals(goodAnswer)) {
                 setCorect(Answer1);
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        nextQuestion();
-                    }
-                }, 1000);
-            }
-            else {
+                handler.postDelayed(this::nextQuestion, 1000);
+            } else {
                 setIncorect(Answer1);
                 showExplanation(inflater);
             }
@@ -110,14 +96,8 @@ public class QuestionnaireFragment extends Fragment {
         Answer2.setOnClickListener(v -> {
             if (Answer2.getText().equals(goodAnswer)) {
                 setCorect(Answer2);
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        nextQuestion();
-                    }
-                }, 1000);
-            }
-            else {
+                handler.postDelayed(this::nextQuestion, 1000);
+            } else {
                 setIncorect(Answer2);
                 showExplanation(inflater);
             }
@@ -125,14 +105,8 @@ public class QuestionnaireFragment extends Fragment {
         Answer3.setOnClickListener(v -> {
             if (Answer3.getText().equals(goodAnswer)) {
                 setCorect(Answer3);
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        nextQuestion();
-                    }
-                }, 1000);
-            }
-            else {
+                handler.postDelayed(this::nextQuestion, 1000);
+            } else {
                 setIncorect(Answer3);
                 showExplanation(inflater);
             }
@@ -140,14 +114,8 @@ public class QuestionnaireFragment extends Fragment {
         Answer4.setOnClickListener(v -> {
             if (Answer4.getText().equals(goodAnswer)) {
                 setCorect(Answer4);
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        nextQuestion();
-                    }
-                }, 1000);
-            }
-            else {
+                handler.postDelayed(this::nextQuestion, 1000);
+            } else {
                 setIncorect(Answer4);
                 showExplanation(inflater);
             }
@@ -169,7 +137,7 @@ public class QuestionnaireFragment extends Fragment {
 
     private void nextQuestion() {
         setProgress();
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         if (numberOfQuestions != questionNumber) {
 
             transaction.replace(R.id.container, newInstance(questionNumber + 1, capitol_id, numberOfQuestions));
@@ -188,8 +156,7 @@ public class QuestionnaireFragment extends Fragment {
             connection.setDoInput(true);
             connection.connect();
             InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
+            return BitmapFactory.decodeStream(input);
         } catch (IOException e) {
             Log.e("getBitmapFromURL:", e.toString());
             return null;
@@ -245,7 +212,7 @@ public class QuestionnaireFragment extends Fragment {
             if (connect != null) {
                 float progress = HomePage.user.getProgress();
                 if (capitol_id == CoursesFragment.getCapitol() /*&& questionNumber == lastQuestion*/) {
-                    progress += ((float)(1) / (float) (StartCourseFragment.getNrIntrebariCurs()) * 100);
+                    progress += ((float) (1) / (float) (StartCourseFragment.getNrIntrebariCurs()) * 100);
                     HomePage.user.setProgress(progress);
                     PreparedStatement statement = connect.prepareStatement("UPDATE " + COURSESUSERS_TABLE + " SET Progress = ?, LastQuestion = ? WHERE Username = ? AND CourseId = ?");
                     statement.setFloat(1, progress);
@@ -283,7 +250,7 @@ public class QuestionnaireFragment extends Fragment {
                     explanation = resultSet.getString(7);
                     goodAnswer = resultSet.getString(2);
                     xp = resultSet.getInt(9);
-                    imgurl = resultSet.getString(10);
+                    String imgurl = resultSet.getString(10);
                     ImagineCurs.setImageBitmap(getBitmapFromURL(imgurl));
                 }
             }

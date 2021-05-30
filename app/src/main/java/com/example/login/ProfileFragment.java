@@ -1,5 +1,6 @@
 package com.example.login;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -30,46 +31,42 @@ import java.sql.PreparedStatement;
 import static com.example.login.SQLConnection.PROFILES_TABLE;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment pentru profil
  */
 public class ProfileFragment extends Fragment {
 
-    private TextView eUsername;
     private ProgressBar eBar;
     private TextView eLevel;
     private TextView eCursuri;
     private TextView eStreak;
     public ImageView eAvatar;
-
     private static User USER;
     Connection connect;
 
 
     public ProfileFragment() {
-        // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static ProfileFragment newInstance(User user) {
         ProfileFragment fragment = new ProfileFragment();
         USER = user;
         return fragment;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        ((HomePage)getActivity()).updateStatusBarColor("#00B2E5");
+        ((HomePage) requireActivity()).updateStatusBarColor("#00B2E5");
 
-        eUsername = view.findViewById(R.id.tv_username);
+        TextView eUsername = view.findViewById(R.id.tv_username);
         eUsername.setText(USER.getUsername());
 
         eStreak = view.findViewById(R.id.tv_streak);
@@ -106,9 +103,7 @@ public class ProfileFragment extends Fragment {
                 dialog.dismiss();
             });
 
-            btnCancel.setOnClickListener(v5 -> {
-                dialog.dismiss();
-            });
+            btnCancel.setOnClickListener(v5 -> dialog.dismiss());
 
             builder.setView(dialogLayout);
             dialog.show();
@@ -117,17 +112,24 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Schimba datele din pagina profilului
+     */
+    @SuppressLint("SetTextI18n")
     private void setData() {
         int xp = USER.getXp();
         eCursuri.setText("Cursuri: " + USER.getCursuri());
         eStreak.setText(USER.getStreak() + "");
-        eLevel.setText("Nivel " + xp /100);
-        eBar.setProgress(xp %100);
+        eLevel.setText("Nivel " + xp / 100);
+        eBar.setProgress(xp % 100);
         byte[] barray = USER.getBarray();
         Bitmap bitmap = BitmapFactory.decodeByteArray(barray, 0, barray.length);
         eAvatar.setImageBitmap(bitmap);
     }
 
+    /**
+     * Functie pentru a face o poza
+     */
     private void takePicture() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         try {
@@ -137,6 +139,9 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    /**
+     * Functie pentru a scoate imagine din galerie
+     */
     private void getImageFromAlbum() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -144,9 +149,16 @@ public class ProfileFragment extends Fragment {
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), 100);
     }
 
+    /**
+     * Functie pentru stabilirea intentiei de a schimba poza sau de a face o alta poza
+     *
+     * @param requestCode cod intentie
+     * @param resultCode  parametru true/false
+     * @param data        datele pentru poza
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode != getActivity().RESULT_CANCELED) {
+        if (resultCode != getActivity().RESULT_CANCELED) {
             switch (requestCode) {
                 case 101:
                     if (resultCode == getActivity().RESULT_OK && data != null) {
@@ -165,7 +177,7 @@ public class ProfileFragment extends Fragment {
                     if (selectedImageUri != null) {
                         eAvatar.setImageURI(selectedImageUri);
                         try {
-                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getActivity().getContentResolver(), selectedImageUri);
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.requireActivity().getContentResolver(), selectedImageUri);
                             ByteArrayOutputStream bos = new ByteArrayOutputStream();
                             bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
                             byte[] bArray = bos.toByteArray();
@@ -182,6 +194,12 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    /**
+     * Metoda pentru actualizarea pozei de profil
+     *
+     * @param data datele pentru poza
+     * @return intoarce true sau false daca nu reuseste sa actualizeze poza
+     */
     private boolean updateProfilePicture(byte[] data) {
         try {
             connect = SQLConnection.getConnection();

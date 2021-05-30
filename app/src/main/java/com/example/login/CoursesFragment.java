@@ -17,23 +17,24 @@ import android.widget.Toast;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import static com.example.login.SQLConnection.COURSESUSERS_TABLE;
 import static com.example.login.SQLConnection.COURSES_TABLE;
 
-
+/**
+ * Fragment pentru selectarea cursurilor
+ */
 public class CoursesFragment extends Fragment {
     private static float progress = 0;
     Connection connect = SQLConnection.getConnection();
     private static int capitol;
     private static int lastQuestion;
-    private static int numarCapitole;
     private int course_id;
 
     public CoursesFragment() {
         // Required empty public constructor
     }
+
     public static CoursesFragment newInstance() {
         CoursesFragment fragment = new CoursesFragment();
         return fragment;
@@ -42,28 +43,26 @@ public class CoursesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_courses, container, false);
 
-        ((HomePage)getActivity()).updateStatusBarColor("#00B2E5");
+        ((HomePage) requireActivity()).updateStatusBarColor("#00B2E5");
 
         CardView cv1 = view.findViewById(R.id.cv_course1);
         ProgressBar financeProgressBar = view.findViewById(R.id.pb_course1);
         boolean isEnrolledFinance = checkEnrolled(getSet(COURSESUSERS_TABLE));
         if (isEnrolledFinance) {
             financeProgressBar.setVisibility(View.VISIBLE);
-            financeProgressBar.setProgress((int)progress);
+            financeProgressBar.setProgress((int) progress);
         }
-        
+
         CardView cv2 = view.findViewById(R.id.cv_course2);
         cv2.setClickable(false);
-
 
         cv1.setOnClickListener(v -> {
             course_id = 1;
@@ -73,25 +72,33 @@ public class CoursesFragment extends Fragment {
             startCourse(course_id);
         });
 
-        cv2.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Curs In Lucru", Toast.LENGTH_LONG).show();
-        });
+        cv2.setOnClickListener(v -> Toast.makeText(getContext(), "Curs In Lucru", Toast.LENGTH_LONG).show());
 
         return view;
     }
 
+    /**
+     * Functie pentru pornirea cursului
+     *
+     * @param id index curs
+     */
     private void startCourse(int id) {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentManager fm = requireActivity().getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.replace(R.id.container, StartCourseFragment.newInstance(id));
         transaction.addToBackStack(null);
         transaction.commit();
     }
 
+    /**
+     * Metoda care verifica daca userul este inscris in tabela pentru curs
+     *
+     * @param resultSet ofera datele tabelei
+     * @return intoarce true daca userul este inscris in curs, false altfel
+     */
     private boolean checkEnrolled(ResultSet resultSet) {
         try {
             if (resultSet != null) {
-                //to be changed when more courses are added
                 capitol = resultSet.getInt(5);
                 lastQuestion = resultSet.getInt(6);
                 progress = resultSet.getFloat(4);
@@ -104,6 +111,12 @@ public class CoursesFragment extends Fragment {
         return false;
     }
 
+    /**
+     * Functie pentru aducerea datelor tabelei din baza de date
+     *
+     * @param table specifica tabela
+     * @return intoarce datele daca le gaseste / null altfel
+     */
     private ResultSet getSet(String table) {
         ResultSet resultSet = null;
         try {
@@ -111,7 +124,7 @@ public class CoursesFragment extends Fragment {
                 PreparedStatement statement = connect.prepareStatement("SELECT * FROM " + table + " WHERE Username = ?");
                 statement.setString(1, HomePage.user.getUsername());
                 resultSet = statement.executeQuery();
-                if(resultSet.next())
+                if (resultSet.next())
                     return resultSet;
             }
         } catch (Exception e) {
@@ -120,6 +133,9 @@ public class CoursesFragment extends Fragment {
         return resultSet;
     }
 
+    /**
+     * Functie pentru punerea utilizatorul in tabela pentru curs
+     */
     private void addUserToFinanceTable() {
         try {
             if (connect != null) {
@@ -144,6 +160,11 @@ public class CoursesFragment extends Fragment {
         }
     }
 
+    /**
+     * Functie care aduce datele cursului
+     *
+     * @param id indexul cursului
+     */
     private void getCourse(int id) {
         try {
             if (connect != null) {
@@ -151,7 +172,7 @@ public class CoursesFragment extends Fragment {
                 statement.setInt(1, id);
                 ResultSet resultSet = statement.executeQuery();
                 resultSet.next();
-                numarCapitole = resultSet.getInt(4);
+                int numarCapitole = resultSet.getInt(4);
             }
         } catch (Exception e) {
             Log.e("getCourse: ", e.toString());
@@ -164,9 +185,5 @@ public class CoursesFragment extends Fragment {
 
     public static int getLastQuestion() {
         return lastQuestion;
-    }
-
-    public static float getProgress() {
-        return progress;
     }
 }

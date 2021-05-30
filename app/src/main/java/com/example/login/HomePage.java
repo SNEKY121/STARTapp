@@ -6,21 +6,20 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.graphics.Color;
 import android.os.Build;
-import android.util.Log;
 import android.os.Bundle;
-
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.Arrays;
-
-
+/**
+ * Fragment principal, contine bara de navigare
+ */
 public class HomePage extends AppCompatActivity {
 
     public static User user = new User();
+    private long pressedTime;
 
     public void openFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -50,7 +49,6 @@ public class HomePage extends AppCompatActivity {
 
     }
 
-    private long pressedTime;
 
     @Override
     public void onBackPressed() {
@@ -65,6 +63,7 @@ public class HomePage extends AppCompatActivity {
         }
         pressedTime = System.currentTimeMillis();
     }
+
     BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener = item -> {
         final int profile_id = R.id.profile;
         final int settings_id = R.id.settings;
@@ -95,7 +94,12 @@ public class HomePage extends AppCompatActivity {
                 .apply();
     }
 
-    public void updateStatusBarColor(String color){
+    /**
+     * Functie pentru actualizarea culoare barii de status
+     *
+     * @param color culoare
+     */
+    public void updateStatusBarColor(String color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);

@@ -1,5 +1,6 @@
 package com.example.login;
 
+import android.annotation.SuppressLint;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,7 +10,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 
-import android.text.Layout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -23,22 +23,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link LeaderboardFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment pentru clasament
  */
 public class LeaderboardFragment extends Fragment {
 
     private View view;
 
     public LeaderboardFragment() {
-        // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static LeaderboardFragment newInstance() {
-        LeaderboardFragment fragment = new LeaderboardFragment();
-        return fragment;
+        return new LeaderboardFragment();
     }
 
     @Override
@@ -46,19 +41,23 @@ public class LeaderboardFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         view = inflater.inflate(R.layout.fragment_leaderboard, container, false);
 
-        ((HomePage)getActivity()).updateStatusBarColor("#00B2E5");
+        ((HomePage) requireActivity()).updateStatusBarColor("#00B2E5");
 
         setData();
 
         return view;
     }
 
+    /**
+     * Functie pentru obtinerea datelor din baza de date
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setData() {
         Connection connect = SQLConnection.getConnection();
@@ -76,10 +75,18 @@ public class LeaderboardFragment extends Fragment {
         }
     }
 
+    /**
+     * Functie pentru aranjarea in pagina a elementelor clasamentului
+     *
+     * @param username nume utilizator
+     * @param xp       experienta
+     * @param index    numarul in clasament
+     */
+    @SuppressLint("SetTextI18n")
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void makeConstraint(String username, String xp, int index) {
         LinearLayout linearlayout = view.findViewById(R.id.llLeaderboard);
-        ConstraintLayout constraintLayout = new ConstraintLayout(getContext());
+        ConstraintLayout constraintLayout = new ConstraintLayout(requireContext());
         ConstraintSet constraintSet = new ConstraintSet();
         TextView placement = new TextView(getContext());
         TextView user = new TextView(getContext());
@@ -107,10 +114,6 @@ public class LeaderboardFragment extends Fragment {
         constraintSet.connect(score.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
         constraintSet.connect(score.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
         constraintSet.applyTo(constraintLayout);
-        /*
-        straintSet.connect(user.getId(), ConstraintSet.LEFT, placement.getId(), ConstraintSet.RIGHT);
-        constraintSet.connect(user.getId(), ConstraintSet.RIGHT, score.getId(), ConstraintSet.LEFT);
-         */
         linearlayout.addView(constraintLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, pxToDp(60)));
 
     }
@@ -119,9 +122,13 @@ public class LeaderboardFragment extends Fragment {
         constraintLayout.addView(tv, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
+    /**
+     * Functie pentru datele din TextView
+     *
+     * @param tv widget TextView
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setTextView(TextView tv) {
-        //tv.setLayoutParams(new ViewGroup.LayoutParams(60, ViewGroup.LayoutParams.MATCH_PARENT));
         tv.setId(View.generateViewId());
         tv.setGravity(Gravity.CENTER);
         tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -131,7 +138,7 @@ public class LeaderboardFragment extends Fragment {
     }
 
     private int pxToDp(int dp) {
-        final float scale = getContext().getResources().getDisplayMetrics().density;
+        final float scale = requireContext().getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.login;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -29,9 +30,7 @@ import static com.example.login.SQLConnection.PROFILES_TABLE;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link SettingsFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment pentru setari
  */
 public class SettingsFragment extends Fragment {
     private static User USER = null;
@@ -40,14 +39,11 @@ public class SettingsFragment extends Fragment {
     private String newPassword;
     private String feedbackText;
 
-
-
     Connection connect = SQLConnection.getConnection();
 
     public SettingsFragment() {
-        // Required empty public constructor
     }
-    // TODO: Rename and change types and number of parameters
+
     public static SettingsFragment newInstance(User user) {
         SettingsFragment fragment = new SettingsFragment();
         USER = user;
@@ -59,13 +55,14 @@ public class SettingsFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        ((HomePage)getActivity()).updateStatusBarColor("#00B2E5");
+        ((HomePage) requireActivity()).updateStatusBarColor("#00B2E5");
 
         TextView eNotifs = view.findViewById(R.id.tv_notifs);
         eNotifsbtn = view.findViewById(R.id.sw_notifs);
@@ -76,50 +73,34 @@ public class SettingsFragment extends Fragment {
 
         eNotifs.setOnClickListener(v -> eNotifsbtn.setChecked(!eNotifsbtn.isChecked()));
 
-        eLogout.setOnClickListener(v -> {
+        funcLogout(inflater, eLogout);
+        funcPassword(inflater, ePassword);
+        funcFeedback(inflater, eFeedback);
+        funcUsername(inflater, eUsername);
+
+        return view;
+    }
+
+    /**
+     * Functie pentru trimitere feedback
+     *
+     * @param inflater
+     * @param eFeedback butonul pentru feedback
+     */
+    private void funcFeedback(LayoutInflater inflater, TextView eFeedback) {
+        eFeedback.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DialogTheme);
-            View dialogLayout = inflater.inflate(R.layout.logout_popup, null);
-            final AlertDialog dialog = builder.create();
-            setDialog(dialog, dialogLayout);
-
-            Button btnLogout = dialogLayout.findViewById(R.id.btnLogout);
-            Button btnCancel = dialogLayout.findViewById(R.id.btnCancel);
-
-            btnLogout.setOnClickListener(v1 -> {
-                dialog.dismiss();
-                resetPref();
-                Intent intent = new Intent(getActivity(), GetStartedPage.class);
-                startActivity(intent);
-            });
-            btnCancel.setOnClickListener(v2 -> dialog.dismiss());
-
-            builder.setView(dialogLayout);
-            dialog.show();
-        });
-
-        ePassword.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DialogTheme);
-            View dialogLayout = inflater.inflate(R.layout.datachange_popup, null);
+            View dialogLayout = inflater.inflate(R.layout.feedback_popup, null);
             final AlertDialog dialog = builder.create();
             setDialog(dialog, dialogLayout);
 
             Button btnChange = dialogLayout.findViewById(R.id.btnChange);
             Button btnCancel = dialogLayout.findViewById(R.id.btnCancel);
-            TextView tvData = dialogLayout.findViewById(R.id.tv_datashow);
-            EditText etData = dialogLayout.findViewById(R.id.etNewData);
-            TextView tvTitle = dialogLayout.findViewById(R.id.tv_title);
-
-            tvData.setVisibility(View.GONE);
-
-            etData.setHint("Parola Noua");
-            builder.setView(etData);
-
-            tvTitle.setText("Schimba parola");
-            builder.setView(tvTitle);
+            EditText etText = dialogLayout.findViewById(R.id.etText);
 
             btnChange.setOnClickListener(v1 -> {
-                newPassword = etData.getText().toString();
-                changePass(newPassword);
+                feedbackText = etText.getText().toString();
+                trySend(feedbackText);
                 dialog.dismiss();
             });
             btnCancel.setOnClickListener(v2 -> dialog.dismiss());
@@ -127,7 +108,16 @@ public class SettingsFragment extends Fragment {
             builder.setView(dialogLayout);
             dialog.show();
         });
+    }
 
+    /**
+     * Functie pentru schimbare username
+     *
+     * @param inflater
+     * @param eUsername butonul pentru username
+     */
+    @SuppressLint("SetTextI18n")
+    private void funcUsername(LayoutInflater inflater, TextView eUsername) {
         eUsername.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DialogTheme);
             View dialogLayout = inflater.inflate(R.layout.datachange_popup, null);
@@ -159,20 +149,68 @@ public class SettingsFragment extends Fragment {
             builder.setView(dialogLayout);
             dialog.show();
         });
+    }
 
-        eFeedback.setOnClickListener(v -> {
+    /**
+     * Functie pentru delogare
+     *
+     * @param inflater
+     * @param eLogout  butonul pentru logout
+     */
+    private void funcLogout(LayoutInflater inflater, TextView eLogout) {
+        eLogout.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DialogTheme);
-            View dialogLayout = inflater.inflate(R.layout.feedback_popup, null);
+            View dialogLayout = inflater.inflate(R.layout.logout_popup, null);
+            final AlertDialog dialog = builder.create();
+            setDialog(dialog, dialogLayout);
+
+            Button btnLogout = dialogLayout.findViewById(R.id.btnLogout);
+            Button btnCancel = dialogLayout.findViewById(R.id.btnCancel);
+
+            btnLogout.setOnClickListener(v1 -> {
+                dialog.dismiss();
+                resetPref();
+                Intent intent = new Intent(getActivity(), GetStartedPage.class);
+                startActivity(intent);
+            });
+            btnCancel.setOnClickListener(v2 -> dialog.dismiss());
+
+            builder.setView(dialogLayout);
+            dialog.show();
+        });
+    }
+
+    /**
+     * Functie pentru schimbare parola
+     *
+     * @param inflater
+     * @param ePassword butonul pentru parola
+     */
+    @SuppressLint("SetTextI18n")
+    private void funcPassword(LayoutInflater inflater, TextView ePassword) {
+        ePassword.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DialogTheme);
+            View dialogLayout = inflater.inflate(R.layout.datachange_popup, null);
             final AlertDialog dialog = builder.create();
             setDialog(dialog, dialogLayout);
 
             Button btnChange = dialogLayout.findViewById(R.id.btnChange);
             Button btnCancel = dialogLayout.findViewById(R.id.btnCancel);
-            EditText etText = dialogLayout.findViewById(R.id.etText);
+            TextView tvData = dialogLayout.findViewById(R.id.tv_datashow);
+            EditText etData = dialogLayout.findViewById(R.id.etNewData);
+            TextView tvTitle = dialogLayout.findViewById(R.id.tv_title);
+
+            tvData.setVisibility(View.GONE);
+
+            etData.setHint("Parola Noua");
+            builder.setView(etData);
+
+            tvTitle.setText("Schimba parola");
+            builder.setView(tvTitle);
 
             btnChange.setOnClickListener(v1 -> {
-                feedbackText = etText.getText().toString();
-                trySend(feedbackText);
+                newPassword = etData.getText().toString();
+                changePass(newPassword);
                 dialog.dismiss();
             });
             btnCancel.setOnClickListener(v2 -> dialog.dismiss());
@@ -180,10 +218,13 @@ public class SettingsFragment extends Fragment {
             builder.setView(dialogLayout);
             dialog.show();
         });
-
-        return view;
     }
 
+    /**
+     * Functie pentru schimbul parolei
+     *
+     * @param pass
+     */
     private void changePass(String pass) {
         pass = pass.trim();
         if (pass.length() > 7) {
@@ -210,8 +251,14 @@ public class SettingsFragment extends Fragment {
         wlmp.gravity = Gravity.BOTTOM;
     }
 
+    /**
+     * Schimbare username in toate tabelele din database
+     *
+     * @param currentData username inainte de schimbare
+     * @param newData     username dupa schimbare
+     */
     private void trySubmit(String currentData, String newData) {
-        if (newData.length()>4) {
+        if (newData.length() > 4) {
             if (!currentData.equals(newData)) {
                 try {
                     if (connect != null) {
@@ -232,7 +279,7 @@ public class SettingsFragment extends Fragment {
                                 changeCoursesUsernameStatement.setString(2, currentData);
                                 changeCoursesUsernameStatement.executeUpdate();
                             } catch (Exception ignored) {
-                                
+
                             }
                         }
 
@@ -252,11 +299,17 @@ public class SettingsFragment extends Fragment {
                     Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
                 }
             } else Toast.makeText(getActivity(), "date identice", Toast.LENGTH_SHORT).show();
-        } else Toast.makeText(getActivity(), "introduceti macar 5 caractere", Toast.LENGTH_LONG).show();
+        } else
+            Toast.makeText(getActivity(), "introduceti macar 5 caractere", Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * Trimitere feedback la adresa de mail a echipei Vsauce4
+     *
+     * @param Data Textul de feedback
+     */
     private void trySend(String Data) {
-        if (Data.length()>10) {
+        if (Data.length() > 10) {
             final String to = "startappv4@gmail.com";
             String subject = "New Feedback from " + USER.getUsername();
 

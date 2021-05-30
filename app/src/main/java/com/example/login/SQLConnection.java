@@ -6,6 +6,9 @@ import android.util.Log;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+/**
+ * Conexiunea la baza de date
+ */
 public class SQLConnection {
     private static final String USERNAME = "lol";
     private static final String IP = "mlcapp.go.ro";
@@ -19,6 +22,11 @@ public class SQLConnection {
     public static final String CAPITOLE_TABLE = "Capitole";
     public static final String QUESTIONS_TABLE = "Questions";
 
+    /**
+     * Metoda pentru stabilire conexiune
+     *
+     * @return intoarce conexiunea sau null
+     */
     public static Connection getConnection() {
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -30,8 +38,7 @@ public class SQLConnection {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
             ConnectionURL = "jdbc:jtds:sqlserver://" + IP + ":" + PORT + ";" + "databasename=" + DATABASE + ";user=" + USERNAME + ";password=" + PASSWORD + ";";
             connection = DriverManager.getConnection(ConnectionURL);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             Log.e("Error", ex.getMessage());
         }
         return connection;

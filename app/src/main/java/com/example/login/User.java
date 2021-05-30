@@ -9,6 +9,9 @@ import java.util.Calendar;
 
 import static com.example.login.SQLConnection.PROFILES_TABLE;
 
+/**
+ * Clasa pentru stocarea temporara a datelor
+ */
 public class User {
     private String username;
     private String email;
@@ -33,10 +36,6 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public void setEmail(String email) {
@@ -78,6 +77,9 @@ public class User {
         getDataFromDB();
     }
 
+    /**
+     * Functie care aduce datele utilizatorului din baza de date
+     */
     private void getDataFromDB() {
         try {
             connect = SQLConnection.getConnection();
@@ -90,16 +92,16 @@ public class User {
                 Calendar c = Calendar.getInstance();
 
                 xp = rs.getInt(4);
-                if(rs.wasNull()) create.createUserProfile(username);
+                if (rs.wasNull()) create.createUserProfile(username);
                 cursuri = rs.getInt(2);
-                if(rs.wasNull()) create.createUserProfile(username);
+                if (rs.wasNull()) create.createUserProfile(username);
                 streak = rs.getInt(6);
-                if(rs.wasNull()) create.createUserProfile(username);
+                if (rs.wasNull()) create.createUserProfile(username);
                 barray = rs.getBytes(3);
-                if(rs.wasNull()) create.createUserProfile(username);
+                if (rs.wasNull()) create.createUserProfile(username);
                 int lastDay = rs.getInt(5);
                 int thisDay = c.get(Calendar.DAY_OF_YEAR);
-                if(rs.wasNull()) create.createUserProfile(username);
+                if (rs.wasNull()) create.createUserProfile(username);
                 updateProfile("Lastlogin", thisDay);
                 if (lastDay == thisDay - 1 || (lastDay == 365 || lastDay == 366) && thisDay == 1) {
                     streak++;
@@ -116,6 +118,12 @@ public class User {
         }
     }
 
+    /**
+     * Functie care actualizeaza profilul utilizatorului
+     *
+     * @param column numele coloanei din tabela
+     * @param val    valoare actualizata
+     */
     private void updateProfile(String column, int val) {
         try {
             connect = SQLConnection.getConnection();
@@ -129,4 +137,5 @@ public class User {
             Log.e("", "Check connection " + e);
         }
     }
+
 }

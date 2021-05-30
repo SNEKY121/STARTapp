@@ -16,6 +16,9 @@ import java.sql.ResultSet;
 
 import static com.example.login.SQLConnection.ACCOUNTS_TABLE;
 
+/**
+ * Pagina de login
+ */
 public class GetStartedPage extends AppCompatActivity {
 
     public static final String PREFS_NAME = "RememberMe";
@@ -27,7 +30,7 @@ public class GetStartedPage extends AppCompatActivity {
     private CheckBox eCheckBox;
     private String email;
     private String username;
-
+    private long pressedTime;
     private boolean isValid = false;
 
     Connection connect;
@@ -84,8 +87,6 @@ public class GetStartedPage extends AppCompatActivity {
         });
     }
 
-    private long pressedTime;
-
     @Override
     public void onBackPressed() {
 
@@ -99,14 +100,23 @@ public class GetStartedPage extends AppCompatActivity {
         pressedTime = System.currentTimeMillis();
     }
 
+    /**
+     * Verifica datele introduse pentru login
+     *
+     * @param name     numele/emailul utilizatorului
+     * @param password verifica parola utilizatorului folosind salt hash
+     * @return intoarce true daca reuseste sau false daca apar probleme
+     */
     private boolean checkCred(String name, String password) {
         try {
             connect = SQLConnection.getConnection();
             if (connect != null) {
                 String type;
-                if (name.contains("@"))
+                if (name.contains("@")) {
                     type = "Email";
-                else type = "Username";
+                } else {
+                    type = "Username";
+                }
 
                 PreparedStatement statement = connect.prepareStatement("SELECT * from " + ACCOUNTS_TABLE + " WHERE " + type + " = ?");
                 statement.setString(1, name);
@@ -130,6 +140,12 @@ public class GetStartedPage extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * Functie pentru redirectionarea catre activitatea HomePage
+     *
+     * @param username numele utilizatorului
+     * @param email    emailul utilizatorului
+     */
     private void redirect(String username, String email) {
         Intent intent = new Intent(GetStartedPage.this, HomePage.class);
         intent.putExtra("username", username);
