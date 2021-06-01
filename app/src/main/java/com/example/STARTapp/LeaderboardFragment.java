@@ -10,7 +10,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
+
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,16 +19,21 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+
 
 /**
  * Fragment pentru clasament
  */
 public class LeaderboardFragment extends Fragment {
 
-    private View view;
+    TextView placement;
+    TextView user;
+    TextView score;
+    LinearLayout linearlayout;
 
     public LeaderboardFragment() {
     }
@@ -46,11 +52,20 @@ public class LeaderboardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.fragment_leaderboard, container, false);
+        View view = inflater.inflate(R.layout.fragment_leaderboard, container, false);
+        linearlayout = view.findViewById(R.id.llLeaderboard);
 
         ((HomePage) requireActivity()).updateStatusBarColor("#00B2E5");
 
         setData();
+
+        FloatingActionButton refresh = view.findViewById(R.id.fab_refresh);
+
+        new Handler().postDelayed(() -> refresh.setOnClickListener(v -> {
+            HomePage.leaderboard.refresh();
+            linearlayout.removeAllViews();
+            setData();
+        }), 5000);
 
         return view;
     }
@@ -60,18 +75,12 @@ public class LeaderboardFragment extends Fragment {
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setData() {
-        Connection connect = SQLConnection.getConnection();
-        try {
-            if (connect != null) {
-                PreparedStatement statement = connect.prepareStatement("SELECT Username, Xp FROM " + SQLConnection.PROFILES_TABLE + " ORDER BY Xp DESC");
-                ResultSet resultSet = statement.executeQuery();
-
-                int index = 1;
-                while (resultSet.next())
-                    makeConstraint(resultSet.getString(1), resultSet.getString(2), index++);
-            }
-        } catch (Exception e) {
-            Log.e("setData: ", e.toString());
+        LinkedHashMap<String, Integer> user = HomePage.leaderboard.getMap();
+        makeConstraint("Utilizator", "Xp", "Pos");
+        for (int index = 0; index < user.size(); index++) {
+            Integer xp = (new ArrayList<>(user.values())).get(index);
+            String name = (new ArrayList<>(user.keySet())).get(index);
+            makeConstraint(name, xp + "xp", "#" + (index + 1));
         }
     }
 
@@ -82,22 +91,19 @@ public class LeaderboardFragment extends Fragment {
      * @param xp       experienta
      * @param index    numarul in clasament
      */
-    @SuppressLint("SetTextI18n")
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void makeConstraint(String username, String xp, int index) {
-        LinearLayout linearlayout = view.findViewById(R.id.llLeaderboard);
+    private void makeConstraint(String username, String xp, String index) {
         ConstraintLayout constraintLayout = new ConstraintLayout(requireContext());
         ConstraintSet constraintSet = new ConstraintSet();
-        TextView placement = new TextView(getContext());
-        TextView user = new TextView(getContext());
-        TextView score = new TextView(getContext());
+        placement = new TextView(getContext());
+        user = new TextView(getContext());
+        score = new TextView(getContext());
 
         setTextView(placement);
-        placement.setText("#" + index);
         setTextView(user);
-        user.setText(username);
         setTextView(score);
-        score.setText(xp + "xp");
+
+        setText(username, xp, index);
 
         addViewsToConstraintLayout(constraintLayout, placement);
         addViewsToConstraintLayout(constraintLayout, user);
@@ -116,6 +122,12 @@ public class LeaderboardFragment extends Fragment {
         constraintSet.applyTo(constraintLayout);
         linearlayout.addView(constraintLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, pxToDp(60)));
 
+    }
+
+    private void setText(String username, String xp, String index) {
+        placement.setText(index);
+        user.setText(username);
+        score.setText(xp);
     }
 
     private void addViewsToConstraintLayout(ConstraintLayout constraintLayout, TextView tv) {

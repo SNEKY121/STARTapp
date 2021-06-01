@@ -19,6 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class HomePage extends AppCompatActivity {
 
     public static User user = new User();
+    public static Leaderboard leaderboard = new Leaderboard();
     private long pressedTime;
 
     public void openFragment(Fragment fragment) {
@@ -39,8 +40,9 @@ public class HomePage extends AppCompatActivity {
         user.setUsername(username);
         String email = getIntent().getStringExtra("email");
         user.setEmail(email);
-
         user.getData();
+
+        leaderboard.init();
 
         BottomNavigationView eNav = findViewById(R.id.home_nav);
         eNav.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
