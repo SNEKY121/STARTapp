@@ -4,11 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -21,6 +23,8 @@ public class HomePage extends AppCompatActivity {
     public static User user = new User();
     public static Leaderboard leaderboard = new Leaderboard();
     private long pressedTime;
+    private int currentFragment = 1;
+    private final int TOTAL_FRAGMENTS = 4;
 
     public void openFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -29,6 +33,7 @@ public class HomePage extends AppCompatActivity {
         transaction.commit();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +49,20 @@ public class HomePage extends AppCompatActivity {
 
         leaderboard.init();
 
+        FrameLayout frameLayout = findViewById(R.id.container);
+        frameLayout.setOnTouchListener(new OnSwipeTouchListener(this) {
+            public void onSwipeLeft() {
+                if (currentFragment != TOTAL_FRAGMENTS) {
+                    getFragment(++currentFragment);
+                }
+            }
+            public void onSwipeRight() {
+                if (currentFragment != 1) {
+                    getFragment(--currentFragment);
+                }
+            }
+        });
+
         BottomNavigationView eNav = findViewById(R.id.home_nav);
         eNav.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
         eNav.setItemIconTintList(null);
@@ -51,6 +70,21 @@ public class HomePage extends AppCompatActivity {
 
     }
 
+    private void getFragment(int poz) {
+        switch (poz) {
+            case 1:
+                openFragment(ProfileFragment.newInstance(user));
+                return;
+            case 2:
+                openFragment(CoursesFragment.newInstance());
+                return;
+            case 3:
+                openFragment(LeaderboardFragment.newInstance());
+                return;
+            case 4:
+                openFragment(SettingsFragment.newInstance(user));
+        }
+    }
 
     @Override
     public void onBackPressed() {
@@ -75,15 +109,19 @@ public class HomePage extends AppCompatActivity {
         switch (item.getItemId()) {
             case courses_id:
                 openFragment(CoursesFragment.newInstance());
+                currentFragment = 2;
                 return true;
             case leaderbd_id:
                 openFragment(LeaderboardFragment.newInstance());
+                currentFragment = 3;
                 return true;
             case profile_id:
                 openFragment(ProfileFragment.newInstance(user));
+                currentFragment = 1;
                 return true;
             case settings_id:
                 openFragment(SettingsFragment.newInstance(user));
+                currentFragment = 4;
                 return true;
         }
         return false;
