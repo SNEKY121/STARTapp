@@ -14,6 +14,7 @@ public class Leaderboard {
         Connection connect = SQLConnection.getConnection();
         try {
             if (connect != null) {
+                user.clear();
                 PreparedStatement statement = connect.prepareStatement("SELECT Username, Xp FROM " + SQLConnection.PROFILES_TABLE + " ORDER BY Xp DESC");
                 ResultSet resultSet = statement.executeQuery();
                 while (resultSet.next())

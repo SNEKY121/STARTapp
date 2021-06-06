@@ -258,49 +258,48 @@ public class SettingsFragment extends Fragment {
      * @param newData     username dupa schimbare
      */
     private void trySubmit(String currentData, String newData) {
-        if (newData.length() > 4) {
-            if (!currentData.equals(newData)) {
-                try {
-                    if (connect != null) {
-                        PreparedStatement stmt = connect.prepareStatement("SELECT Username from " + ACCOUNTS_TABLE + " WHERE Username = ?");
-                        stmt.setString(1, currentData);
-                        ResultSet resultSet = stmt.executeQuery();
-                        resultSet.next();
-
-                        if (resultSet.getString(1) != null) {
-                            PreparedStatement changeProfilesUsername = connect.prepareStatement("UPDATE " + PROFILES_TABLE + " SET Username = ? WHERE Username = ?");
-                            changeProfilesUsername.setString(1, newData);
-                            changeProfilesUsername.setString(2, currentData);
-                            changeProfilesUsername.execute();
-
-                            try {
-                                PreparedStatement changeCoursesUsernameStatement = connect.prepareStatement("UPDATE " + COURSESUSERS_TABLE + " SET Username = ? WHERE Username = ?");
-                                changeCoursesUsernameStatement.setString(1, newData);
-                                changeCoursesUsernameStatement.setString(2, currentData);
-                                changeCoursesUsernameStatement.executeUpdate();
-                            } catch (Exception ignored) {
-
-                            }
-                        }
-
-                        PreparedStatement changeAccountsUsername = connect.prepareStatement("UPDATE " + ACCOUNTS_TABLE + " SET Username = ? WHERE Username = ?");
-                        changeAccountsUsername.setString(1, newData);
-                        changeAccountsUsername.setString(2, currentData);
-                        try {
-                            changeAccountsUsername.executeUpdate();
-                            Toast.makeText(getContext(), "Succes", Toast.LENGTH_LONG).show();
-                            USER.setUsername(newData);
-                            requireActivity().getSharedPreferences(GetStartedPage.PREFS_NAME, Context.MODE_PRIVATE).edit().putString(GetStartedPage.PREF_USERNAME, newData).apply();
-                        } catch (Exception e) {
-                            Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                } catch (Exception e) {
-                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
-                }
-            } else Toast.makeText(getActivity(), "date identice", Toast.LENGTH_SHORT).show();
-        } else
+        if (newData.length() < 5) {
             Toast.makeText(getActivity(), "introduceti macar 5 caractere", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (currentData.equals(newData)) {
+            Toast.makeText(getActivity(), "date identice", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        try {
+            if (connect != null) {
+                PreparedStatement checkUsernameStatement = connect.prepareStatement("SELECT Username from " + ACCOUNTS_TABLE + " WHERE Username = ?");
+                PreparedStatement changeProfilesUsernameStatement = connect.prepareStatement("UPDATE " + PROFILES_TABLE + " SET Username = ? WHERE Username = ?");
+                PreparedStatement changeCoursesUsernameStatement = connect.prepareStatement("UPDATE " + COURSESUSERS_TABLE + " SET Username = ? WHERE Username = ?");
+                PreparedStatement changeAccountsUsernameStatement = connect.prepareStatement("UPDATE " + ACCOUNTS_TABLE + " SET Username = ? WHERE Username = ?");
+
+                checkUsernameStatement.setString(1, currentData);
+                ResultSet resultSet = checkUsernameStatement.executeQuery();
+
+                if (resultSet.next()) {
+                    changeProfilesUsernameStatement.setString(1, newData);
+                    changeProfilesUsernameStatement.setString(2, currentData);
+                    changeProfilesUsernameStatement.execute();
+
+                    changeCoursesUsernameStatement.setString(1, newData);
+                    changeCoursesUsernameStatement.setString(2, currentData);
+                    changeCoursesUsernameStatement.executeUpdate();
+                }
+
+                changeAccountsUsernameStatement.setString(1, newData);
+                changeAccountsUsernameStatement.setString(2, currentData);
+                try {
+                    changeAccountsUsernameStatement.executeUpdate();
+                    Toast.makeText(getContext(), "Succes", Toast.LENGTH_LONG).show();
+                    USER.setUsername(newData);
+                    requireActivity().getSharedPreferences(GetStartedPage.PREFS_NAME, Context.MODE_PRIVATE).edit().putString(GetStartedPage.PREF_USERNAME, newData).apply();
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
+                }
+            }
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
