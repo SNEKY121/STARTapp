@@ -10,10 +10,10 @@ import java.sql.DriverManager;
  * Conexiunea la baza de date
  */
 public class SQLConnection {
-    private static final String USERNAME = "lol";
+    private static final String USERNAME = "app_login";
     private static final String IP = "mlcapp.go.ro";
     private static final String DATABASE = "MLC App Profiles";
-    private static final String PASSWORD = "test129";
+    private static final String PASSWORD = "11774297";
     private static final String PORT = "1433";
     public static final String ACCOUNTS_TABLE = "Accounts";
     public static final String PROFILES_TABLE = "Profiles";
